@@ -23,6 +23,7 @@ import { PlayerProfile } from "./components/PlayerProfile";
 import { HomePage } from "./pages/HomePage";
 import { PlayersPage } from "./pages/PlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
+import { MapsPage } from "./pages/MapsPage";
 
 const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/", label: "Overview", end: true },
@@ -119,7 +120,7 @@ function App() {
             <Route path="/players/:playerId" element={<PlayerRoute />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/teams/:teamId" element={<TeamRoute />} />
-            <Route path="/maps" element={<MapsRoute />} />
+            <Route path="/maps" element={<MapsPage />} />
             <Route path="/maps/:mapId" element={<MapRoute />} />
             <Route path="/compare" element={<CompareView />} />
             <Route path="/team-compare" element={<TeamCompareView />} />
@@ -207,12 +208,6 @@ function TeamRoute() {
   }
 
   return <TeamDetailView team={team} onBack={() => navigate("/teams")} />;
-}
-
-function MapsRoute() {
-  const navigate = useNavigate();
-
-  return <MapsView onMapClick={(mapId) => navigate(`/maps/${mapId}`)} />;
 }
 
 function MapRoute() {
@@ -985,91 +980,6 @@ function getTeamCompareRead(
       : "По best maps нет прямого пересечения.";
 
   return `${left.name} опирается на ${leftStrong}, ${right.name} — на ${rightStrong}. ${overlapText} В MVP-логике это помогает быстро понять, где матчап будет решаться: в огневой мощи, структуре, clutch-ситуациях или глубине map pool.`;
-}
-
-
-function MapsView({
-  onMapClick,
-}: {
-  onMapClick: (mapId: string) => void;
-}) {
-  return (
-    <section className="grid gap-6">
-      <PageTitle
-        title="Maps"
-        description="Карта как аналитический профиль: стиль, сторона, ценность AWP, entry и anchor-ролей."
-      />
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {maps.map((map) => {
-          const bestTeams = getBestTeamsForMap(map).slice(0, 3);
-          const bestPlayers = getBestPlayersForMap(map).slice(0, 3);
-
-          return (
-            <button
-              key={map.id}
-              onClick={() => onMapClick(map.id)}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-3xl font-black">{map.name}</h3>
-                  <p className="mt-2 text-sm text-slate-400">{map.identity}</p>
-                </div>
-
-                <span className="rounded-2xl bg-cyan-300 px-3 py-2 text-sm font-black text-slate-950">
-                  {map.sideProfile}
-                </span>
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                <Metric label="T-side difficulty" value={map.tSideDifficulty} />
-                <Metric label="CT-side strength" value={map.ctSideStrength} />
-                <Metric label="AWP value" value={map.awpValue} />
-                <Metric label="Entry value" value={map.entryValue} />
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Best teams
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {bestTeams.length > 0 ? (
-                    bestTeams.map((team) => (
-                      <span
-                        key={team.id}
-                        className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300"
-                      >
-                        {team.name}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-slate-500">No team tags yet</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Best player fits
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {bestPlayers.map((player) => (
-                    <span
-                      key={player.id}
-                      className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm text-cyan-200"
-                    >
-                      {player.nickname}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
 }
 
 function MapDetailView({
