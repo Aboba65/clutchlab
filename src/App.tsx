@@ -19,6 +19,7 @@ type View =
   | "compare"
   | "teamCompare"
   | "builder"
+  | "savedRosters"
   | "traits"
   | "maps"
   | "player"
@@ -33,6 +34,7 @@ const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/compare", label: "Compare" },
   { path: "/team-compare", label: "Team Compare" },
   { path: "/roster-builder", label: "Roster Builder" },
+  { path: "/saved-rosters", label: "Saved Rosters" },
   { path: "/traits", label: "Traits" },
 ];
 
@@ -163,6 +165,76 @@ const maps: CS2MapProfile[] = [
   },
 ];
 
+type SavedRoster = {
+  id: string;
+  name: string;
+  playerIds: string[];
+  createdAt: string;
+};
+
+const SAVED_ROSTERS_KEY = "clutchlab.savedRosters";
+const ACTIVE_ROSTER_KEY = "clutchlab.activeRoster";
+
+function readSavedRosters(): SavedRoster[] {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = window.localStorage.getItem(SAVED_ROSTERS_KEY);
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter((item): item is SavedRoster => {
+      return (
+        typeof item?.id === "string" &&
+        typeof item?.name === "string" &&
+        typeof item?.createdAt === "string" &&
+        Array.isArray(item?.playerIds)
+      );
+    });
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedRosters(rosters: SavedRoster[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(SAVED_ROSTERS_KEY, JSON.stringify(rosters));
+}
+
+function readActiveRosterIds() {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = window.localStorage.getItem(ACTIVE_ROSTER_KEY);
+    if (!raw) return [];
+
+    window.localStorage.removeItem(ACTIVE_ROSTER_KEY);
+    const parsed = JSON.parse(raw);
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter((id): id is string => {
+      return typeof id === "string" && players.some((player) => player.id === id);
+    });
+  } catch {
+    return [];
+  }
+}
+
+function writeActiveRosterIds(playerIds: string[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ACTIVE_ROSTER_KEY, JSON.stringify(playerIds));
+}
+
+function getRosterPlayers(playerIds: string[]) {
+  return playerIds
+    .map((playerId) => players.find((player) => player.id === playerId))
+    .filter((player): player is CS2Player => Boolean(player));
+}
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -181,6 +253,7 @@ function App() {
             <Route path="/compare" element={<CompareView />} />
             <Route path="/team-compare" element={<TeamCompareView />} />
             <Route path="/roster-builder" element={<RosterBuilderView />} />
+            <Route path="/saved-rosters" element={<SavedRostersView />} />
             <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
             <Route path="/traits" element={<TraitsView />} />
             <Route path="*" element={<NotFoundView />} />
@@ -348,6 +421,7 @@ function getPathForView(view: View) {
     compare: "/compare",
     teamCompare: "/team-compare",
     builder: "/roster-builder",
+    savedRosters: "/saved-rosters",
     traits: "/traits",
     player: "/players",
     team: "/teams",
@@ -2172,7 +2246,9 @@ function formatCompareValue(value: number, kind: CompareRow["kind"]) {
 }
 
 function RosterBuilderView() {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => readActiveRosterIds());
+  const [rosterName, setRosterName] = useState("");
 
   const selectedPlayers = players.filter((player) => selectedIds.includes(player.id));
   const totalPrice = selectedPlayers.reduce((sum, player) => sum + player.price, 0);
@@ -2208,6 +2284,23 @@ function RosterBuilderView() {
     setSelectedIds([]);
   }
 
+  function saveRoster() {
+    if (selectedPlayers.length !== 5 || isOverBudget) return;
+
+    const name = rosterName.trim() || `Roster ${new Date().toLocaleString()}`;
+    const savedRoster: SavedRoster = {
+      id: `roster-${Date.now()}`,
+      name,
+      playerIds: selectedIds,
+      createdAt: new Date().toISOString(),
+    };
+
+    const nextRosters = [savedRoster, ...readSavedRosters()].slice(0, 30);
+    writeSavedRosters(nextRosters);
+    setRosterName("");
+    navigate("/saved-rosters");
+  }
+
   return (
     <section className="grid gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -2225,6 +2318,12 @@ function RosterBuilderView() {
           >
             Clear roster
           </button>
+          <NavLink
+            to="/saved-rosters"
+            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-300 transition hover:bg-white/10 hover:text-white"
+          >
+            Saved rosters
+          </NavLink>
         </div>
       </div>
 
@@ -2357,6 +2456,30 @@ function RosterBuilderView() {
             ))}
           </div>
 
+          <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+              Save roster
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto]">
+              <input
+                value={rosterName}
+                onChange={(event) => setRosterName(event.target.value)}
+                placeholder="Roster name, например: Dream five"
+                className="rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/50"
+              />
+              <button
+                onClick={saveRoster}
+                disabled={selectedPlayers.length !== 5 || isOverBudget}
+                className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Save
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-slate-500">
+              Сохранение доступно для состава 5/5 в рамках бюджета. Данные хранятся в браузере через localStorage.
+            </p>
+          </div>
+
           <div className="mt-5 grid gap-3">
             <Metric label="AWP Power" value={score.awp} />
             <Metric label="Entry Pressure" value={score.entry} />
@@ -2381,6 +2504,143 @@ function RosterBuilderView() {
           </div>
         </Panel>
       </div>
+    </section>
+  );
+}
+
+
+function SavedRostersView() {
+  const navigate = useNavigate();
+  const [savedRosters, setSavedRosters] = useState<SavedRoster[]>(() => readSavedRosters());
+
+  function deleteRoster(rosterId: string) {
+    const nextRosters = savedRosters.filter((roster) => roster.id !== rosterId);
+    setSavedRosters(nextRosters);
+    writeSavedRosters(nextRosters);
+  }
+
+  function loadRoster(roster: SavedRoster) {
+    writeActiveRosterIds(roster.playerIds);
+    navigate("/roster-builder");
+  }
+
+  return (
+    <section className="grid gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <PageTitle
+          title="Saved Rosters"
+          description="Сохранённые составы из Roster Builder. Они хранятся локально в браузере, без аккаунта и backend."
+        />
+
+        <NavLink
+          to="/roster-builder"
+          className="w-fit rounded-full bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
+        >
+          Build new roster
+        </NavLink>
+      </div>
+
+      {savedRosters.length === 0 ? (
+        <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.03] p-8 text-center">
+          <p className="text-2xl font-black text-white">Пока нет сохранённых составов</p>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-400">
+            Собери валидный ростер 5/5 в рамках бюджета, задай название и нажми Save. После этого он появится здесь.
+          </p>
+          <NavLink
+            to="/roster-builder"
+            className="mt-6 inline-flex rounded-full bg-cyan-300 px-5 py-3 font-bold text-slate-950 hover:bg-cyan-200"
+          >
+            Go to Roster Builder
+          </NavLink>
+        </div>
+      ) : (
+        <div className="grid gap-4 xl:grid-cols-2">
+          {savedRosters.map((roster) => {
+            const rosterPlayers = getRosterPlayers(roster.playerIds);
+            const totalPrice = rosterPlayers.reduce((sum, player) => sum + player.price, 0);
+            const score = getRosterScore(rosterPlayers);
+            const warnings = getRosterWarnings(rosterPlayers);
+            const createdAt = new Date(roster.createdAt);
+
+            return (
+              <article
+                key={roster.id}
+                className="rounded-3xl border border-white/10 bg-white/[0.04] p-5"
+              >
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h3 className="text-2xl font-black text-white">{roster.name}</h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {Number.isNaN(createdAt.getTime())
+                        ? "Saved roster"
+                        : createdAt.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Score value={score.total} />
+                    <span className="inline-flex h-11 items-center rounded-2xl bg-white/5 px-3 text-sm font-black text-cyan-300">
+                      ${totalPrice}/25
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid gap-3">
+                  {rosterPlayers.map((player) => (
+                    <div
+                      key={player.id}
+                      className="flex items-center justify-between rounded-2xl bg-white/[0.04] p-4"
+                    >
+                      <div>
+                        <div className="font-black">{player.nickname}</div>
+                        <div className="mt-1 text-sm text-slate-400">
+                          {player.role} · {getTeamName(player.teamId, teams)}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-black text-cyan-300">${player.price}</div>
+                        <div className="mt-1 text-xs text-slate-500">
+                          Impact {getPlayerImpact(player)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 grid gap-3 md:grid-cols-4">
+                  <MiniMetric title="Firepower" value={score.firepower} />
+                  <MiniMetric title="AWP" value={score.awp} />
+                  <MiniMetric title="Entry" value={score.entry} />
+                  <MiniMetric title="Structure" value={score.structure} />
+                </div>
+
+                {warnings.length > 0 && (
+                  <div className="mt-5 grid gap-2">
+                    {warnings.map((warning) => (
+                      <Warning key={warning} text={warning} />
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => loadRoster(roster)}
+                    className="rounded-full bg-cyan-300 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
+                  >
+                    Load in builder
+                  </button>
+                  <button
+                    onClick={() => deleteRoster(roster.id)}
+                    className="rounded-full border border-red-300/20 bg-red-400/10 px-4 py-2 text-sm font-bold text-red-200 transition hover:bg-red-400/15"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
@@ -2775,6 +3035,16 @@ function Panel({
       <h3 className="mb-4 text-xl font-black">{title}</h3>
       {children}
     </section>
+  );
+}
+
+
+function MiniMetric({ title, value }: { title: string; value: number }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
+      <p className="mt-1 text-2xl font-black text-white">{value}</p>
+    </div>
   );
 }
 
