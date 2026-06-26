@@ -2748,8 +2748,10 @@ function PlayerDetailView({
   player: CS2Player;
   onBack: () => void;
 }) {
+  const navigate = useNavigate();
   const impact = getPlayerImpact(player);
   const teamName = getTeamName(player.teamId, teams);
+  const similarPlayers = getSimilarPlayers(player, 4);
 
   return (
     <section className="grid gap-6">
@@ -2860,8 +2862,148 @@ function PlayerDetailView({
           </div>
         </Panel>
       </div>
+
+      <Panel title="Similar players">
+        <div className="mb-4 rounded-2xl bg-white/[0.04] p-4 text-sm text-slate-300">
+          Similarity is calculated from role fit, Impact Index, rating, clutch,
+          opening pressure, weapon profile, consistency and price. Current values
+          are MVP demo scores, not official statistics.
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {similarPlayers.map(({ player: similarPlayer, score, reasons }) => (
+            <button
+              key={similarPlayer.id}
+              onClick={() => navigate(`/players/${similarPlayer.id}`)}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-xl font-black">{similarPlayer.nickname}</h3>
+                  <p className="mt-1 text-sm text-slate-400">
+                    {similarPlayer.country} · {getTeamName(similarPlayer.teamId, teams)}
+                  </p>
+                </div>
+                <Score value={score} />
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <RoleBadge role={similarPlayer.role} />
+                <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-slate-300">
+                  Impact {getPlayerImpact(similarPlayer)}
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-2">
+                {reasons.map((reason) => (
+                  <span
+                    key={reason}
+                    className="rounded-2xl bg-white/[0.04] px-3 py-2 text-sm text-slate-300"
+                  >
+                    {reason}
+                  </span>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div>
+      </Panel>
     </section>
   );
+}
+
+
+type SimilarPlayerResult = {
+  player: CS2Player;
+  score: number;
+  reasons: string[];
+};
+
+function getSimilarPlayers(player: CS2Player, limit = 4): SimilarPlayerResult[] {
+  return players
+    .filter((candidate) => candidate.id !== player.id)
+    .map((candidate) => ({
+      player: candidate,
+      score: getPlayerSimilarityScore(player, candidate),
+      reasons: getSimilarityReasons(player, candidate),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
+
+function getPlayerSimilarityScore(base: CS2Player, candidate: CS2Player) {
+  const roleScore = base.role === candidate.role ? 100 : getRoleFamily(base.role) === getRoleFamily(candidate.role) ? 74 : 42;
+  const impactScore = closeness(getPlayerImpact(base), getPlayerImpact(candidate), 24);
+  const ratingScore = closeness(base.stats.rating * 100, candidate.stats.rating * 100, 18);
+  const clutchScore = closeness(base.stats.clutch, candidate.stats.clutch, 28);
+  const openingScore = closeness(base.stats.opening, candidate.stats.opening, 32);
+  const weaponScore = closeness(getWeaponProfileScore(base), getWeaponProfileScore(candidate), 48);
+  const consistencyScore = closeness(base.stats.consistency, candidate.stats.consistency, 28);
+  const priceScore = closeness(base.price, candidate.price, 6);
+
+  return Math.round(
+    roleScore * 0.22 +
+      impactScore * 0.18 +
+      ratingScore * 0.12 +
+      clutchScore * 0.11 +
+      openingScore * 0.11 +
+      weaponScore * 0.12 +
+      consistencyScore * 0.08 +
+      priceScore * 0.06,
+  );
+}
+
+function closeness(left: number, right: number, maxDifference: number) {
+  const difference = Math.abs(left - right);
+  return Math.max(0, Math.round(100 - (difference / maxDifference) * 100));
+}
+
+function getWeaponProfileScore(player: CS2Player) {
+  return player.stats.awp * 0.55 + player.stats.rifle * 0.45;
+}
+
+function getRoleFamily(role: PlayerRole) {
+  if (role === "AWPer") return "awp";
+  if (role === "Entry" || role === "Star Rifler") return "aggressive-rifle";
+  if (role === "Lurker" || role === "Flex") return "space";
+  if (role === "Anchor" || role === "Support" || role === "IGL") return "structure";
+  return "other";
+}
+
+function getSimilarityReasons(base: CS2Player, candidate: CS2Player) {
+  const reasons: string[] = [];
+
+  if (base.role === candidate.role) {
+    reasons.push(`Same role: ${candidate.role}`);
+  } else if (getRoleFamily(base.role) === getRoleFamily(candidate.role)) {
+    reasons.push("Similar role family");
+  }
+
+  if (Math.abs(getPlayerImpact(base) - getPlayerImpact(candidate)) <= 8) {
+    reasons.push("Close impact level");
+  }
+
+  if (Math.abs(base.stats.opening - candidate.stats.opening) <= 10) {
+    reasons.push("Similar opening pressure");
+  }
+
+  if (Math.abs(base.stats.clutch - candidate.stats.clutch) <= 10) {
+    reasons.push("Comparable clutch value");
+  }
+
+  if (Math.abs(getWeaponProfileScore(base) - getWeaponProfileScore(candidate)) <= 12) {
+    reasons.push("Similar weapon profile");
+  }
+
+  if (reasons.length < 3 && Math.abs(base.price - candidate.price) <= 2) {
+    reasons.push("Similar roster price");
+  }
+
+  if (reasons.length < 3) {
+    reasons.push("Comparable statistical shape");
+  }
+
+  return reasons.slice(0, 3);
 }
 
 function getPlayerSummary(player: CS2Player) {
