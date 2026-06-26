@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -13,6 +13,12 @@ import type { CS2Player, PlayerRole } from "./types";
 import { getPlayerImpact, getRosterScore, getRosterWarnings, getTeamName } from "./lib";
 import { roleConfigs, type RoleConfig } from "./config/roles";
 import { maps, type CS2MapProfile } from "./config/maps";
+import { Panel } from "./components/Panel";
+import { StatCard } from "./components/StatCard";
+import { RoleBadge } from "./components/RoleBadge";
+import { Score } from "./components/Score";
+import { Metric } from "./components/Metric";
+import { Warning } from "./components/Warning";
 
 type View =
   | "home"
@@ -4140,97 +4146,11 @@ function PageTitle({
   );
 }
 
-function Panel({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-      <h3 className="mb-4 text-xl font-black">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-
 function MiniMetric({ title, value }: { title: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
       <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-1 text-2xl font-black text-white">{value}</p>
-    </div>
-  );
-}
-
-function StatCard({
-  title,
-  value,
-  subtitle,
-  danger = false,
-}: {
-  title: string;
-  value: string;
-  subtitle: string;
-  danger?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-3xl border p-5 ${
-        danger
-          ? "border-red-400/30 bg-red-500/10"
-          : "border-white/10 bg-white/[0.04]"
-      }`}
-    >
-      <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
-      <div className={`mt-2 text-3xl font-black ${danger ? "text-red-300" : "text-white"}`}>
-        {value}
-      </div>
-      <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
-    </div>
-  );
-}
-
-function RoleBadge({ role }: { role: PlayerRole }) {
-  return (
-    <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-200">
-      {role}
-    </span>
-  );
-}
-
-function Score({ value }: { value: number }) {
-  return (
-    <span className="inline-flex h-11 min-w-11 items-center justify-center rounded-2xl bg-cyan-300 px-3 text-sm font-black text-slate-950">
-      {value}
-    </span>
-  );
-}
-
-function Metric({ label, value }: { label: string; value: number }) {
-  const safeValue = Math.max(0, Math.min(100, value));
-
-  return (
-    <div>
-      <div className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-slate-400">{label}</span>
-        <span className="font-bold text-white">{value}</span>
-      </div>
-      <div className="h-2 overflow-hidden rounded-full bg-white/10">
-        <div className="h-full rounded-full bg-cyan-300" style={{ width: `${safeValue}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function Warning({ text }: { text: string }) {
-  return (
-    <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-sm text-amber-100">
-      {text}
     </div>
   );
 }
