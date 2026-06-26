@@ -26,6 +26,7 @@ import { SavedRostersPage } from "./pages/SavedRostersPage";
 import { TeamComparePage } from "./pages/TeamComparePage";
 import { ComparePage } from "./pages/ComparePage";
 import { RosterBuilderPage } from "./pages/RosterBuilderPage";
+import { RolesPage } from "./pages/RolesPage";
 
 const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/", label: "Overview", end: true },
@@ -59,7 +60,7 @@ function App() {
             <Route path="/team-compare" element={<TeamComparePage />} />
             <Route path="/roster-builder" element={<RosterBuilderPage />} />
             <Route path="/saved-rosters" element={<SavedRostersPage />} />
-            <Route path="/roles" element={<RolesRoute />} />
+            <Route path="/roles" element={<RolesPage />} />
             <Route path="/roles/:roleId" element={<RoleRoute />} />
             <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
             <Route path="/traits" element={<TraitsPage />} />
@@ -158,12 +159,6 @@ function MapRoute() {
   }
 
   return <MapDetailView map={map} onBack={() => navigate("/maps")} />;
-}
-
-
-function RolesRoute() {
-  const navigate = useNavigate();
-  return <RolesView onRoleClick={(roleId) => navigate(`/roles/${roleId}`)} />;
 }
 
 function RoleRoute() {
@@ -604,77 +599,6 @@ function getMapRead(map: CS2MapProfile) {
   const roleText = map.bestRoles.join(", ");
 
   return `${map.name} — ${map.sideProfile.toLowerCase()} map. Главные роли: ${roleText}. AWP value ${map.awpValue}/100, entry value ${map.entryValue}/100, anchor pressure ${map.anchorPressure}/100. Сейчас это MVP-оценка, позже её можно связать с реальными map stats.`;
-}
-
-function RolesView({
-  onRoleClick,
-}: {
-  onRoleClick: (roleId: string) => void;
-}) {
-  return (
-    <section className="grid gap-6">
-      <PageTitle
-        title="Roles"
-        description="Ролевые страницы связывают игроков, карты и roster builder: кто лучший в роли, какие карты подходят и как использовать роль в составе."
-      />
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {roleConfigs.map((config) => {
-          const rolePlayers = getRolePlayers(config.role);
-          const bestPlayers = getBestPlayersForRole(config.role, 3);
-          const average = getAverageRoleProfile(config.role);
-          const bestMap = getBestMapsForRole(config.role, 1)[0];
-
-          return (
-            <button
-              key={config.id}
-              onClick={() => onRoleClick(config.id)}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-2xl font-black">{config.title}</h3>
-                  <p className="mt-2 text-sm text-slate-400">{config.identity}</p>
-                </div>
-                <Score value={average.roleFit} />
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                <MiniMetric title="Players" value={rolePlayers.length} />
-                <Metric label="Avg Impact" value={average.impact} />
-                <Metric label="Avg Role Fit" value={average.roleFit} />
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Top players
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {bestPlayers.map((player) => (
-                    <span
-                      key={player.id}
-                      className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300"
-                    >
-                      {player.nickname}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Best map fit
-                </p>
-                <span className="mt-2 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-200">
-                  {bestMap?.map.name ?? "No map"}
-                </span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
 }
 
 function RoleDetailView({
@@ -1713,30 +1637,6 @@ function getRoleRead(player: CS2Player) {
     player.stats.awp > player.stats.rifle ? "AWP" : "rifle";
 
   return `Основной профиль: ${player.role}. Сильнейшая сторона по данным MVP: ${bestWeaponProfile}. Clutch ${player.stats.clutch}/100, consistency ${player.stats.consistency}/100, opening pressure ${player.stats.opening}/100.`;
-}
-
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <div>
-      <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
-      <p className="mt-3 max-w-3xl text-slate-400">{description}</p>
-    </div>
-  );
-}
-
-function MiniMetric({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
-      <p className="mt-1 text-2xl font-black text-white">{value}</p>
-    </div>
-  );
 }
 
 export default App;
