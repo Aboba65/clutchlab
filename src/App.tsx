@@ -20,6 +20,8 @@ type View =
   | "teamCompare"
   | "builder"
   | "savedRosters"
+  | "roles"
+  | "role"
   | "traits"
   | "maps"
   | "player"
@@ -35,6 +37,7 @@ const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/team-compare", label: "Team Compare" },
   { path: "/roster-builder", label: "Roster Builder" },
   { path: "/saved-rosters", label: "Saved Rosters" },
+  { path: "/roles", label: "Roles" },
   { path: "/traits", label: "Traits" },
 ];
 
@@ -48,6 +51,117 @@ const roles: Array<"All" | PlayerRole> = [
   "Support",
   "IGL",
   "Flex",
+];
+
+
+type RoleConfig = {
+  id: string;
+  role: PlayerRole;
+  title: string;
+  identity: string;
+  description: string;
+  needs: string[];
+  bestUse: string[];
+  rosterAdvice: string;
+};
+
+const roleConfigs: RoleConfig[] = [
+  {
+    id: "awper",
+    role: "AWPer",
+    title: "AWPer",
+    identity: "angle control, opening picks, late-round stability",
+    description:
+      "The AWPer controls long sightlines, punishes dry peeks and changes how opponents path around the map. In roster construction, this is usually a premium slot that needs structure and trading support around it.",
+    needs: ["Strong angle discipline", "Reliable first contact", "Late-round composure", "Space from riflers"],
+    bestUse: ["Give them clear protocols", "Pair with a high-pressure rifler", "Avoid overpaying for a second pure AWP"],
+    rosterAdvice:
+      "Build around one primary AWPer, then spend the remaining budget on entry pressure, structure and at least one stable anchor.",
+  },
+  {
+    id: "entry",
+    role: "Entry",
+    title: "Entry",
+    identity: "space creation, first contact, T-side pressure",
+    description:
+      "Entry players create space by taking the first fight and forcing rotations. Their value is not only K/D: a good entry makes the next duel easier for the whole pack.",
+    needs: ["Trading support", "Utility behind them", "Confidence in first contact", "A structured caller"],
+    bestUse: ["Pair with star riflers", "Do not judge only by deaths", "Use them on high-entry maps"],
+    rosterAdvice:
+      "A strong roster usually needs at least one real entry profile. Pair entry pressure with a trader and a structured IGL.",
+  },
+  {
+    id: "star-rifler",
+    role: "Star Rifler",
+    title: "Star Rifler",
+    identity: "rifle carry, multi-kill threat, damage engine",
+    description:
+      "Star riflers are the main rifle damage engine. They must convert space into kills, win hard duels and stay valuable across both sides.",
+    needs: ["Space from entries", "Good trade spacing", "Freedom in mid-rounds", "Utility support"],
+    bestUse: ["Use as a core damage piece", "Pair with a lower-cost support", "Give them maps with rifle pressure"],
+    rosterAdvice:
+      "A star rifler is worth paying for if the roster still has enough budget for AWP, IGL and anchor stability.",
+  },
+  {
+    id: "lurker",
+    role: "Lurker",
+    title: "Lurker",
+    identity: "timings, map pressure, late-round punishment",
+    description:
+      "Lurkers punish rotations, preserve pressure away from the pack and create late-round options. Their best rounds often start before the final duel happens.",
+    needs: ["Patience", "Map awareness", "Late-round clutch value", "Clear team spacing"],
+    bestUse: ["Use on rotation-heavy maps", "Pair with active pack players", "Avoid too many passive profiles together"],
+    rosterAdvice:
+      "A lurker fits best when the team already has entry pressure and needs map control, timings and late-round value.",
+  },
+  {
+    id: "anchor",
+    role: "Anchor",
+    title: "Anchor",
+    identity: "site defense, CT stability, low-mistake play",
+    description:
+      "Anchors hold difficult sites, absorb pressure and reduce chaos on CT side. The role is not always flashy, but it determines whether the team collapses under executes.",
+    needs: ["Utility discipline", "Survival under pressure", "Good positioning", "Reliable communication"],
+    bestUse: ["Prioritize on CT-sided maps", "Pair with aggressive rotators", "Do not overload roster with greedy stars"],
+    rosterAdvice:
+      "A stable anchor is a good budget/value slot when the rest of the roster already has firepower and opening pressure.",
+  },
+  {
+    id: "support",
+    role: "Support",
+    title: "Support",
+    identity: "utility, trading setup, star enablement",
+    description:
+      "Support players make stars easier to use. They flash entries, stabilize executes, trade correctly and keep the team functional when raw firepower is not enough.",
+    needs: ["Utility knowledge", "Team-first decisions", "Trading discipline", "High KAST value"],
+    bestUse: ["Pair with premium stars", "Use to fix greedy rosters", "Value KAST and consistency over raw rating"],
+    rosterAdvice:
+      "Support is a strong balancing role. Add it when the roster has enough star power but lacks structure and utility discipline.",
+  },
+  {
+    id: "igl",
+    role: "IGL",
+    title: "IGL",
+    identity: "calling, structure, tempo control",
+    description:
+      "The IGL sets the pace, controls mid-round decisions and gives the roster an actual operating system. Rating matters, but structure is the core value.",
+    needs: ["Mid-round clarity", "Role management", "Map pool understanding", "Enough firepower around them"],
+    bestUse: ["Pair with stars", "Do not overvalue raw stats", "Use to raise structure score"],
+    rosterAdvice:
+      "Most roster-builder lineups need one IGL. If you skip the role, the team may look strong on firepower but weak on structure.",
+  },
+  {
+    id: "flex",
+    role: "Flex",
+    title: "Flex",
+    identity: "adaptability, secondary roles, roster glue",
+    description:
+      "Flex players patch holes. They can cover multiple roles, adjust to maps and give the roster more room to spend elsewhere.",
+    needs: ["Adaptability", "Good baseline mechanics", "Role discipline", "Map-to-map flexibility"],
+    bestUse: ["Use to complete role balance", "Pair with specialists", "Value consistency and hybrid weapon profile"],
+    rosterAdvice:
+      "Flex is best as the final roster piece when you already know what the team lacks: rifle output, secondary AWP, CT stability or clutch value.",
+  },
 ];
 
 type CS2MapProfile = {
@@ -254,6 +368,8 @@ function App() {
             <Route path="/team-compare" element={<TeamCompareView />} />
             <Route path="/roster-builder" element={<RosterBuilderView />} />
             <Route path="/saved-rosters" element={<SavedRostersView />} />
+            <Route path="/roles" element={<RolesRoute />} />
+            <Route path="/roles/:roleId" element={<RoleRoute />} />
             <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
             <Route path="/traits" element={<TraitsView />} />
             <Route path="*" element={<NotFoundView />} />
@@ -386,6 +502,29 @@ function MapRoute() {
   return <MapDetailView map={map} onBack={() => navigate("/maps")} />;
 }
 
+
+function RolesRoute() {
+  const navigate = useNavigate();
+  return <RolesView onRoleClick={(roleId) => navigate(`/roles/${roleId}`)} />;
+}
+
+function RoleRoute() {
+  const navigate = useNavigate();
+  const { roleId } = useParams();
+  const config = roleConfigs.find((item) => item.id === roleId);
+
+  if (!config) {
+    return (
+      <NotFoundView
+        title="Role not found"
+        description="Такой роли нет в текущей модели ClutchLab."
+      />
+    );
+  }
+
+  return <RoleDetailView config={config} onBack={() => navigate("/roles")} />;
+}
+
 function NotFoundView({
   title = "Page not found",
   description = "Такой страницы нет. Вернись на главную или выбери раздел в навигации.",
@@ -422,6 +561,8 @@ function getPathForView(view: View) {
     teamCompare: "/team-compare",
     builder: "/roster-builder",
     savedRosters: "/saved-rosters",
+    roles: "/roles",
+    role: "/roles",
     traits: "/traits",
     player: "/players",
     team: "/teams",
@@ -2718,6 +2859,372 @@ function RosterStatusBadge({
     </span>
   );
 }
+
+function RolesView({
+  onRoleClick,
+}: {
+  onRoleClick: (roleId: string) => void;
+}) {
+  return (
+    <section className="grid gap-6">
+      <PageTitle
+        title="Roles"
+        description="Ролевые страницы связывают игроков, карты и roster builder: кто лучший в роли, какие карты подходят и как использовать роль в составе."
+      />
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {roleConfigs.map((config) => {
+          const rolePlayers = getRolePlayers(config.role);
+          const bestPlayers = getBestPlayersForRole(config.role, 3);
+          const average = getAverageRoleProfile(config.role);
+          const bestMap = getBestMapsForRole(config.role, 1)[0];
+
+          return (
+            <button
+              key={config.id}
+              onClick={() => onRoleClick(config.id)}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-2xl font-black">{config.title}</h3>
+                  <p className="mt-2 text-sm text-slate-400">{config.identity}</p>
+                </div>
+                <Score value={average.roleFit} />
+              </div>
+
+              <div className="mt-5 grid gap-3">
+                <MiniMetric title="Players" value={rolePlayers.length} />
+                <Metric label="Avg Impact" value={average.impact} />
+                <Metric label="Avg Role Fit" value={average.roleFit} />
+              </div>
+
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Top players
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {bestPlayers.map((player) => (
+                    <span
+                      key={player.id}
+                      className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300"
+                    >
+                      {player.nickname}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Best map fit
+                </p>
+                <span className="mt-2 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-200">
+                  {bestMap?.map.name ?? "No map"}
+                </span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function RoleDetailView({
+  config,
+  onBack,
+}: {
+  config: RoleConfig;
+  onBack: () => void;
+}) {
+  const navigate = useNavigate();
+  const rolePlayers = getRolePlayers(config.role);
+  const topPlayers = getBestPlayersForRole(config.role, 8);
+  const average = getAverageRoleProfile(config.role);
+  const bestMaps = getBestMapsForRole(config.role, 5);
+  const similarRoles = getSimilarRoles(config.role);
+
+  return (
+    <section className="grid gap-6">
+      <button
+        onClick={onBack}
+        className="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/10 hover:text-white"
+      >
+        ← Back to roles
+      </button>
+
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-400/15 via-white/[0.04] to-purple-500/10 p-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+              Role Profile
+            </p>
+
+            <h2 className="mt-3 text-5xl font-black tracking-tight md:text-7xl">
+              {config.title}
+            </h2>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <RoleBadge role={config.role} />
+              <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-slate-300">
+                {rolePlayers.length} players
+              </span>
+              <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-slate-300">
+                {config.identity}
+              </span>
+            </div>
+
+            <p className="mt-5 max-w-3xl text-slate-300">{config.description}</p>
+          </div>
+
+          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/10 p-5 text-center">
+            <p className="text-sm font-bold uppercase tracking-wider text-cyan-200">
+              Avg Role Fit
+            </p>
+            <div className="mt-2 text-6xl font-black text-cyan-200">
+              {average.roleFit}
+            </div>
+            <p className="mt-2 text-sm text-slate-400">Current MVP role pool</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-5">
+        <StatCard title="Players" value={rolePlayers.length.toString()} subtitle="in database" />
+        <StatCard title="Impact" value={average.impact.toString()} subtitle="avg index" />
+        <StatCard title="Opening" value={average.opening.toString()} subtitle="pressure" />
+        <StatCard title="Clutch" value={average.clutch.toString()} subtitle="late round" />
+        <StatCard title="Price" value={`$${average.price}`} subtitle="avg budget" />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
+        <Panel title={`Top ${config.title}s`}>
+          <div className="grid gap-3">
+            {topPlayers.length > 0 ? (
+              topPlayers.map((player, index) => (
+                <button
+                  key={player.id}
+                  onClick={() => navigate(`/players/${player.id}`)}
+                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 font-black">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <div className="font-black">{player.nickname}</div>
+                      <div className="mt-1 text-sm text-slate-400">
+                        {player.country} · {getTeamName(player.teamId, teams)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="hidden text-sm font-semibold text-slate-400 md:inline">
+                      Role Fit {getRoleFitScore(player)}
+                    </span>
+                    <Score value={getPlayerImpact(player)} />
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-white/10 p-6 text-center text-slate-500">
+                No players for this role yet.
+              </div>
+            )}
+          </div>
+        </Panel>
+
+        <Panel title="Role model">
+          <div className="grid gap-4">
+            <div className="rounded-2xl bg-white/[0.04] p-4">
+              <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+                What this role needs
+              </p>
+              <div className="mt-3 grid gap-2">
+                {config.needs.map((item) => (
+                  <span key={item} className="rounded-xl bg-black/20 px-3 py-2 text-sm text-slate-200">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-white/[0.04] p-4">
+              <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+                Roster builder advice
+              </p>
+              <p className="mt-2 text-sm text-slate-300">{config.rosterAdvice}</p>
+            </div>
+          </div>
+        </Panel>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Panel title="Average profile">
+          <div className="grid gap-4">
+            <Metric label="Role Fit" value={average.roleFit} />
+            <Metric label="Impact" value={average.impact} />
+            <Metric label="Opening" value={average.opening} />
+            <Metric label="Clutch" value={average.clutch} />
+            <Metric label="AWP Power" value={average.awp} />
+            <Metric label="Rifle Power" value={average.rifle} />
+            <Metric label="Consistency" value={average.consistency} />
+          </div>
+        </Panel>
+
+        <Panel title="Best map fits">
+          <div className="grid gap-3">
+            {bestMaps.map(({ map, score, reason }) => (
+              <button
+                key={map.id}
+                onClick={() => navigate(`/maps/${map.id}`)}
+                className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-black">{map.name}</div>
+                    <div className="mt-1 text-sm text-slate-400">{reason}</div>
+                  </div>
+                  <Score value={score} />
+                </div>
+              </button>
+            ))}
+          </div>
+        </Panel>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Panel title="Best use cases">
+          <div className="grid gap-2">
+            {config.bestUse.map((item) => (
+              <div key={item} className="rounded-2xl bg-white/[0.04] p-4 text-sm text-slate-300">
+                {item}
+              </div>
+            ))}
+          </div>
+        </Panel>
+
+        <Panel title="Similar roles">
+          <div className="grid gap-3">
+            {similarRoles.map((role) => (
+              <button
+                key={role.id}
+                onClick={() => navigate(`/roles/${role.id}`)}
+                className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-purple-300/40 hover:bg-white/[0.07]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-black">{role.title}</div>
+                    <div className="mt-1 text-sm text-slate-400">{role.identity}</div>
+                  </div>
+                  <RoleBadge role={role.role} />
+                </div>
+              </button>
+            ))}
+          </div>
+        </Panel>
+      </div>
+    </section>
+  );
+}
+
+function getRolePlayers(role: PlayerRole) {
+  return players.filter((player) => player.role === role);
+}
+
+function getBestPlayersForRole(role: PlayerRole, limit = 5) {
+  return getRolePlayers(role)
+    .sort((a, b) => {
+      const roleFitDifference = getRoleFitScore(b) - getRoleFitScore(a);
+      if (roleFitDifference !== 0) return roleFitDifference;
+      return getPlayerImpact(b) - getPlayerImpact(a);
+    })
+    .slice(0, limit);
+}
+
+function getAverageRoleProfile(role: PlayerRole) {
+  const rolePlayers = getRolePlayers(role);
+
+  return {
+    roleFit: average(rolePlayers.map((player) => getRoleFitScore(player))),
+    impact: average(rolePlayers.map((player) => getPlayerImpact(player))),
+    rating: average(rolePlayers.map((player) => ratingToScore(player.stats.rating))),
+    opening: average(rolePlayers.map((player) => player.stats.opening)),
+    clutch: average(rolePlayers.map((player) => player.stats.clutch)),
+    awp: average(rolePlayers.map((player) => player.stats.awp)),
+    rifle: average(rolePlayers.map((player) => player.stats.rifle)),
+    consistency: average(rolePlayers.map((player) => player.stats.consistency)),
+    price: average(rolePlayers.map((player) => player.price)),
+  };
+}
+
+function average(values: number[]) {
+  if (values.length === 0) return 0;
+  return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+function getBestMapsForRole(role: PlayerRole, limit = 5) {
+  return maps
+    .map((map) => ({
+      map,
+      score: getRoleMapScore(role, map),
+      reason: getRoleMapReason(role, map),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
+
+function getRoleMapScore(role: PlayerRole, map: CS2MapProfile) {
+  const directRoleBonus = map.bestRoles.includes(role) ? 18 : 0;
+  const familyBonus = map.bestRoles.some((item) => getRoleFamily(item) === getRoleFamily(role)) ? 8 : 0;
+
+  if (role === "AWPer") {
+    return Math.min(100, Math.round(map.awpValue * 0.68 + map.ctSideStrength * 0.18 + directRoleBonus + familyBonus));
+  }
+
+  if (role === "Entry" || role === "Star Rifler") {
+    return Math.min(100, Math.round(map.entryValue * 0.55 + map.tSideDifficulty * 0.18 + map.ctSideStrength * 0.12 + directRoleBonus + familyBonus));
+  }
+
+  if (role === "Anchor" || role === "Support" || role === "IGL") {
+    return Math.min(100, Math.round(map.anchorPressure * 0.46 + map.ctSideStrength * 0.24 + map.tSideDifficulty * 0.12 + directRoleBonus + familyBonus));
+  }
+
+  return Math.min(100, Math.round(map.entryValue * 0.26 + map.anchorPressure * 0.24 + map.ctSideStrength * 0.18 + map.awpValue * 0.12 + directRoleBonus + familyBonus));
+}
+
+function getRoleMapReason(role: PlayerRole, map: CS2MapProfile) {
+  if (map.bestRoles.includes(role)) {
+    return `${role} is listed as a primary role fit on ${map.name}.`;
+  }
+
+  if (role === "AWPer" && map.awpValue >= 80) {
+    return "High AWP value map with long-angle control.";
+  }
+
+  if ((role === "Entry" || role === "Star Rifler") && map.entryValue >= 80) {
+    return "Strong map for opening duels and rifle pressure.";
+  }
+
+  if ((role === "Anchor" || role === "Support" || role === "IGL") && map.anchorPressure >= 82) {
+    return "High structure and site-defense value.";
+  }
+
+  return map.identity;
+}
+
+function getSimilarRoles(role: PlayerRole) {
+  return roleConfigs
+    .filter((config) => config.role !== role)
+    .map((config) => ({
+      ...config,
+      score: getRoleFamily(config.role) === getRoleFamily(role) ? 100 : 65,
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+}
+
 function TraitsView() {
   const topImpact = [...players].sort((a, b) => getPlayerImpact(b) - getPlayerImpact(a)).slice(0, 5);
   const topClutch = [...players].sort((a, b) => b.stats.clutch - a.stats.clutch).slice(0, 5);
