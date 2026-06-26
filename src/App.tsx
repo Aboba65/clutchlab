@@ -20,9 +20,9 @@ import { Score } from "./components/Score";
 import { Metric } from "./components/Metric";
 import { Warning } from "./components/Warning";
 import { PlayerProfile } from "./components/PlayerProfile";
-import { TeamCard } from "./components/TeamCard";
 import { HomePage } from "./pages/HomePage";
 import { PlayersPage } from "./pages/PlayersPage";
+import { TeamsPage } from "./pages/TeamsPage";
 
 const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/", label: "Overview", end: true },
@@ -117,7 +117,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/players" element={<PlayersPage />} />
             <Route path="/players/:playerId" element={<PlayerRoute />} />
-            <Route path="/teams" element={<TeamsRoute />} />
+            <Route path="/teams" element={<TeamsPage />} />
             <Route path="/teams/:teamId" element={<TeamRoute />} />
             <Route path="/maps" element={<MapsRoute />} />
             <Route path="/maps/:mapId" element={<MapRoute />} />
@@ -190,12 +190,6 @@ function PlayerRoute() {
   }
 
   return <PlayerDetailView player={player} onBack={() => navigate("/players")} />;
-}
-
-function TeamsRoute() {
-  const navigate = useNavigate();
-
-  return <TeamsView onTeamClick={(teamId) => navigate(`/teams/${teamId}`)} />;
 }
 
 function TeamRoute() {
@@ -283,36 +277,6 @@ function NotFoundView({
       >
         Back to overview
       </NavLink>
-    </section>
-  );
-}
-
-function TeamsView({
-  onTeamClick,
-}: {
-  onTeamClick: (teamId: string) => void;
-}) {
-  return (
-    <section className="grid gap-6">
-      <PageTitle
-        title="Teams"
-        description="Команды пока демо. Позже здесь будут реальные составы, форма, map pool и role balance."
-      />
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {teams.map((team) => {
-          const teamPlayers = players.filter((player) => team.players.includes(player.id));
-
-          return (
-            <TeamCard
-              key={team.id}
-              team={team}
-              teamPlayers={teamPlayers}
-              onClick={() => onTeamClick(team.id)}
-            />
-          );
-        })}
-      </div>
     </section>
   );
 }
