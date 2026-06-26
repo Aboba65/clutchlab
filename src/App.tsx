@@ -19,6 +19,9 @@ import { RoleBadge } from "./components/RoleBadge";
 import { Score } from "./components/Score";
 import { Metric } from "./components/Metric";
 import { Warning } from "./components/Warning";
+import { PlayerCard } from "./components/PlayerCard";
+import { PlayerProfile } from "./components/PlayerProfile";
+import { TeamCard } from "./components/TeamCard";
 
 type View =
   | "home"
@@ -913,62 +916,12 @@ function TeamsView({
           const teamPlayers = players.filter((player) => team.players.includes(player.id));
 
           return (
-            <button
+            <TeamCard
               key={team.id}
+              team={team}
+              teamPlayers={teamPlayers}
               onClick={() => onTeamClick(team.id)}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-2xl font-black">{team.name}</h3>
-                  <p className="mt-1 text-sm text-slate-400">{team.region}</p>
-                </div>
-                <Score value={team.scores.form} />
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                <Metric label="Firepower" value={team.scores.firepower} />
-                <Metric label="Structure" value={team.scores.structure} />
-                <Metric label="Map Pool" value={team.scores.mapPool} />
-                <Metric label="Clutch" value={team.scores.clutch} />
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Players
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {teamPlayers.length > 0 ? (
-                    teamPlayers.map((player) => (
-                      <span
-                        key={player.id}
-                        className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300"
-                      >
-                        {player.nickname}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-slate-500">No demo players</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Best maps
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {team.bestMaps.map((map) => (
-                    <span
-                      key={map}
-                      className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm text-cyan-200"
-                    >
-                      {map}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </button>
+            />
           );
         })}
       </div>
@@ -4024,77 +3977,6 @@ function getRoleRead(player: CS2Player) {
     player.stats.awp > player.stats.rifle ? "AWP" : "rifle";
 
   return `Основной профиль: ${player.role}. Сильнейшая сторона по данным MVP: ${bestWeaponProfile}. Clutch ${player.stats.clutch}/100, consistency ${player.stats.consistency}/100, opening pressure ${player.stats.opening}/100.`;
-}
-
-function PlayerCard({
-  player,
-  onClick,
-}: {
-  player: CS2Player;
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-cyan-300/40 hover:bg-white/[0.07]"
-    >
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="text-xl font-black">{player.nickname}</h3>
-          <p className="mt-1 text-sm text-slate-400">
-            {player.country} · {player.age}
-          </p>
-        </div>
-        <Score value={getPlayerImpact(player)} />
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <RoleBadge role={player.role} />
-        <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-slate-300">
-          ${player.price}
-        </span>
-      </div>
-
-      <div className="mt-4 grid gap-2">
-        <Metric label="Rating" value={Math.round(player.stats.rating * 100)} />
-        <Metric label="ADR" value={Math.round(player.stats.adr)} />
-        <Metric label="Clutch" value={player.stats.clutch} />
-      </div>
-    </button>
-  );
-}
-
-function PlayerProfile({ player }: { player: CS2Player }) {
-  return (
-    <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-3xl font-black">{player.nickname}</h3>
-          <p className="mt-1 text-slate-400">
-            {player.country} · {getTeamName(player.teamId, teams)}
-          </p>
-        </div>
-        <Score value={getPlayerImpact(player)} />
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <RoleBadge role={player.role} />
-        {player.traits.map((trait) => (
-          <span key={trait} className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300">
-            {trait}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-5 grid gap-3">
-        <Metric label="Impact" value={getPlayerImpact(player)} />
-        <Metric label="Opening" value={player.stats.opening} />
-        <Metric label="Clutch" value={player.stats.clutch} />
-        <Metric label="AWP" value={player.stats.awp} />
-        <Metric label="Rifle" value={player.stats.rifle} />
-      </div>
-    </article>
-  );
 }
 
 function TraitList({
