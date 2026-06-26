@@ -24,6 +24,7 @@ import { HomePage } from "./pages/HomePage";
 import { PlayersPage } from "./pages/PlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
 import { MapsPage } from "./pages/MapsPage";
+import { TraitsPage } from "./pages/TraitsPage";
 
 const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/", label: "Overview", end: true },
@@ -129,7 +130,7 @@ function App() {
             <Route path="/roles" element={<RolesRoute />} />
             <Route path="/roles/:roleId" element={<RoleRoute />} />
             <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
-            <Route path="/traits" element={<TraitsView />} />
+            <Route path="/traits" element={<TraitsPage />} />
             <Route path="*" element={<NotFoundView />} />
           </Routes>
         </div>
@@ -2474,29 +2475,6 @@ function getSimilarRoles(role: PlayerRole) {
     .slice(0, 3);
 }
 
-function TraitsView() {
-  const topImpact = [...players].sort((a, b) => getPlayerImpact(b) - getPlayerImpact(a)).slice(0, 5);
-  const topClutch = [...players].sort((a, b) => b.stats.clutch - a.stats.clutch).slice(0, 5);
-  const topAWP = [...players].sort((a, b) => b.stats.awp - a.stats.awp).slice(0, 5);
-  const topEntry = [...players].sort((a, b) => b.stats.opening - a.stats.opening).slice(0, 5);
-
-  return (
-    <section className="grid gap-6">
-      <PageTitle
-        title="Traits"
-        description="Рейтинги по типам игроков: impact, clutch, AWP и entry pressure."
-      />
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <TraitList title="Highest Impact" players={topImpact} value={(p) => getPlayerImpact(p)} />
-        <TraitList title="Best Clutch" players={topClutch} value={(p) => p.stats.clutch} />
-        <TraitList title="Best AWPers" players={topAWP} value={(p) => p.stats.awp} />
-        <TraitList title="Best Entry Pressure" players={topEntry} value={(p) => p.stats.opening} />
-      </div>
-    </section>
-  );
-}
-
 function PlayerDetailView({
   player,
   onBack,
@@ -3239,40 +3217,6 @@ function getRoleRead(player: CS2Player) {
     player.stats.awp > player.stats.rifle ? "AWP" : "rifle";
 
   return `Основной профиль: ${player.role}. Сильнейшая сторона по данным MVP: ${bestWeaponProfile}. Clutch ${player.stats.clutch}/100, consistency ${player.stats.consistency}/100, opening pressure ${player.stats.opening}/100.`;
-}
-
-function TraitList({
-  title,
-  players,
-  value,
-}: {
-  title: string;
-  players: CS2Player[];
-  value: (player: CS2Player) => number;
-}) {
-  return (
-    <Panel title={title}>
-      <div className="grid gap-3">
-        {players.map((player, index) => (
-          <div
-            key={player.id}
-            className="flex items-center justify-between rounded-2xl bg-white/[0.04] p-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 font-black">
-                {index + 1}
-              </div>
-              <div>
-                <div className="font-black">{player.nickname}</div>
-                <div className="text-sm text-slate-400">{player.role}</div>
-              </div>
-            </div>
-            <Score value={Math.round(value(player))} />
-          </div>
-        ))}
-      </div>
-    </Panel>
-  );
 }
 
 function PageTitle({
