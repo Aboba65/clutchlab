@@ -6,7 +6,8 @@
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 
-CS2 analytics MVP for exploring players, teams, maps, roles, roster construction and matchup comparison.
+CS2 analytics MVP for exploring players, teams, maps, roles, roster construction
+and matchup comparison.
 
 Live site: https://clutchlab-olive.vercel.app/  
 Repository: https://github.com/Aboba65/clutchlab
@@ -15,7 +16,10 @@ Repository: https://github.com/Aboba65/clutchlab
 
 ClutchLab is currently an MVP with a static local data layer.
 
-The interface is built like a real analytics product, but the current ratings, prices, team scores, map scores and custom indexes are **demo/manual values** used for product testing. They should not be treated as live, official or current esports statistics.
+The interface is built like a real analytics product, but the current ratings,
+prices, team scores, map scores and custom indexes are **demo/manual values**
+used for product testing. They should not be treated as live, official or current
+esports statistics.
 
 ## Features
 
@@ -43,6 +47,9 @@ The interface is built like a real analytics product, but the current ratings, p
 - Tailwind CSS
 - React Router
 - Browser `localStorage`
+- ESLint
+- Prettier
+- GitHub Actions CI
 - Vercel deployment
 
 ## Routes
@@ -127,6 +134,24 @@ Validate local data:
 npm run validate:data
 ```
 
+Lint source files:
+
+```bash
+npm run lint
+```
+
+Format files:
+
+```bash
+npm run format
+```
+
+Check formatting without writing changes:
+
+```bash
+npm run format:check
+```
+
 Run full release check:
 
 ```bash
@@ -139,6 +164,34 @@ Preview production build locally:
 npm run preview
 ```
 
+## Quality workflow
+
+Before committing or deploying, run:
+
+```bash
+npm run release:check
+```
+
+The release check runs:
+
+```bash
+npm run validate:data
+npm run lint
+npm run format:check
+npm run build
+```
+
+Quality config files:
+
+```text
+scripts/validate-data.mjs
+scripts/release-check.mjs
+eslint.config.js
+.prettierrc
+.prettierignore
+.github/workflows/ci.yml
+```
+
 ## CI
 
 GitHub Actions runs on pushes and pull requests to `main` or `master`.
@@ -148,6 +201,8 @@ The CI workflow runs:
 ```bash
 npm ci
 npm run validate:data
+npm run lint
+npm run format:check
 npm run build
 ```
 
@@ -185,7 +240,9 @@ Vercel then builds the latest pushed version.
 
 ### Player Impact
 
-A custom MVP index for comparing individual players. It blends demo values such as rating, ADR, K/D, KAST, opening, clutch, AWP/rifle value and consistency into a 0–100 style read.
+A custom MVP index for comparing individual players. It blends demo values such
+as rating, ADR, K/D, KAST, opening, clutch, AWP/rifle value and consistency into
+a 0–100 style read.
 
 ### Team Score
 
@@ -193,11 +250,13 @@ A weighted team profile using firepower, structure, map pool, clutch and form.
 
 ### Map Fit
 
-A map-specific read based on AWP value, entry value, anchor pressure, side profile and preferred roles.
+A map-specific read based on AWP value, entry value, anchor pressure, side
+profile and preferred roles.
 
 ### Roster Value
 
-A budget-aware read used in Roster Builder and Saved Rosters. It considers player impact, player price, role coverage, roster cost and overall roster balance.
+A budget-aware read used in Roster Builder and Saved Rosters. It considers player
+impact, player price, role coverage, roster cost and overall roster balance.
 
 ## Roadmap
 
@@ -211,4 +270,5 @@ A budget-aware read used in Roster Builder and Saved Rosters. It considers playe
 
 ## Important note
 
-ClutchLab is not currently a live ranking system. It is a product MVP with a clean interface, static local data and clear boundaries around demo/manual scoring.
+ClutchLab is not currently a live ranking system. It is a product MVP with a clean
+interface, static local data and clear boundaries around demo/manual scoring.

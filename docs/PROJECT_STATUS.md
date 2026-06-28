@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.1 MVP quality workflow
+0.1.2 MVP quality workflow
 ```
 
 ## Live site
@@ -24,9 +24,11 @@ https://github.com/Aboba65/clutchlab
 
 ## Summary
 
-ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles, roster construction and matchup comparison.
+ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
+roster construction and matchup comparison.
 
-The product now has a complete first version of the interface and a basic quality workflow:
+The product now has a complete first version of the interface and a stronger
+quality workflow:
 
 - dashboard
 - catalogs
@@ -37,6 +39,8 @@ The product now has a complete first version of the interface and a basic qualit
 - methodology page
 - public project documentation
 - data validation script
+- linting
+- formatting
 - release check script
 - GitHub Actions CI
 
@@ -46,7 +50,8 @@ The product now has a complete first version of the interface and a basic qualit
 demo/manual data
 ```
 
-The current dataset is useful for product testing and UI logic, but it should not be described as live, official or current esports statistics.
+The current dataset is useful for product testing and UI logic, but it should not
+be described as live, official or current esports statistics.
 
 ### What is demo/manual
 
@@ -68,6 +73,8 @@ The current dataset is useful for product testing and UI logic, but it should no
 - Roster builder logic
 - Saved rosters via `localStorage`
 - Data validation script
+- ESLint config
+- Prettier config
 - Release check script
 - GitHub Actions CI
 - SEO files
@@ -136,6 +143,8 @@ The current dataset is useful for product testing and UI logic, but it should no
 [✓] sitemap.xml
 [✓] Vercel SPA rewrite
 [✓] Data validation script
+[✓] ESLint config
+[✓] Prettier config
 [✓] Release check script
 [✓] GitHub Actions CI
 ```
@@ -154,6 +163,8 @@ This runs:
 
 ```bash
 npm run validate:data
+npm run lint
+npm run format:check
 npm run build
 ```
 
@@ -189,6 +200,52 @@ Current validation checks:
 [✓] warnings for non-bidirectional player/team links
 ```
 
+### Linting
+
+Command:
+
+```bash
+npm run lint
+```
+
+Config:
+
+```text
+eslint.config.js
+```
+
+Current lint setup:
+
+```text
+[✓] ESLint flat config
+[✓] TypeScript ESLint recommended rules
+[✓] React Hooks rules
+[✓] React Refresh export rule
+[✓] browser globals for app files
+[✓] node globals for scripts
+```
+
+### Formatting
+
+Format files:
+
+```bash
+npm run format
+```
+
+Check formatting:
+
+```bash
+npm run format:check
+```
+
+Config files:
+
+```text
+.prettierrc
+.prettierignore
+```
+
 ### Release check
 
 Command:
@@ -218,6 +275,8 @@ GitHub runs on push and pull request to `main` or `master`:
 ```bash
 npm ci
 npm run validate:data
+npm run lint
+npm run format:check
 npm run build
 ```
 
@@ -240,6 +299,9 @@ src/lib.ts
 src/types.ts
 scripts/validate-data.mjs
 scripts/release-check.mjs
+eslint.config.js
+.prettierrc
+.prettierignore
 .github/workflows/ci.yml
 README.md
 CHANGELOG.md
@@ -270,16 +332,14 @@ public/sitemap.xml
 - No user accounts
 - No backend
 - No import/export for rosters yet
-- No advanced testing suite yet
 - No dynamic sitemap for all detail pages yet
 
 ### Quality limitations
 
-- There is no ESLint configuration yet
-- There is no Prettier/format command yet
 - There are no unit tests yet
+- There are no component tests yet
 - Data validation is source-text based, not AST-based
-- CI runs install, validation and build only
+- CI currently runs install, validation, lint, format check and build only
 
 ### SEO limitations
 
@@ -290,17 +350,7 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Add linting and formatting
-
-```text
-[ ] add ESLint
-[ ] add format command
-[ ] add lint command
-[ ] include lint in release:check
-[ ] include lint in GitHub Actions CI
-```
-
-### 2. Real-stat data plan
+### 1. Real-stat data plan
 
 Create a documented workflow for replacing demo values:
 
@@ -312,7 +362,7 @@ Create a documented workflow for replacing demo values:
 [ ] document manual adjustments
 ```
 
-### 3. Roster export/import
+### 2. Roster export/import
 
 Improve Saved Rosters:
 
@@ -323,18 +373,17 @@ Improve Saved Rosters:
 [ ] share roster link later
 ```
 
-### 4. Testing and quality
+### 3. Testing
 
 Add project quality tools:
 
 ```text
 [ ] basic smoke tests
 [ ] component tests for core pages
-[ ] data validation based on AST or generated JSON later
-[ ] CI badge monitoring
+[ ] CI test step
 ```
 
-### 5. More real product polish
+### 4. More real product polish
 
 ```text
 [ ] per-route page titles
@@ -350,6 +399,9 @@ Add project quality tools:
 npm install
 npm run dev
 npm run validate:data
+npm run lint
+npm run format
+npm run format:check
 npm run build
 npm run release:check
 npm run preview

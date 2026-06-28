@@ -2,6 +2,62 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.2 — Linting and formatting workflow
+
+Date: 2026-06-28
+
+### Added
+
+- ESLint flat config: `eslint.config.js`
+- Prettier config: `.prettierrc`
+- Prettier ignore file: `.prettierignore`
+- NPM command: `npm run lint`
+- NPM command: `npm run format`
+- NPM command: `npm run format:check`
+- Lint and format documentation in `README.md`
+- Updated quality workflow documentation in `docs/PROJECT_STATUS.md`
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run validate:data
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs:
+
+```bash
+npm ci
+npm run validate:data
+npm run lint
+npm run format:check
+npm run build
+```
+
+- README now documents linting, formatting and the full local quality workflow.
+- Project status now treats lint and formatting as completed quality tools.
+
+### Quality gates
+
+Current quality gates:
+
+```text
+[✓] Local data validation
+[✓] Local lint
+[✓] Local format check
+[✓] Local production build
+[✓] Local release check
+[✓] GitHub Actions install check
+[✓] GitHub Actions data validation
+[✓] GitHub Actions lint
+[✓] GitHub Actions format check
+[✓] GitHub Actions production build
+```
+
 ## 0.1.1 — Quality workflow and repository polish
 
 Date: 2026-06-28
@@ -38,30 +94,20 @@ npm run build
 ```
 
 - GitHub CI now validates data and builds the project on push / pull request.
-- README deployment flow now recommends running `npm run release:check` before committing.
+- README deployment flow now recommends running `npm run release:check` before
+  committing.
 
 ### Fixed
 
-- Fixed data validation parser so it correctly reads arrays after TypeScript type annotations like:
+- Fixed data validation parser so it correctly reads arrays after TypeScript type
+  annotations like:
 
 ```ts
 export const players: CS2Player[] = [
 ```
 
-- Fixed Windows compatibility issue in `release-check.mjs` by switching to `execSync` with `shell: true`.
-
-### Quality gates
-
-Current quality gates:
-
-```text
-[✓] Local data validation
-[✓] Local production build
-[✓] Local release check
-[✓] GitHub Actions install check
-[✓] GitHub Actions data validation
-[✓] GitHub Actions production build
-```
+- Fixed Windows compatibility issue in `release-check.mjs` by switching to
+  `execSync` with `shell: true`.
 
 ## 0.1.0 — MVP buildout
 
@@ -109,8 +155,10 @@ Date: 2026-06-28
 - Map catalog filters and sorting
 - Roster Builder filters, sorting, role fill, value scoring and map fit
 - Saved Rosters search, sorting, status filtering and load/delete actions
-- Player Compare with presets, searchable pickers, winner badges and analytical read
-- Team Compare with presets, searchable pickers, roster strength, map pool overlap and analytical read
+- Player Compare with presets, searchable pickers, winner badges and analytical
+  read
+- Team Compare with presets, searchable pickers, roster strength, map pool overlap
+  and analytical read
 - Homepage upgraded into a product dashboard
 - Data layer split into separate player and team files
 - Data metadata added through `dataMeta`
@@ -127,28 +175,9 @@ Date: 2026-06-28
 
 Current data is marked as `demo/manual`.
 
-The interface uses recognizable CS2 names for product testing, but ratings, prices, team scores, map scores and custom indexes are not live or official esports statistics.
-
-### Current main routes
-
-```text
-/                         Home dashboard
-/players                  Player catalog
-/players/:playerId        Player profile
-/teams                    Team catalog
-/teams/:teamId            Team profile
-/maps                     Map catalog
-/maps/:mapId              Map detail
-/roles                    Role catalog
-/roles/:roleId            Role detail
-/compare                  Player comparison
-/team-compare             Team comparison
-/roster-builder           Roster Builder
-/saved-rosters            Saved Rosters
-/traits                   Traits
-/about                    About / Methodology
-/builder                  Redirect to /roster-builder
-```
+The interface uses recognizable CS2 names for product testing, but ratings,
+prices, team scores, map scores and custom indexes are not live or official
+esports statistics.
 
 ## Next
 
@@ -160,5 +189,4 @@ Planned next milestones:
 - Improve saved roster import/export
 - Expand player and team database
 - Add dynamic sitemap generation for detail pages
-- Add lightweight testing and linting workflow
-- Add data validation to CI quality gates
+- Add lightweight tests later
