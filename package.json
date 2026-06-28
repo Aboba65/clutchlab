@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "validate:data": "node scripts/validate-data.mjs"
+    "validate:data": "node scripts/validate-data.mjs",
+    "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
