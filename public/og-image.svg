@@ -1,0 +1,17 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050816"/>
+  <circle cx="170" cy="100" r="300" fill="#22D3EE" opacity="0.16"/>
+  <circle cx="1030" cy="130" r="280" fill="#8B5CF6" opacity="0.18"/>
+  <rect x="70" y="70" width="1060" height="490" rx="44" fill="white" fill-opacity="0.045" stroke="white" stroke-opacity="0.12"/>
+  <text x="110" y="160" fill="#67E8F9" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="8">CS2 ANALYTICS</text>
+  <text x="110" y="275" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="86" font-weight="900">ClutchLab</text>
+  <text x="110" y="350" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="500">Players · Teams · Maps · Roles · Rosters</text>
+  <text x="110" y="415" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Roster builder and matchup comparison MVP</text>
+  <rect x="110" y="470" width="235" height="52" rx="26" fill="#67E8F9"/>
+  <text x="138" y="505" fill="#020617" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="900">Build roster</text>
+  <rect x="370" y="470" width="250" height="52" rx="26" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.14"/>
+  <text x="400" y="505" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">Compare teams</text>
+  <rect x="770" y="170" width="260" height="260" rx="38" fill="#0F172A" stroke="white" stroke-opacity="0.12"/>
+  <path d="M830 346V218H894C928 218 951 237 951 267C951 297 928 316 894 316H862V346H830ZM862 288H891C907 288 918 280 918 267C918 254 907 246 891 246H862V288Z" fill="#67E8F9"/>
+  <path d="M827 390H977" stroke="#C084FC" stroke-width="14" stroke-linecap="round"/>
+</svg>

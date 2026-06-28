@@ -1,0 +1,16 @@
+{
+  "name": "ClutchLab",
+  "short_name": "ClutchLab",
+  "description": "CS2 analytics MVP for players, teams, maps, roles, roster building and matchup comparison.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
