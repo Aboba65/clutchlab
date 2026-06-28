@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.3 UX polish
+0.1.4 Mobile navigation polish
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -44,6 +44,8 @@ esports statistics.
 - Traits page
 - About / Methodology page
 - Route-based browser tab titles
+- Compact mobile header
+- Horizontal mobile navigation
 - Data notice shown in the app shell
 - Footer with version, data status and project links
 
@@ -274,11 +276,34 @@ Current UX polish includes:
 
 ```text
 [✓] route-based browser titles
+[✓] compact mobile header
+[✓] horizontal mobile navigation
+[✓] active mobile route visibility
+[✓] keyboard focus ring on navigation links
 [✓] app-wide footer
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
 [✓] GitHub, Changelog, Data and Live site links
+```
+
+### Mobile navigation
+
+On smaller screens, the main navigation uses a horizontal scroll row instead of
+wrapping into a tall block.
+
+```text
+Mobile:
+[✓] tighter page padding
+[✓] smaller header radius and spacing
+[✓] smaller title scale
+[✓] horizontal nav scroll
+[✓] nav links do not wrap into a tall block
+
+Desktop:
+[✓] premium header preserved
+[✓] navigation wraps normally
+[✓] layout remains wide
 ```
 
 ## Methodology overview

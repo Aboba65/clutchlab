@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.3 UX polish
+0.1.4 Mobile navigation polish
 ```
 
 ## Live site
@@ -28,7 +28,7 @@ ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
-workflow and a small UX polish layer:
+workflow and an improved mobile navigation layer:
 
 - dashboard
 - catalogs
@@ -38,6 +38,8 @@ workflow and a small UX polish layer:
 - saved roster management
 - methodology page
 - route-based browser titles
+- compact mobile header
+- horizontal mobile navigation
 - footer with version/data status/project links
 - public project documentation
 - data validation script
@@ -75,6 +77,7 @@ be described as live, official or current esports statistics.
 - Roster builder logic
 - Saved rosters via `localStorage`
 - Route title hook
+- Compact mobile navigation
 - Footer status block
 - Data validation script
 - ESLint config
@@ -125,6 +128,8 @@ be described as live, official or current esports statistics.
 [✓] Roster Builder
 [✓] Saved Rosters manager
 [✓] Route page titles
+[✓] Compact mobile header
+[✓] Horizontal mobile navigation
 [✓] Data notice
 [✓] Footer status block
 [✓] About / Methodology page
@@ -137,6 +142,7 @@ be described as live, official or current esports statistics.
 [✓] AppShell layout
 [✓] Shared UI components
 [✓] Route title hook
+[✓] Mobile navigation polish
 [✓] Footer component
 [✓] Data layer split
 [✓] dataMeta
@@ -310,6 +316,27 @@ Examples:
 /about            ClutchLab — About
 ```
 
+### Mobile navigation
+
+Component:
+
+```text
+src/components/AppShell.tsx
+```
+
+The mobile header and navigation now use:
+
+```text
+[✓] tighter mobile page padding
+[✓] smaller mobile header radius and spacing
+[✓] smaller mobile title scale
+[✓] horizontal mobile nav scroll
+[✓] non-wrapping mobile nav items
+[✓] active nav item highlight
+[✓] keyboard focus ring
+[✓] preserved desktop wrapped navigation
+```
+
 ### Footer
 
 Component:
@@ -322,7 +349,7 @@ The footer shows:
 
 ```text
 [✓] ClutchLab MVP
-[✓] version 0.1.3
+[✓] version 0.1.4
 [✓] data status from dataMeta.status
 [✓] data updated from dataMeta.lastUpdated
 [✓] About link
@@ -415,18 +442,7 @@ Create a documented workflow for replacing demo values:
 [ ] document manual adjustments
 ```
 
-### 2. Mobile navigation polish
-
-Improve navigation on smaller screens:
-
-```text
-[ ] compact mobile header
-[ ] scrollable nav row or menu
-[ ] active route visibility
-[ ] reduced vertical height
-```
-
-### 3. Testing
+### 2. Testing
 
 Add project quality tools:
 
@@ -436,7 +452,7 @@ Add project quality tools:
 [ ] CI test step
 ```
 
-### 4. More real product polish
+### 3. More real product polish
 
 ```text
 [ ] per-route meta descriptions

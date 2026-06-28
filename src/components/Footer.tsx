@@ -24,7 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.1.3" detail="UX polish" />
+          <FooterCard label="Version" value="0.1.4" detail="Mobile navigation polish" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}

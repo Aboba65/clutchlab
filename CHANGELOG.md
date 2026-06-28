@@ -2,6 +2,28 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.4 — Mobile navigation polish
+
+Date: 2026-06-28
+
+### Added
+
+- Compact mobile header spacing
+- Horizontal mobile navigation row
+- Better active navigation visibility
+- Keyboard focus ring for navigation links
+- README mobile navigation section
+- Project status mobile navigation notes
+
+### Improved
+
+- Mobile navigation no longer wraps into a tall multi-line block.
+- Mobile page padding is tighter.
+- Mobile header uses smaller spacing and title scale.
+- Desktop header and wrapped navigation behavior are preserved.
+- Documentation now reflects mobile navigation polish.
+- Footer version display was updated to `0.1.4`.
+
 ## 0.1.3 — UX polish
 
 Date: 2026-06-28
@@ -219,7 +241,6 @@ Planned next milestones:
 - Strengthen real-stat data model
 - Add source metadata per stat group
 - Add manual real-stat update workflow
-- Improve mobile navigation polish
 - Expand player and team database
 - Add dynamic sitemap generation for detail pages
 - Add lightweight tests later
