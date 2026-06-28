@@ -1,78 +1,101 @@
 # ClutchLab
 
-**ClutchLab** is a CS2 analytics MVP inspired by modern sports analytics products.  
-It provides player profiles, team profiles, map pages, player comparison, role-based rankings, and an interactive roster builder.
+CS2 analytics MVP for exploring players, teams, maps, roles, roster construction and matchup comparison.
 
-Live site: https://clutchlab-olive.vercel.app/
+Live site: https://clutchlab-olive.vercel.app/  
+Repository: https://github.com/Aboba65/clutchlab
+
+## Status
+
+ClutchLab is currently an MVP with a static local data layer.
+
+The interface is built like a real analytics product, but the current ratings, prices, team scores, map scores and custom indexes are **demo/manual values** used for product testing. They should not be treated as live, official or current esports statistics.
 
 ## Features
 
-- **Players catalog**
-  - Search by nickname, team, country, and role
-  - Role, team, and country filters
-  - Sorting by impact, rating, ADR, clutch, and price
+- Dashboard homepage
+- Player catalog with filters and sorting
+- Team catalog with filters and sorting
+- Map catalog with filters and sorting
+- Role pages and role detail pages
+- Player profile pages
+- Team profile pages
+- Map detail pages
+- Player comparison page
+- Team comparison page
+- Roster Builder with budget, role checks, value scoring and map fit
+- Saved Rosters manager using `localStorage`
+- Traits page
+- About / Methodology page
+- Data notice shown in the app shell
 
-- **Player profiles**
-  - Player role, team, country, and price
-  - Impact Index
-  - Rating, ADR, K/D, KAST
-  - Role read and performance profile
-
-- **Teams**
-  - Team cards and team profile pages
-  - Firepower, structure, map pool, clutch, and form scores
-  - Roster overview
-  - Best maps
-
-- **Compare 2.0**
-  - Compare two players
-  - Search-based player selection
-  - Category winners
-  - Overall edge
-  - Swap players
-
-- **Roster Builder**
-  - Build a 5-player CS2 roster
-  - Budget system
-  - Role validation
-  - Roster score
-  - Warnings and roster analysis
-
-- **Traits**
-  - Highest Impact
-  - Best Clutch
-  - Best AWPers
-  - Best Entry Pressure
-
-- **Maps**
-  - Map cards
-  - Map profile pages
-  - Best team fits
-  - Best player fits
-  - T-side difficulty, CT strength, AWP value, entry value, and anchor pressure
-
-## Tech Stack
+## Tech stack
 
 - React
 - TypeScript
 - Vite
 - Tailwind CSS
 - React Router
-- Vercel
+- Browser `localStorage`
+- Vercel deployment
 
-## Project Structure
+## Routes
+
+```text
+/                         Home dashboard
+/players                  Player catalog
+/players/:playerId        Player profile
+/teams                    Team catalog
+/teams/:teamId            Team profile
+/maps                     Map catalog
+/maps/:mapId              Map detail
+/roles                    Role catalog
+/roles/:roleId            Role detail
+/compare                  Player comparison
+/team-compare             Team comparison
+/roster-builder           Roster Builder
+/saved-rosters            Saved Rosters
+/traits                   Traits
+/about                    About / Methodology
+/builder                  Redirect to /roster-builder
+```
+
+## Project structure
 
 ```text
 src/
-  App.tsx       # Main application, routes, views, and UI components
-  data.ts      # MVP player and team data
-  lib.ts       # Scoring and helper functions
-  types.ts     # TypeScript types
-  index.css    # Tailwind and global styles
-  main.tsx     # React entry point
+  components/             Shared UI components and app shell
+  config/                 Navigation, role profiles and map profiles
+  data/                   Player data, team data and dataset metadata
+  pages/                  Route-level pages
+  App.tsx                 BrowserRouter and route table
+  data.ts                 Compatibility data export
+  index.css               Global styles
+  lib.ts                  Shared scoring and helper functions
+  types.ts                Shared TypeScript types
 ```
 
-## Local Development
+## Data layer
+
+```text
+src/data/players.ts       Player profiles
+src/data/teams.ts         Team profiles
+src/data/meta.ts          Dataset version, status and source notes
+src/data/index.ts         Public data exports
+src/data/README.md        Data rules and future real-stat notes
+```
+
+`src/data.ts` remains as a compatibility export so older imports continue to work.
+
+Current data status:
+
+```text
+Status: demo/manual data
+Purpose: MVP navigation, UI testing and product logic
+Not intended as: live esports statistics
+```
+
+## Local setup
 
 Install dependencies:
 
@@ -86,13 +109,13 @@ Run development server:
 npm run dev
 ```
 
-Build production version:
+Build production bundle:
 
 ```bash
 npm run build
 ```
 
-Preview production build:
+Preview production build locally:
 
 ```bash
 npm run preview
@@ -100,9 +123,9 @@ npm run preview
 
 ## Deployment
 
-The project is deployed on Vercel.
+The project is configured for Vercel.
 
-The repository includes `vercel.json` with SPA rewrites so React Router routes work after page refresh:
+`vercel.json` contains a SPA rewrite so React Router routes work after refresh:
 
 ```json
 {
@@ -113,23 +136,44 @@ The repository includes `vercel.json` with SPA rewrites so React Router routes w
 }
 ```
 
-## Current Status
+Typical deployment flow:
 
-This is an MVP.  
-The teams and players are real-world CS2 names, but the current ratings, prices, map scores, and custom indexes are demo values created for the product prototype.
+```bash
+git add -A
+git commit -m "Your commit message"
+git push
+```
+
+Vercel then builds the latest pushed version.
+
+## Methodology overview
+
+### Player Impact
+
+A custom MVP index for comparing individual players. It blends demo values such as rating, ADR, K/D, KAST, opening, clutch, AWP/rifle value and consistency into a 0–100 style read.
+
+### Team Score
+
+A weighted team profile using firepower, structure, map pool, clutch and form.
+
+### Map Fit
+
+A map-specific read based on AWP value, entry value, anchor pressure, side profile and preferred roles.
+
+### Roster Value
+
+A budget-aware read used in Roster Builder and Saved Rosters. It considers player impact, player price, role coverage, roster cost and overall roster balance.
 
 ## Roadmap
 
-- Add Team Compare
-- Add Favorites / Saved Rosters
-- Add Similar Players
-- Add role-fit pages
-- Add map-specific player breakdowns
-- Add real statistical data pipeline
-- Add backend/database
-- Add authentication and saved user lineups
+- Replace demo/manual values with manually curated real statistics
+- Add source metadata per dataset
+- Track update dates and event windows
+- Separate identity data from current performance data
+- Add richer map-specific statistics
+- Add better saved roster export/import
+- Add automated data generation or backend/API later
 
-## Important Note
+## Important note
 
-ClutchLab is an independent fan-made analytics prototype.  
-It is not affiliated with Valve, HLTV, tournament organizers, teams, or players.
+ClutchLab is not currently a live ranking system. It is a product MVP with a clean interface, static local data and clear boundaries around demo/manual scoring.
