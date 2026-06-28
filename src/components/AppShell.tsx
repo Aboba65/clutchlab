@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { views } from "../config/navigation";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { DataNotice } from "./DataNotice";
+import { Footer } from "./Footer";
 
 export function AppShell({ children }: { children: ReactNode }) {
   usePageTitle();
@@ -13,6 +14,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Header />
         {children}
         <DataNotice />
+        <Footer />
       </div>
     </main>
   );
