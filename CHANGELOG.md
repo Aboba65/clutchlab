@@ -2,6 +2,28 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.5 — SEO route meta polish
+
+Date: 2026-06-28
+
+### Added
+
+- Route-based meta descriptions through `src/hooks/usePageTitle.ts`
+- Open Graph route title updates
+- Open Graph route description updates
+- Twitter route title updates
+- Twitter route description updates
+- README route meta documentation
+- Project status SEO route meta documentation
+
+### Improved
+
+- `usePageTitle()` now manages both page title and route metadata.
+- Key routes now expose more specific descriptions in browser metadata.
+- README now documents dynamic route metadata.
+- Project status now includes route metadata in SEO/UX polish.
+- Footer version display was updated to `0.1.5`.
+
 ## 0.1.4 — Mobile navigation polish
 
 Date: 2026-06-28

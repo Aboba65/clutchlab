@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.4 Mobile navigation polish
+0.1.5 SEO route meta polish
 ```
 
 ## Live site
@@ -28,7 +28,7 @@ ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
-workflow and an improved mobile navigation layer:
+workflow, mobile polish and route-level SEO metadata:
 
 - dashboard
 - catalogs
@@ -38,6 +38,8 @@ workflow and an improved mobile navigation layer:
 - saved roster management
 - methodology page
 - route-based browser titles
+- route-based meta descriptions
+- Open Graph and Twitter route meta updates
 - compact mobile header
 - horizontal mobile navigation
 - footer with version/data status/project links
@@ -76,7 +78,7 @@ be described as live, official or current esports statistics.
 - Local data layer
 - Roster builder logic
 - Saved rosters via `localStorage`
-- Route title hook
+- Route title/meta hook
 - Compact mobile navigation
 - Footer status block
 - Data validation script
@@ -128,6 +130,9 @@ be described as live, official or current esports statistics.
 [✓] Roster Builder
 [✓] Saved Rosters manager
 [✓] Route page titles
+[✓] Route meta descriptions
+[✓] Open Graph route meta
+[✓] Twitter route meta
 [✓] Compact mobile header
 [✓] Horizontal mobile navigation
 [✓] Data notice
@@ -141,7 +146,7 @@ be described as live, official or current esports statistics.
 [✓] React Router route table
 [✓] AppShell layout
 [✓] Shared UI components
-[✓] Route title hook
+[✓] Route title/meta hook
 [✓] Mobile navigation polish
 [✓] Footer component
 [✓] Data layer split
@@ -150,6 +155,7 @@ be described as live, official or current esports statistics.
 [✓] GitHub README
 [✓] README badges
 [✓] SEO meta tags
+[✓] route meta descriptions
 [✓] favicon.svg
 [✓] og-image.svg
 [✓] site.webmanifest
@@ -228,17 +234,6 @@ Config:
 eslint.config.js
 ```
 
-Current lint setup:
-
-```text
-[✓] ESLint flat config
-[✓] TypeScript ESLint recommended rules
-[✓] React Hooks rules
-[✓] React Refresh export rule
-[✓] browser globals for app files
-[✓] node globals for scripts
-```
-
 ### Formatting
 
 Format files:
@@ -274,8 +269,6 @@ Script:
 scripts/release-check.mjs
 ```
 
-This is the preferred local pre-commit/pre-deploy command.
-
 ### GitHub Actions CI
 
 Workflow:
@@ -294,9 +287,9 @@ npm run format:check
 npm run build
 ```
 
-## UX polish
+## SEO and UX polish
 
-### Route titles
+### Route titles and metadata
 
 Hook:
 
@@ -304,9 +297,18 @@ Hook:
 src/hooks/usePageTitle.ts
 ```
 
-The app updates `document.title` when routes change.
+The app updates route metadata on route changes:
 
-Examples:
+```text
+[✓] document.title
+[✓] meta[name="description"]
+[✓] meta[property="og:title"]
+[✓] meta[property="og:description"]
+[✓] meta[name="twitter:title"]
+[✓] meta[name="twitter:description"]
+```
+
+Example route titles:
 
 ```text
 /players          ClutchLab — Players
@@ -324,7 +326,7 @@ Component:
 src/components/AppShell.tsx
 ```
 
-The mobile header and navigation now use:
+The mobile header and navigation use:
 
 ```text
 [✓] tighter mobile page padding
@@ -349,7 +351,7 @@ The footer shows:
 
 ```text
 [✓] ClutchLab MVP
-[✓] version 0.1.4
+[✓] version 0.1.5
 [✓] data status from dataMeta.status
 [✓] data updated from dataMeta.lastUpdated
 [✓] About link
@@ -425,8 +427,8 @@ public/sitemap.xml
 
 - Main routes are listed in sitemap
 - Detail pages are not listed yet
-- Open Graph image is SVG-based placeholder
-- No per-route meta tags yet because the app is a client-side SPA
+- Open Graph image is still a static SVG placeholder
+- Route metadata is client-side because the app is a client-side SPA
 
 ## Recommended next steps
 
@@ -455,10 +457,10 @@ Add project quality tools:
 ### 3. More real product polish
 
 ```text
-[ ] per-route meta descriptions
 [ ] detail-page sitemap entries
 [ ] loading/empty states audit
 [ ] better public data methodology
+[ ] static OG image polish
 ```
 
 ## Build commands

@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.4 Mobile navigation polish
+0.1.5 SEO route meta polish
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -44,6 +44,9 @@ esports statistics.
 - Traits page
 - About / Methodology page
 - Route-based browser tab titles
+- Route-based meta descriptions
+- Open Graph title/description updates
+- Twitter title/description updates
 - Compact mobile header
 - Horizontal mobile navigation
 - Data notice shown in the app shell
@@ -83,9 +86,26 @@ esports statistics.
 /builder                  Redirect to /roster-builder
 ```
 
-## Browser titles
+## Browser titles and route meta
 
-The app updates the browser tab title on route changes.
+The app updates browser title and route metadata on route changes through:
+
+```text
+src/hooks/usePageTitle.ts
+```
+
+The hook updates:
+
+```text
+document.title
+meta[name="description"]
+meta[property="og:title"]
+meta[property="og:description"]
+meta[name="twitter:title"]
+meta[name="twitter:description"]
+```
+
+Example route titles:
 
 ```text
 /                         ClutchLab — CS2 Analytics
@@ -113,7 +133,7 @@ src/
   components/             Shared UI components, app shell and footer
   config/                 Navigation, role profiles and map profiles
   data/                   Player data, team data and dataset metadata
-  hooks/                  Route/title hooks
+  hooks/                  Route/title/meta hooks
   pages/                  Route-level pages
   App.tsx                 BrowserRouter and route table
   data.ts                 Compatibility data export
@@ -270,12 +290,18 @@ git push
 
 Vercel then builds the latest pushed version.
 
-## UX polish
+## SEO and UX polish
 
-Current UX polish includes:
+Current SEO/UX polish includes:
 
 ```text
+[✓] static index.html meta
 [✓] route-based browser titles
+[✓] route-based meta descriptions
+[✓] Open Graph title/description route updates
+[✓] Twitter title/description route updates
+[✓] sitemap.xml
+[✓] robots.txt
 [✓] compact mobile header
 [✓] horizontal mobile navigation
 [✓] active mobile route visibility
@@ -285,25 +311,6 @@ Current UX polish includes:
 [✓] visible data status
 [✓] visible data updated date
 [✓] GitHub, Changelog, Data and Live site links
-```
-
-### Mobile navigation
-
-On smaller screens, the main navigation uses a horizontal scroll row instead of
-wrapping into a tall block.
-
-```text
-Mobile:
-[✓] tighter page padding
-[✓] smaller header radius and spacing
-[✓] smaller title scale
-[✓] horizontal nav scroll
-[✓] nav links do not wrap into a tall block
-
-Desktop:
-[✓] premium header preserved
-[✓] navigation wraps normally
-[✓] layout remains wide
 ```
 
 ## Methodology overview
