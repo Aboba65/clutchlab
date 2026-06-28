@@ -1,5 +1,11 @@
 # ClutchLab
 
+[![CI](https://github.com/Aboba65/clutchlab/actions/workflows/ci.yml/badge.svg)](https://github.com/Aboba65/clutchlab/actions/workflows/ci.yml)
+[![Live](https://img.shields.io/badge/live-Vercel-000000?logo=vercel&logoColor=white)](https://clutchlab-olive.vercel.app/)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+
 CS2 analytics MVP for exploring players, teams, maps, roles, roster construction and matchup comparison.
 
 Live site: https://clutchlab-olive.vercel.app/  
@@ -115,10 +121,40 @@ Build production bundle:
 npm run build
 ```
 
+Validate local data:
+
+```bash
+npm run validate:data
+```
+
+Run full release check:
+
+```bash
+npm run release:check
+```
+
 Preview production build locally:
 
 ```bash
 npm run preview
+```
+
+## CI
+
+GitHub Actions runs on pushes and pull requests to `main` or `master`.
+
+The CI workflow runs:
+
+```bash
+npm ci
+npm run validate:data
+npm run build
+```
+
+Workflow file:
+
+```text
+.github/workflows/ci.yml
 ```
 
 ## Deployment
@@ -139,6 +175,7 @@ The project is configured for Vercel.
 Typical deployment flow:
 
 ```bash
+npm run release:check
 git add -A
 git commit -m "Your commit message"
 git push
