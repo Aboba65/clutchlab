@@ -11,8 +11,8 @@ on:
       - master
 
 jobs:
-  validate-and-build:
-    name: Validate data and build
+  validate-lint-and-build:
+    name: Validate, lint, format and build
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +30,12 @@ jobs:
 
       - name: Validate data
         run: npm run validate:data
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
 
       - name: Build
         run: npm run build

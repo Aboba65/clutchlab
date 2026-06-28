@@ -34,7 +34,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.16,
       adr: 77.0,
-      kd: 1.20,
+      kd: 1.2,
       kast: 75.8,
       impact: 80,
       clutch: 86,
@@ -232,7 +232,7 @@ export const players: CS2Player[] = [
     age: 19,
     price: 10,
     stats: {
-      rating: 1.30,
+      rating: 1.3,
       adr: 92.5,
       kd: 1.24,
       kast: 74.0,
@@ -322,7 +322,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.03,
       adr: 69.4,
-      kd: 1.00,
+      kd: 1.0,
       kast: 75.2,
       impact: 64,
       clutch: 72,
@@ -411,7 +411,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 0.95,
       adr: 63.0,
-      kd: 0.90,
+      kd: 0.9,
       kast: 70.6,
       impact: 58,
       clutch: 69,
@@ -456,7 +456,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.01,
       adr: 67.8,
-      kd: 1.00,
+      kd: 1.0,
       kast: 72.4,
       impact: 64,
       clutch: 77,
@@ -498,7 +498,7 @@ export const players: CS2Player[] = [
     age: 26,
     price: 7,
     stats: {
-      rating: 1.10,
+      rating: 1.1,
       adr: 80.5,
       kd: 1.03,
       kast: 69.8,
@@ -520,7 +520,7 @@ export const players: CS2Player[] = [
     age: 26,
     price: 6,
     stats: {
-      rating: 1.10,
+      rating: 1.1,
       adr: 76.2,
       kd: 1.11,
       kast: 74.6,
@@ -544,7 +544,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.13,
       adr: 73.8,
-      kd: 1.20,
+      kd: 1.2,
       kast: 73.0,
       impact: 79,
       clutch: 78,
@@ -811,7 +811,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.05,
       adr: 72.0,
-      kd: 1.00,
+      kd: 1.0,
       kast: 72.8,
       impact: 70,
       clutch: 71,
@@ -877,7 +877,7 @@ export const players: CS2Player[] = [
     stats: {
       rating: 1.12,
       adr: 79.4,
-      kd: 1.10,
+      kd: 1.1,
       kast: 72.4,
       impact: 80,
       clutch: 75,

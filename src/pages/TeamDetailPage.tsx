@@ -92,12 +92,8 @@ function TeamDetailView({
             <p className="text-sm font-bold uppercase tracking-wider text-cyan-200">
               Team Score
             </p>
-            <div className="mt-2 text-6xl font-black text-cyan-200">
-              {teamScore}
-            </div>
-            <p className="mt-2 text-sm text-slate-400">
-              Custom ClutchLab score
-            </p>
+            <div className="mt-2 text-6xl font-black text-cyan-200">{teamScore}</div>
+            <p className="mt-2 text-sm text-slate-400">Custom ClutchLab score</p>
           </div>
         </div>
       </div>
@@ -145,9 +141,9 @@ function TeamDetailView({
               Read
             </p>
             <p className="mt-2 text-sm text-slate-300">
-              Сильнейшая зона команды: {strongestArea}. Самая уязвимая зона:{" "}
-              {weakestArea}. Это пока демо-оценка, но позже такую логику можно
-              связать с реальными матчами, картами и формой.
+              Сильнейшая зона команды: {strongestArea}. Самая уязвимая зона: {weakestArea}
+              . Это пока демо-оценка, но позже такую логику можно связать с реальными
+              матчами, картами и формой.
             </p>
           </div>
         </Panel>

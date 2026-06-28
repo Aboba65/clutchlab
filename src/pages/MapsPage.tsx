@@ -45,13 +45,7 @@ const scoreThresholds = [
   { value: "90", label: "90+" },
 ] as const;
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -139,8 +133,9 @@ export function MapsPage() {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [sideProfileFilter, setSideProfileFilter] =
-    useState<"All" | CS2MapProfile["sideProfile"]>("All");
+  const [sideProfileFilter, setSideProfileFilter] = useState<
+    "All" | CS2MapProfile["sideProfile"]
+  >("All");
   const [bestRoleFilter, setBestRoleFilter] = useState<"All" | PlayerRole>("All");
   const [minIntensity, setMinIntensity] = useState("All");
   const [sortBy, setSortBy] = useState<SortKey>("overall");
@@ -180,12 +175,7 @@ export function MapsPage() {
         const matchesIntensity =
           minIntensity === "All" || intensity >= Number(minIntensity);
 
-        return (
-          matchesSearch &&
-          matchesSideProfile &&
-          matchesBestRole &&
-          matchesIntensity
-        );
+        return matchesSearch && matchesSideProfile && matchesBestRole && matchesIntensity;
       })
       .sort((a, b) => {
         const aValue = getSortValue(a, sortBy);
@@ -198,7 +188,14 @@ export function MapsPage() {
 
         return a.name.localeCompare(b.name);
       });
-  }, [searchQuery, sideProfileFilter, bestRoleFilter, minIntensity, sortBy, sortDirection]);
+  }, [
+    searchQuery,
+    sideProfileFilter,
+    bestRoleFilter,
+    minIntensity,
+    sortBy,
+    sortDirection,
+  ]);
 
   const averageIntensity = useMemo(
     () => getAverageMapScore(filteredMaps),
@@ -257,36 +254,28 @@ export function MapsPage() {
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg Intensity
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageIntensity}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageIntensity}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg T Difficulty
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageTDifficulty}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageTDifficulty}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg AWP Value
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageAwpValue}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageAwpValue}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg Entry Value
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageEntryValue}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageEntryValue}</p>
         </div>
       </div>
 

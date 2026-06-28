@@ -65,13 +65,7 @@ const priceCaps = [
   { value: "8", label: "$8 or less" },
 ] as const;
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -203,7 +197,10 @@ export function PlayersPage() {
     return new Set(filteredPlayers.map((player) => player.country)).size;
   }, [filteredPlayers]);
 
-  const averageImpact = useMemo(() => getAverageImpact(filteredPlayers), [filteredPlayers]);
+  const averageImpact = useMemo(
+    () => getAverageImpact(filteredPlayers),
+    [filteredPlayers],
+  );
   const averagePrice = useMemo(() => getAveragePrice(filteredPlayers), [filteredPlayers]);
 
   const hasActiveFilters =
@@ -271,9 +268,7 @@ export function PlayersPage() {
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Countries
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {activeCountryCount}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{activeCountryCount}</p>
         </div>
       </div>
 
@@ -466,9 +461,7 @@ export function PlayersPage() {
                   <td className="px-4 py-4 font-bold text-slate-200">
                     {formatSortValue(player, sortBy)}
                   </td>
-                  <td className="px-4 py-4 font-bold text-cyan-300">
-                    ${player.price}
-                  </td>
+                  <td className="px-4 py-4 font-bold text-cyan-300">${player.price}</td>
                 </tr>
               ))
             ) : (

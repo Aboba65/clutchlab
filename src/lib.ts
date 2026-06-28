@@ -38,9 +38,13 @@ export function getRosterScore(players: CS2Player[]) {
     (player) => player.role === "Support" || player.role === "Anchor",
   );
 
-  const firepower = average(players.map((player) => Math.max(player.stats.rifle, player.stats.impact)));
+  const firepower = average(
+    players.map((player) => Math.max(player.stats.rifle, player.stats.impact)),
+  );
   const awp = hasAWPer ? Math.max(...players.map((player) => player.stats.awp)) : 25;
-  const entry = hasEntry ? Math.max(...players.map((player) => player.stats.opening)) : 35;
+  const entry = hasEntry
+    ? Math.max(...players.map((player) => player.stats.opening))
+    : 35;
   const clutch = average(players.map((player) => player.stats.clutch));
 
   let structure = average(players.map((player) => player.stats.consistency));
@@ -52,11 +56,7 @@ export function getRosterScore(players: CS2Player[]) {
   structure = Math.max(0, Math.min(100, structure));
 
   const total = Math.round(
-    firepower * 0.3 +
-      awp * 0.18 +
-      entry * 0.18 +
-      clutch * 0.16 +
-      structure * 0.18,
+    firepower * 0.3 + awp * 0.18 + entry * 0.18 + clutch * 0.16 + structure * 0.18,
   );
 
   return {

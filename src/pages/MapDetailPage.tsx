@@ -34,13 +34,7 @@ export function MapDetailPage() {
   return <MapDetailView map={map} onBack={() => navigate("/maps")} />;
 }
 
-function MapDetailView({
-  map,
-  onBack,
-}: {
-  map: CS2MapProfile;
-  onBack: () => void;
-}) {
+function MapDetailView({ map, onBack }: { map: CS2MapProfile; onBack: () => void }) {
   const bestTeams = getBestTeamsForMap(map);
   const bestPlayers = getBestPlayersForMap(map).slice(0, 8);
   const mapScore = Math.round(
@@ -87,12 +81,8 @@ function MapDetailView({
             <p className="text-sm font-bold uppercase tracking-wider text-cyan-200">
               Map Intensity
             </p>
-            <div className="mt-2 text-6xl font-black text-cyan-200">
-              {mapScore}
-            </div>
-            <p className="mt-2 text-sm text-slate-400">
-              Custom ClutchLab score
-            </p>
+            <div className="mt-2 text-6xl font-black text-cyan-200">{mapScore}</div>
+            <p className="mt-2 text-sm text-slate-400">Custom ClutchLab score</p>
           </div>
         </div>
       </div>
@@ -139,9 +129,7 @@ function MapDetailView({
             <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
               Read
             </p>
-            <p className="mt-2 text-sm text-slate-300">
-              {getMapRead(map)}
-            </p>
+            <p className="mt-2 text-sm text-slate-300">{getMapRead(map)}</p>
           </div>
         </Panel>
 

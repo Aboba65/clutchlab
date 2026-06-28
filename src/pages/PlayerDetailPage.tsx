@@ -34,13 +34,7 @@ export function PlayerDetailPage() {
   return <PlayerDetailView player={player} onBack={() => navigate("/players")} />;
 }
 
-function PlayerDetailView({
-  player,
-  onBack,
-}: {
-  player: CS2Player;
-  onBack: () => void;
-}) {
+function PlayerDetailView({ player, onBack }: { player: CS2Player; onBack: () => void }) {
   const navigate = useNavigate();
   const impact = getPlayerImpact(player);
   const teamName = getTeamName(player.teamId, teams);
@@ -88,9 +82,7 @@ function PlayerDetailView({
               </span>
             </div>
 
-            <p className="mt-5 max-w-3xl text-slate-300">
-              {getPlayerSummary(player)}
-            </p>
+            <p className="mt-5 max-w-3xl text-slate-300">{getPlayerSummary(player)}</p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 md:min-w-[18rem] md:grid-cols-1">
@@ -98,24 +90,16 @@ function PlayerDetailView({
               <p className="text-sm font-bold uppercase tracking-wider text-cyan-200">
                 Impact Index
               </p>
-              <div className="mt-2 text-6xl font-black text-cyan-200">
-                {impact}
-              </div>
-              <p className="mt-2 text-sm text-slate-400">
-                Custom ClutchLab score
-              </p>
+              <div className="mt-2 text-6xl font-black text-cyan-200">{impact}</div>
+              <p className="mt-2 text-sm text-slate-400">Custom ClutchLab score</p>
             </div>
 
             <div className="rounded-3xl border border-purple-300/20 bg-purple-300/10 p-5 text-center">
               <p className="text-sm font-bold uppercase tracking-wider text-purple-200">
                 Role Fit
               </p>
-              <div className="mt-2 text-5xl font-black text-purple-200">
-                {roleFit}
-              </div>
-              <p className="mt-2 text-sm text-slate-400">
-                Fit for listed role
-              </p>
+              <div className="mt-2 text-5xl font-black text-purple-200">{roleFit}</div>
+              <p className="mt-2 text-sm text-slate-400">Fit for listed role</p>
             </div>
           </div>
         </div>
@@ -147,11 +131,7 @@ function PlayerDetailView({
           value={weaponProfile.primary.toString()}
           subtitle={weaponProfile.label}
         />
-        <StatCard
-          title="Price"
-          value={`$${player.price}`}
-          subtitle="builder value"
-        />
+        <StatCard title="Price" value={`$${player.price}`} subtitle="builder value" />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
@@ -173,9 +153,7 @@ function PlayerDetailView({
               <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
                 Role identity
               </p>
-              <p className="mt-2 text-sm text-slate-300">
-                {getRoleRead(player)}
-              </p>
+              <p className="mt-2 text-sm text-slate-300">{getRoleRead(player)}</p>
             </div>
 
             <div className="rounded-2xl bg-white/[0.04] p-4">
@@ -215,7 +193,10 @@ function PlayerDetailView({
               </p>
               <div className="mt-3 grid gap-2">
                 {strengths.map((item) => (
-                  <span key={item} className="rounded-xl bg-black/20 px-3 py-2 text-sm text-emerald-50">
+                  <span
+                    key={item}
+                    className="rounded-xl bg-black/20 px-3 py-2 text-sm text-emerald-50"
+                  >
                     {item}
                   </span>
                 ))}
@@ -228,7 +209,10 @@ function PlayerDetailView({
               </p>
               <div className="mt-3 grid gap-2">
                 {weaknesses.map((item) => (
-                  <span key={item} className="rounded-xl bg-black/20 px-3 py-2 text-sm text-amber-50">
+                  <span
+                    key={item}
+                    className="rounded-xl bg-black/20 px-3 py-2 text-sm text-amber-50"
+                  >
                     {item}
                   </span>
                 ))}
@@ -304,9 +288,9 @@ function PlayerDetailView({
 
       <Panel title="Similar players">
         <div className="mb-4 rounded-2xl bg-white/[0.04] p-4 text-sm text-slate-300">
-          Similarity is calculated from role fit, Impact Index, rating, clutch,
-          opening pressure, weapon profile, consistency and price. Current values
-          are MVP demo scores, not official statistics.
+          Similarity is calculated from role fit, Impact Index, rating, clutch, opening
+          pressure, weapon profile, consistency and price. Current values are MVP demo
+          scores, not official statistics.
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -440,7 +424,9 @@ function ratingToScore(rating: number) {
 function getPlayerWeaponProfile(player: CS2Player) {
   const primary = Math.max(player.stats.awp, player.stats.rifle);
   const secondary = Math.min(player.stats.awp, player.stats.rifle);
-  const balance = Math.round(100 - Math.min(100, Math.abs(player.stats.awp - player.stats.rifle)));
+  const balance = Math.round(
+    100 - Math.min(100, Math.abs(player.stats.awp - player.stats.rifle)),
+  );
 
   if (player.stats.awp >= 72 && player.stats.awp >= player.stats.rifle) {
     return {
@@ -496,7 +482,10 @@ function getPlayerWeaknesses(player: CS2Player) {
     watchPoints.push("Rifle output may be secondary");
   }
 
-  if (player.stats.opening < 55 && (player.role === "Entry" || player.role === "Star Rifler")) {
+  if (
+    player.stats.opening < 55 &&
+    (player.role === "Entry" || player.role === "Star Rifler")
+  ) {
     watchPoints.push("Opening pressure needs support");
   }
 
@@ -580,11 +569,17 @@ function getMapFitReason(player: CS2Player, map: CS2MapProfile) {
     return "High AWP value map with strong angle-control potential.";
   }
 
-  if ((player.role === "Entry" || player.role === "Star Rifler") && map.entryValue >= 76) {
+  if (
+    (player.role === "Entry" || player.role === "Star Rifler") &&
+    map.entryValue >= 76
+  ) {
     return "Good map for pressure riflers and opening duels.";
   }
 
-  if ((player.role === "Anchor" || player.role === "Support") && map.anchorPressure >= 76) {
+  if (
+    (player.role === "Anchor" || player.role === "Support") &&
+    map.anchorPressure >= 76
+  ) {
     return "Good fit for stable site play and utility discipline.";
   }
 
@@ -596,7 +591,9 @@ function getStructureProfileScore(player: CS2Player) {
     return Math.round(player.stats.consistency * 0.65 + player.stats.clutch * 0.35);
   }
 
-  return Math.round(player.stats.consistency * 0.5 + player.stats.rifle * 0.3 + player.stats.clutch * 0.2);
+  return Math.round(
+    player.stats.consistency * 0.5 + player.stats.rifle * 0.3 + player.stats.clutch * 0.2,
+  );
 }
 
 function getTeamFitSuggestions(player: CS2Player, limit = 3) {
@@ -606,9 +603,13 @@ function getTeamFitSuggestions(player: CS2Player, limit = 3) {
       const sameRoleCount = roster.filter((item) => item.role === player.role).length;
       const currentTeamBonus = team.id === player.teamId ? 8 : 0;
       const roleNeedBonus = sameRoleCount === 0 ? 18 : sameRoleCount === 1 ? 8 : 1;
-      const firepowerNeedBonus = team.scores.firepower < 82 && player.stats.impact >= 82 ? 10 : 0;
+      const firepowerNeedBonus =
+        team.scores.firepower < 82 && player.stats.impact >= 82 ? 10 : 0;
       const structureNeedBonus =
-        team.scores.structure < 78 && (player.role === "IGL" || player.role === "Support" || player.role === "Anchor") ? 10 : 0;
+        team.scores.structure < 78 &&
+        (player.role === "IGL" || player.role === "Support" || player.role === "Anchor")
+          ? 10
+          : 0;
 
       const score = Math.round(
         team.scores.form * 0.18 +
@@ -632,7 +633,11 @@ function getTeamFitSuggestions(player: CS2Player, limit = 3) {
     .slice(0, limit);
 }
 
-function getTeamFitReason(player: CS2Player, team: (typeof teams)[number], sameRoleCount: number) {
+function getTeamFitReason(
+  player: CS2Player,
+  team: (typeof teams)[number],
+  sameRoleCount: number,
+) {
   if (team.id === player.teamId) {
     return "Current team context with existing role familiarity.";
   }
@@ -645,7 +650,10 @@ function getTeamFitReason(player: CS2Player, team: (typeof teams)[number], sameR
     return "Raises firepower and round impact.";
   }
 
-  if (team.scores.structure < 78 && (player.role === "IGL" || player.role === "Support" || player.role === "Anchor")) {
+  if (
+    team.scores.structure < 78 &&
+    (player.role === "IGL" || player.role === "Support" || player.role === "Anchor")
+  ) {
     return "Improves structure and role discipline.";
   }
 
@@ -665,13 +673,30 @@ function getSimilarPlayers(player: CS2Player, limit = 4): SimilarPlayerResult[] 
 }
 
 function getPlayerSimilarityScore(base: CS2Player, candidate: CS2Player) {
-  const roleScore = base.role === candidate.role ? 100 : getRoleFamily(base.role) === getRoleFamily(candidate.role) ? 74 : 42;
+  const roleScore =
+    base.role === candidate.role
+      ? 100
+      : getRoleFamily(base.role) === getRoleFamily(candidate.role)
+        ? 74
+        : 42;
   const impactScore = closeness(getPlayerImpact(base), getPlayerImpact(candidate), 24);
-  const ratingScore = closeness(base.stats.rating * 100, candidate.stats.rating * 100, 18);
+  const ratingScore = closeness(
+    base.stats.rating * 100,
+    candidate.stats.rating * 100,
+    18,
+  );
   const clutchScore = closeness(base.stats.clutch, candidate.stats.clutch, 28);
   const openingScore = closeness(base.stats.opening, candidate.stats.opening, 32);
-  const weaponScore = closeness(getWeaponProfileScore(base), getWeaponProfileScore(candidate), 48);
-  const consistencyScore = closeness(base.stats.consistency, candidate.stats.consistency, 28);
+  const weaponScore = closeness(
+    getWeaponProfileScore(base),
+    getWeaponProfileScore(candidate),
+    48,
+  );
+  const consistencyScore = closeness(
+    base.stats.consistency,
+    candidate.stats.consistency,
+    28,
+  );
   const priceScore = closeness(base.price, candidate.price, 6);
 
   return Math.round(
@@ -772,9 +797,7 @@ function getPlayerSummary(player: CS2Player) {
 }
 
 function getRoleRead(player: CS2Player) {
-  const bestWeaponProfile =
-    player.stats.awp > player.stats.rifle ? "AWP" : "rifle";
+  const bestWeaponProfile = player.stats.awp > player.stats.rifle ? "AWP" : "rifle";
 
   return `Основной профиль: ${player.role}. Сильнейшая сторона по данным MVP: ${bestWeaponProfile}. Clutch ${player.stats.clutch}/100, consistency ${player.stats.consistency}/100, opening pressure ${player.stats.opening}/100.`;
 }
-

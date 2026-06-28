@@ -9,14 +9,7 @@ import { PlayerProfile } from "../components/PlayerProfile";
 
 type CompareDirection = "higher" | "lower";
 
-type CompareKind =
-  | "score"
-  | "rating"
-  | "adr"
-  | "kd"
-  | "kast"
-  | "price"
-  | "value";
+type CompareKind = "score" | "rating" | "adr" | "kd" | "kast" | "price" | "value";
 
 type CompareWinner = "left" | "right" | "tie";
 
@@ -46,13 +39,7 @@ type CompareDimension = {
   winner: CompareWinner;
 };
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -199,12 +186,7 @@ export function ComparePage() {
       <Panel title={`${left.nickname} vs ${right.nickname}`}>
         <div className="grid gap-4">
           {rows.map((row) => (
-            <CompareMetricDetailed
-              key={row.label}
-              row={row}
-              left={left}
-              right={right}
-            />
+            <CompareMetricDetailed key={row.label} row={row} left={left} right={right} />
           ))}
         </div>
       </Panel>
@@ -227,9 +209,7 @@ export function ComparePage() {
                 <tr key={row.label} className="border-t border-white/10">
                   <td className="px-3 py-3">
                     <div className="font-bold text-white">{row.label}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {row.description}
-                    </div>
+                    <div className="mt-1 text-xs text-slate-500">{row.description}</div>
                   </td>
                   <td className="px-3 py-3 text-slate-300">
                     {formatCompareValue(row.left, row.kind)}
@@ -380,14 +360,11 @@ function ComparePlayerPicker({
               <div>
                 <div className="font-black text-white">{player.nickname}</div>
                 <div className="mt-1 text-xs text-slate-500">
-                  {getTeamName(player.teamId, teams)} · {player.country} ·{" "}
-                  {player.role}
+                  {getTeamName(player.teamId, teams)} · {player.country} · {player.role}
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-black text-cyan-300">
-                  {getPlayerImpact(player)}
-                </div>
+                <div className="font-black text-cyan-300">{getPlayerImpact(player)}</div>
                 <div className="mt-1 text-xs text-slate-500">
                   {isBlocked ? "selected" : `$${player.price}`}
                 </div>
@@ -799,13 +776,9 @@ function getComparePresets(): ComparePreset[] {
   const awpers = getTopByRole("AWPer");
   const entries = getTopByRole("Entry");
   const riflers = [...players]
-    .filter((player) =>
-      ["Star Rifler", "Lurker", "Anchor", "Flex"].includes(player.role),
-    )
+    .filter((player) => ["Star Rifler", "Lurker", "Anchor", "Flex"].includes(player.role))
     .sort((a, b) => b.stats.rifle - a.stats.rifle);
-  const valuePlayers = [...players].sort(
-    (a, b) => getPlayerValue(b) - getPlayerValue(a),
-  );
+  const valuePlayers = [...players].sort((a, b) => getPlayerValue(b) - getPlayerValue(a));
 
   return [
     createPreset("top-impact", "Top impact", "best two by ClutchLab impact", topImpact),
@@ -894,7 +867,8 @@ function getBestDimensionForPlayer(
       const aGap = Math.abs(a.left - a.right);
       const bGap = Math.abs(b.left - b.right);
       return bGap - aGap;
-    })[0].label.toLowerCase();
+    })[0]
+    .label.toLowerCase();
 }
 
 function formatCompareValue(value: number, kind: CompareKind) {

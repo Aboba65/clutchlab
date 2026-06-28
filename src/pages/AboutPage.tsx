@@ -44,8 +44,7 @@ const scoreSections = [
   },
   {
     title: "Roster Value",
-    description:
-      "Budget-aware score used by Roster Builder and Saved Rosters.",
+    description: "Budget-aware score used by Roster Builder and Saved Rosters.",
     formula:
       "player impact is compared against builder price, role coverage, roster cost and overall roster balance.",
     caveat:
@@ -84,8 +83,7 @@ function getAverageImpact() {
   if (players.length === 0) return 0;
 
   return Math.round(
-    players.reduce((sum, player) => sum + getPlayerImpact(player), 0) /
-      players.length,
+    players.reduce((sum, player) => sum + getPlayerImpact(player), 0) / players.length,
   );
 }
 
@@ -132,47 +130,61 @@ export function AboutPage() {
         </h2>
 
         <p className="mt-5 max-w-4xl text-slate-300">
-          ClutchLab is a CS2 analytics MVP for exploring players, teams, maps,
-          roles, roster construction and matchup comparison. The interface is
-          built like a real product, but the current numerical dataset is marked
-          as demo/manual data for development and testing.
+          ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
+          roster construction and matchup comparison. The interface is built like a real
+          product, but the current numerical dataset is marked as demo/manual data for
+          development and testing.
         </p>
 
         <div className="mt-7 grid gap-4 md:grid-cols-4">
           <StatCard title="Data status" value={statusLabel} subtitle="current dataset" />
           <StatCard title="Version" value={dataMeta.version} subtitle="dataMeta" />
           <StatCard title="Updated" value={dataMeta.lastUpdated} subtitle="last update" />
-          <StatCard title="Players" value={players.length.toString()} subtitle="demo records" />
+          <StatCard
+            title="Players"
+            value={players.length.toString()}
+            subtitle="demo records"
+          />
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <StatCard title="Teams" value={teams.length.toString()} subtitle="team profiles" />
+        <StatCard
+          title="Teams"
+          value={teams.length.toString()}
+          subtitle="team profiles"
+        />
         <StatCard title="Maps" value={maps.length.toString()} subtitle="map profiles" />
-        <StatCard title="Roles" value={roleConfigs.length.toString()} subtitle="role profiles" />
-        <StatCard title="Avg Impact" value={getAverageImpact().toString()} subtitle="demo index" />
+        <StatCard
+          title="Roles"
+          value={roleConfigs.length.toString()}
+          subtitle="role profiles"
+        />
+        <StatCard
+          title="Avg Impact"
+          value={getAverageImpact().toString()}
+          subtitle="demo index"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <Panel title="What ClutchLab is">
           <div className="grid gap-4 text-sm leading-6 text-slate-300">
             <p>
-              ClutchLab is designed as a decision-support interface for CS2. It
-              connects player profiles, team profiles, role identity, map demands
-              and roster-building constraints into one navigable product.
+              ClutchLab is designed as a decision-support interface for CS2. It connects
+              player profiles, team profiles, role identity, map demands and
+              roster-building constraints into one navigable product.
             </p>
 
             <p>
-              The site is not trying to be a live scoreboard in the current MVP.
-              The goal is to validate the product structure first: pages,
-              filtering, comparison logic, roster builder UX, saved rosters and
-              clear data boundaries.
+              The site is not trying to be a live scoreboard in the current MVP. The goal
+              is to validate the product structure first: pages, filtering, comparison
+              logic, roster builder UX, saved rosters and clear data boundaries.
             </p>
 
             <p>
-              The next data milestone is to replace demo/manual numbers with a
-              documented real-stat layer where every score has an update date and
-              source notes.
+              The next data milestone is to replace demo/manual numbers with a documented
+              real-stat layer where every score has an update date and source notes.
             </p>
           </div>
         </Panel>
@@ -260,9 +272,7 @@ export function AboutPage() {
 function CoverageMetric({ title, value }: { title: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-2 text-3xl font-black text-cyan-200">{value}</p>
     </div>
   );

@@ -2,12 +2,7 @@ import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { players, teams } from "../data";
 import type { CS2Player } from "../types";
-import {
-  getPlayerImpact,
-  getRosterScore,
-  getRosterWarnings,
-  getTeamName,
-} from "../lib";
+import { getPlayerImpact, getRosterScore, getRosterWarnings, getTeamName } from "../lib";
 import { RoleBadge } from "../components/RoleBadge";
 import { Score } from "../components/Score";
 import { Warning } from "../components/Warning";
@@ -59,13 +54,7 @@ const sortOptions: Array<{ value: SortKey; label: string }> = [
   { value: "value", label: "Value / $" },
 ];
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -120,10 +109,7 @@ function getRosterPrice(rosterPlayers: CS2Player[]) {
 function getAverageImpact(rosterPlayers: CS2Player[]) {
   if (rosterPlayers.length === 0) return 0;
 
-  const total = rosterPlayers.reduce(
-    (sum, player) => sum + getPlayerImpact(player),
-    0,
-  );
+  const total = rosterPlayers.reduce((sum, player) => sum + getPlayerImpact(player), 0);
 
   return Math.round(total / rosterPlayers.length);
 }
@@ -232,22 +218,17 @@ function getSummary(rosters: SavedRoster[]) {
   });
 
   const validCount = hydrated.filter((item) => item.status === "valid").length;
-  const overBudgetCount = hydrated.filter(
-    (item) => item.status === "over-budget",
-  ).length;
+  const overBudgetCount = hydrated.filter((item) => item.status === "over-budget").length;
 
   const averageScore =
     hydrated.length === 0
       ? 0
       : Math.round(
-          hydrated.reduce((sum, item) => sum + item.score.total, 0) /
-            hydrated.length,
+          hydrated.reduce((sum, item) => sum + item.score.total, 0) / hydrated.length,
         );
 
   const bestScore =
-    hydrated.length === 0
-      ? 0
-      : Math.max(...hydrated.map((item) => item.score.total));
+    hydrated.length === 0 ? 0 : Math.max(...hydrated.map((item) => item.score.total));
 
   return {
     validCount,
@@ -281,8 +262,7 @@ export function SavedRostersPage() {
           normalizedQuery.length === 0 ||
           getRosterSearchText(roster).includes(normalizedQuery);
 
-        const matchesStatus =
-          statusFilter === "All" || status === statusFilter;
+        const matchesStatus = statusFilter === "All" || status === statusFilter;
 
         return matchesSearch && matchesStatus;
       })
@@ -437,8 +417,8 @@ export function SavedRostersPage() {
 
         <div className="rounded-2xl border border-cyan-300/10 bg-cyan-300/5 px-4 py-3 text-sm text-slate-300">
           Showing <span className="font-bold text-white">{filteredRosters.length}</span>{" "}
-          of <span className="font-bold text-white">{savedRosters.length}</span>{" "}
-          saved rosters. Over budget:{" "}
+          of <span className="font-bold text-white">{savedRosters.length}</span> saved
+          rosters. Over budget:{" "}
           <span className="font-bold text-red-200">{summary.overBudgetCount}</span>.
         </div>
       </div>
@@ -542,7 +522,10 @@ export function SavedRostersPage() {
                   <MiniMetric title="Clutch" value={score.clutch} />
                   <MiniMetric title="Players" value={rosterPlayers.length} />
                   <MiniMetric title="Avg Impact" value={averageImpact} />
-                  <MiniMetric title="Value/$" value={Number(getRosterValue(rosterPlayers).toFixed(1))} />
+                  <MiniMetric
+                    title="Value/$"
+                    value={Number(getRosterValue(rosterPlayers).toFixed(1))}
+                  />
                 </div>
 
                 {warnings.length > 0 && (
@@ -589,8 +572,8 @@ function EmptyState() {
     <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.03] p-8 text-center">
       <p className="text-2xl font-black text-white">Пока нет сохранённых составов</p>
       <p className="mx-auto mt-3 max-w-2xl text-slate-400">
-        Собери валидный ростер 5/5 в рамках бюджета, задай название и нажми Save.
-        После этого он появится здесь.
+        Собери валидный ростер 5/5 в рамках бюджета, задай название и нажми Save. После
+        этого он появится здесь.
       </p>
       <NavLink
         to="/roster-builder"
@@ -605,9 +588,7 @@ function EmptyState() {
 function SummaryCard({ title, value }: { title: string; value: string }) {
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-2 text-3xl font-black text-cyan-200">{value}</p>
     </div>
   );
@@ -616,9 +597,7 @@ function SummaryCard({ title, value }: { title: string; value: string }) {
 function MiniMetric({ title, value }: { title: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-1 text-2xl font-black text-white">{value}</p>
     </div>
   );

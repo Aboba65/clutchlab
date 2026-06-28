@@ -22,7 +22,14 @@ const VALID_ROLES = new Set([
   "Flex",
 ]);
 
-const PLAYER_SCORE_FIELDS = ["impact", "clutch", "opening", "awp", "rifle", "consistency"];
+const PLAYER_SCORE_FIELDS = [
+  "impact",
+  "clutch",
+  "opening",
+  "awp",
+  "rifle",
+  "consistency",
+];
 const TEAM_SCORE_FIELDS = ["firepower", "structure", "mapPool", "clutch", "form"];
 const MAP_SCORE_FIELDS = [
   "ctSideStrength",
@@ -52,10 +59,22 @@ function main() {
   const maps = mapObjects.map(parseMap);
 
   validateRequiredCounts(players, teams, maps);
-  validateUnique(players.map((player) => player.id), "player id");
-  validateUnique(teams.map((team) => team.id), "team id");
-  validateUnique(maps.map((map) => map.id), "map id");
-  validateUnique(maps.map((map) => map.name), "map name");
+  validateUnique(
+    players.map((player) => player.id),
+    "player id",
+  );
+  validateUnique(
+    teams.map((team) => team.id),
+    "team id",
+  );
+  validateUnique(
+    maps.map((map) => map.id),
+    "map id",
+  );
+  validateUnique(
+    maps.map((map) => map.name),
+    "map name",
+  );
 
   validatePlayers(players, teams);
   validateTeams(teams, players, maps);
@@ -395,7 +414,9 @@ function validateBidirectionalTeamLinks(players, teams) {
     if (!team) continue;
 
     if (!team.playerIds.includes(player.id)) {
-      warn(`${player.id}: teamId points to "${player.teamId}", but team.players does not include this player`);
+      warn(
+        `${player.id}: teamId points to "${player.teamId}", but team.players does not include this player`,
+      );
     }
   }
 
@@ -406,7 +427,9 @@ function validateBidirectionalTeamLinks(players, teams) {
       const player = playerById.get(playerId);
 
       if (player && player.teamId !== team.id) {
-        warn(`${team.id}: includes "${playerId}", but player.teamId is "${player.teamId}"`);
+        warn(
+          `${team.id}: includes "${playerId}", but player.teamId is "${player.teamId}"`,
+        );
       }
     }
   }

@@ -8,7 +8,10 @@ export function Metric({ label, value }: { label: string; value: number }) {
         <span className="font-bold text-white">{value}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-white/10">
-        <div className="h-full rounded-full bg-cyan-300" style={{ width: `${safeValue}%` }} />
+        <div
+          className="h-full rounded-full bg-cyan-300"
+          style={{ width: `${safeValue}%` }}
+        />
       </div>
     </div>
   );

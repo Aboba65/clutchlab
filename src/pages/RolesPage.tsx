@@ -7,13 +7,7 @@ import { maps, type CS2MapProfile } from "../config/maps";
 import { Score } from "../components/Score";
 import { Metric } from "../components/Metric";
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -74,21 +68,58 @@ function getBestMapsForRole(role: PlayerRole, limit = 5) {
 
 function getRoleMapScore(role: PlayerRole, map: CS2MapProfile) {
   const directRoleBonus = map.bestRoles.includes(role) ? 18 : 0;
-  const familyBonus = map.bestRoles.some((item) => getRoleFamily(item) === getRoleFamily(role)) ? 8 : 0;
+  const familyBonus = map.bestRoles.some(
+    (item) => getRoleFamily(item) === getRoleFamily(role),
+  )
+    ? 8
+    : 0;
 
   if (role === "AWPer") {
-    return Math.min(100, Math.round(map.awpValue * 0.68 + map.ctSideStrength * 0.18 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.awpValue * 0.68 + map.ctSideStrength * 0.18 + directRoleBonus + familyBonus,
+      ),
+    );
   }
 
   if (role === "Entry" || role === "Star Rifler") {
-    return Math.min(100, Math.round(map.entryValue * 0.55 + map.tSideDifficulty * 0.18 + map.ctSideStrength * 0.12 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.entryValue * 0.55 +
+          map.tSideDifficulty * 0.18 +
+          map.ctSideStrength * 0.12 +
+          directRoleBonus +
+          familyBonus,
+      ),
+    );
   }
 
   if (role === "Anchor" || role === "Support" || role === "IGL") {
-    return Math.min(100, Math.round(map.anchorPressure * 0.46 + map.ctSideStrength * 0.24 + map.tSideDifficulty * 0.12 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.anchorPressure * 0.46 +
+          map.ctSideStrength * 0.24 +
+          map.tSideDifficulty * 0.12 +
+          directRoleBonus +
+          familyBonus,
+      ),
+    );
   }
 
-  return Math.min(100, Math.round(map.entryValue * 0.26 + map.anchorPressure * 0.24 + map.ctSideStrength * 0.18 + map.awpValue * 0.12 + directRoleBonus + familyBonus));
+  return Math.min(
+    100,
+    Math.round(
+      map.entryValue * 0.26 +
+        map.anchorPressure * 0.24 +
+        map.ctSideStrength * 0.18 +
+        map.awpValue * 0.12 +
+        directRoleBonus +
+        familyBonus,
+    ),
+  );
 }
 
 function getRoleMapReason(role: PlayerRole, map: CS2MapProfile) {
@@ -104,7 +135,10 @@ function getRoleMapReason(role: PlayerRole, map: CS2MapProfile) {
     return "Strong map for opening duels and rifle pressure.";
   }
 
-  if ((role === "Anchor" || role === "Support" || role === "IGL") && map.anchorPressure >= 82) {
+  if (
+    (role === "Anchor" || role === "Support" || role === "IGL") &&
+    map.anchorPressure >= 82
+  ) {
     return "High structure and site-defense value.";
   }
 

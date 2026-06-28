@@ -12,9 +12,7 @@ export function NotFoundPage({
       <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
         404
       </p>
-      <h2 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">
-        {title}
-      </h2>
+      <h2 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">{title}</h2>
       <p className="mt-4 max-w-2xl text-slate-400">{description}</p>
       <NavLink
         to="/"

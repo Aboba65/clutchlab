@@ -21,7 +21,10 @@ export function PlayerProfile({ player }: { player: CS2Player }) {
       <div className="mt-4 flex flex-wrap gap-2">
         <RoleBadge role={player.role} />
         {player.traits.map((trait) => (
-          <span key={trait} className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300">
+          <span
+            key={trait}
+            className="rounded-full bg-white/5 px-3 py-1 text-sm text-slate-300"
+          >
             {trait}
           </span>
         ))}

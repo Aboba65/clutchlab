@@ -3,12 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { players, teams } from "../data";
 import type { CS2Player, PlayerRole } from "../types";
 import { maps, type CS2MapProfile } from "../config/maps";
-import {
-  getPlayerImpact,
-  getRosterScore,
-  getRosterWarnings,
-  getTeamName,
-} from "../lib";
+import { getPlayerImpact, getRosterScore, getRosterWarnings, getTeamName } from "../lib";
 import { Panel } from "../components/Panel";
 import { StatCard } from "../components/StatCard";
 import { RoleBadge } from "../components/RoleBadge";
@@ -69,13 +64,7 @@ const priceCaps = [
   { value: "8", label: "$8 or less" },
 ] as const;
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -216,11 +205,7 @@ export function RosterBuilderPage() {
           !showOnlyAffordable || selected || (affordable && rosterHasSlot);
 
         return (
-          matchesSearch &&
-          matchesRole &&
-          matchesTeam &&
-          matchesPrice &&
-          matchesAffordable
+          matchesSearch && matchesRole && matchesTeam && matchesPrice && matchesAffordable
         );
       })
       .sort((a, b) => {
@@ -278,7 +263,12 @@ export function RosterBuilderPage() {
   }
 
   function addBestForRole(role: PlayerRole) {
-    const bestPlayer = getBestAvailableForRole(role, selectedIds, selectedPlayers, totalPrice);
+    const bestPlayer = getBestAvailableForRole(
+      role,
+      selectedIds,
+      selectedPlayers,
+      totalPrice,
+    );
 
     if (bestPlayer) {
       togglePlayer(bestPlayer);
@@ -516,7 +506,8 @@ export function RosterBuilderPage() {
 
             <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-400">
               <span>
-                Showing <span className="font-bold text-white">{filteredPlayers.length}</span>{" "}
+                Showing{" "}
+                <span className="font-bold text-white">{filteredPlayers.length}</span>{" "}
                 candidates sorted by{" "}
                 <span className="font-bold text-cyan-200">
                   {sortOptions.find((item) => item.value === sortBy)?.label}
@@ -650,9 +641,7 @@ export function RosterBuilderPage() {
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 Avg Impact
               </p>
-              <p className="mt-2 text-3xl font-black text-cyan-200">
-                {averageImpact}
-              </p>
+              <p className="mt-2 text-3xl font-black text-cyan-200">{averageImpact}</p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
@@ -762,7 +751,8 @@ export function RosterBuilderPage() {
               </button>
             </div>
             <p className="mt-2 text-xs text-slate-500">
-              Сохранение доступно для состава 5/5 в рамках бюджета. Данные хранятся в браузере через localStorage.
+              Сохранение доступно для состава 5/5 в рамках бюджета. Данные хранятся в
+              браузере через localStorage.
             </p>
           </div>
 
@@ -795,11 +785,7 @@ export function RosterBuilderPage() {
   );
 }
 
-function getSortValue(
-  player: CS2Player,
-  sortBy: SortKey,
-  selectedPlayers: CS2Player[],
-) {
+function getSortValue(player: CS2Player, sortBy: SortKey, selectedPlayers: CS2Player[]) {
   if (sortBy === "fit") return getCandidateFitScore(player, selectedPlayers);
   if (sortBy === "impact") return getPlayerImpact(player);
   if (sortBy === "rating") return player.stats.rating;
@@ -829,7 +815,8 @@ function formatSortValue(
 function getCandidateFitScore(player: CS2Player, selectedPlayers: CS2Player[]) {
   const roleAlreadyCovered = selectedPlayers.some((item) => item.role === player.role);
   const selectedRoles = new Set(selectedPlayers.map((item) => item.role));
-  const fillsCoreRole = coreRoles.includes(player.role) && !selectedRoles.has(player.role);
+  const fillsCoreRole =
+    coreRoles.includes(player.role) && !selectedRoles.has(player.role);
 
   const impactScore = getPlayerImpact(player) * 0.45;
   const consistencyScore = player.stats.consistency * 0.15;
@@ -840,7 +827,10 @@ function getCandidateFitScore(player: CS2Player, selectedPlayers: CS2Player[]) {
   return Math.round(
     Math.max(
       0,
-      Math.min(100, impactScore + consistencyScore + clutchScore + valueScore + roleBonus),
+      Math.min(
+        100,
+        impactScore + consistencyScore + clutchScore + valueScore + roleBonus,
+      ),
     ),
   );
 }
@@ -852,10 +842,7 @@ function getPlayerValueScore(player: CS2Player) {
 function getAverageImpact(selectedPlayers: CS2Player[]) {
   if (selectedPlayers.length === 0) return 0;
 
-  const total = selectedPlayers.reduce(
-    (sum, player) => sum + getPlayerImpact(player),
-    0,
-  );
+  const total = selectedPlayers.reduce((sum, player) => sum + getPlayerImpact(player), 0);
 
   return Math.round(total / selectedPlayers.length);
 }
@@ -873,10 +860,7 @@ function getRoleBalanceScore(selectedPlayers: CS2Player[]) {
   const uniqueRoles = new Set(selectedPlayers.map((player) => player.role)).size;
 
   return Math.round(
-    Math.min(
-      100,
-      coveredCoreRoles * 16 + uniqueRoles * 4 + selectedPlayers.length * 2,
-    ),
+    Math.min(100, coveredCoreRoles * 16 + uniqueRoles * 4 + selectedPlayers.length * 2),
   );
 }
 
@@ -905,19 +889,21 @@ function getBestAvailableForRole(
 ) {
   if (selectedPlayers.length >= ROSTER_SIZE) return null;
 
-  return players
-    .filter((player) => {
-      return (
-        player.role === role &&
-        !selectedIds.includes(player.id) &&
-        totalPrice + player.price <= ROSTER_BUDGET
-      );
-    })
-    .sort(
-      (a, b) =>
-        getCandidateFitScore(b, selectedPlayers) -
-        getCandidateFitScore(a, selectedPlayers),
-    )[0] ?? null;
+  return (
+    players
+      .filter((player) => {
+        return (
+          player.role === role &&
+          !selectedIds.includes(player.id) &&
+          totalPrice + player.price <= ROSTER_BUDGET
+        );
+      })
+      .sort(
+        (a, b) =>
+          getCandidateFitScore(b, selectedPlayers) -
+          getCandidateFitScore(a, selectedPlayers),
+      )[0] ?? null
+  );
 }
 
 function getBuilderWarnings(
@@ -1040,11 +1026,7 @@ function getRosterRead(
   }.`;
 }
 
-function RosterStatusBadge({
-  status,
-}: {
-  status: ReturnType<typeof getRosterStatus>;
-}) {
+function RosterStatusBadge({ status }: { status: ReturnType<typeof getRosterStatus> }) {
   return (
     <span
       className={`inline-flex items-center rounded-full border px-4 py-2 text-sm font-black ${status.className}`}

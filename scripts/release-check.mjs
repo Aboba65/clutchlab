@@ -6,6 +6,14 @@ const checks = [
     command: "npm run validate:data",
   },
   {
+    name: "Lint source",
+    command: "npm run lint",
+  },
+  {
+    name: "Check formatting",
+    command: "npm run format:check",
+  },
+  {
     name: "Build production bundle",
     command: "npm run build",
   },

@@ -41,13 +41,7 @@ type TeamComparePreset = {
   rightId: string;
 };
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -71,10 +65,7 @@ export function TeamComparePage() {
   const leftPlayers = useMemo(() => getTeamPlayers(left), [left]);
   const rightPlayers = useMemo(() => getTeamPlayers(right), [right]);
   const rows = useMemo(() => getTeamCompareRows(left, right), [left, right]);
-  const dimensions = useMemo(
-    () => getTeamCompareDimensions(left, right),
-    [left, right],
-  );
+  const dimensions = useMemo(() => getTeamCompareDimensions(left, right), [left, right]);
   const sharedMaps = useMemo(() => getSharedMaps(left, right), [left, right]);
   const uniqueLeftMaps = useMemo(
     () => left.bestMaps.filter((map) => !right.bestMaps.includes(map)),
@@ -263,9 +254,7 @@ export function TeamComparePage() {
                 <tr key={row.label} className="border-t border-white/10">
                   <td className="px-3 py-3">
                     <div className="font-bold text-white">{row.label}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {row.description}
-                    </div>
+                    <div className="mt-1 text-xs text-slate-500">{row.description}</div>
                   </td>
                   <td className="px-3 py-3 text-slate-300">
                     {formatTeamCompareValue(row.left, row.kind)}
@@ -521,11 +510,7 @@ function TeamDimensionCard({
       </div>
 
       <div className="mt-3">
-        <TeamCompareWinnerBadge
-          winner={dimension.winner}
-          left={left}
-          right={right}
-        />
+        <TeamCompareWinnerBadge winner={dimension.winner} left={left} right={right} />
       </div>
     </div>
   );
@@ -711,9 +696,7 @@ function MapList({
 
   return (
     <div>
-      <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-sm font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {maps.length > 0 ? (
           maps.map((map) => (
@@ -757,9 +740,7 @@ function CompareSummaryCard({
 function MiniMetric({ title, value }: { title: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-1 text-2xl font-black text-white">{value}</p>
     </div>
   );
@@ -1139,12 +1120,8 @@ function getTeamComparePresets(): TeamComparePreset[] {
   const overall = [...teams].sort(
     (a, b) => getTeamOverallScore(b) - getTeamOverallScore(a),
   );
-  const firepower = [...teams].sort(
-    (a, b) => b.scores.firepower - a.scores.firepower,
-  );
-  const structure = [...teams].sort(
-    (a, b) => b.scores.structure - a.scores.structure,
-  );
+  const firepower = [...teams].sort((a, b) => b.scores.firepower - a.scores.firepower);
+  const structure = [...teams].sort((a, b) => b.scores.structure - a.scores.structure);
   const mapPool = [...teams].sort((a, b) => b.scores.mapPool - a.scores.mapPool);
   const rosterStrength = [...teams].sort(
     (a, b) => getTeamRosterStrength(b) - getTeamRosterStrength(a),
@@ -1214,9 +1191,9 @@ function getBestDimensionForTeam(
     return "overall profile";
   }
 
-  return winningDimensions
-    .sort((a, b) => Math.abs(b.left - b.right) - Math.abs(a.left - a.right))[0]
-    .label;
+  return winningDimensions.sort(
+    (a, b) => Math.abs(b.left - b.right) - Math.abs(a.left - a.right),
+  )[0].label;
 }
 
 function formatTeamCompareValue(value: number, kind: CompareKind) {
@@ -1291,9 +1268,7 @@ function getTeamSideRead(
 
   const side = dimensions[0]?.left === team.scores.firepower ? "left" : "right";
   const dimensionWins = dimensions.filter((dimension) => {
-    return side === "left"
-      ? dimension.winner === "left"
-      : dimension.winner === "right";
+    return side === "left" ? dimension.winner === "left" : dimension.winner === "right";
   }).length;
 
   return `${team.name} ${overallText}. Сильная зона: ${strongest}; слабая зона: ${weakest}. Выигранные profile dimensions: ${dimensionWins}/6. ${overlapText}`;

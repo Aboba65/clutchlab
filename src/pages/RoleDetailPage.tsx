@@ -35,13 +35,7 @@ export function RoleDetailPage() {
   return <RoleDetailView config={config} onBack={() => navigate("/roles")} />;
 }
 
-function RoleDetailView({
-  config,
-  onBack,
-}: {
-  config: RoleConfig;
-  onBack: () => void;
-}) {
+function RoleDetailView({ config, onBack }: { config: RoleConfig; onBack: () => void }) {
   const navigate = useNavigate();
   const rolePlayers = getRolePlayers(config.role);
   const topPlayers = getBestPlayersForRole(config.role, 8);
@@ -95,10 +89,22 @@ function RoleDetailView({
       </div>
 
       <div className="grid gap-4 md:grid-cols-5">
-        <StatCard title="Players" value={rolePlayers.length.toString()} subtitle="in database" />
+        <StatCard
+          title="Players"
+          value={rolePlayers.length.toString()}
+          subtitle="in database"
+        />
         <StatCard title="Impact" value={average.impact.toString()} subtitle="avg index" />
-        <StatCard title="Opening" value={average.opening.toString()} subtitle="pressure" />
-        <StatCard title="Clutch" value={average.clutch.toString()} subtitle="late round" />
+        <StatCard
+          title="Opening"
+          value={average.opening.toString()}
+          subtitle="pressure"
+        />
+        <StatCard
+          title="Clutch"
+          value={average.clutch.toString()}
+          subtitle="late round"
+        />
         <StatCard title="Price" value={`$${average.price}`} subtitle="avg budget" />
       </div>
 
@@ -147,7 +153,10 @@ function RoleDetailView({
               </p>
               <div className="mt-3 grid gap-2">
                 {config.needs.map((item) => (
-                  <span key={item} className="rounded-xl bg-black/20 px-3 py-2 text-sm text-slate-200">
+                  <span
+                    key={item}
+                    className="rounded-xl bg-black/20 px-3 py-2 text-sm text-slate-200"
+                  >
                     {item}
                   </span>
                 ))}
@@ -202,7 +211,10 @@ function RoleDetailView({
         <Panel title="Best use cases">
           <div className="grid gap-2">
             {config.bestUse.map((item) => (
-              <div key={item} className="rounded-2xl bg-white/[0.04] p-4 text-sm text-slate-300">
+              <div
+                key={item}
+                className="rounded-2xl bg-white/[0.04] p-4 text-sm text-slate-300"
+              >
                 {item}
               </div>
             ))}
@@ -281,21 +293,58 @@ function getBestMapsForRole(role: PlayerRole, limit = 5) {
 
 function getRoleMapScore(role: PlayerRole, map: CS2MapProfile) {
   const directRoleBonus = map.bestRoles.includes(role) ? 18 : 0;
-  const familyBonus = map.bestRoles.some((item) => getRoleFamily(item) === getRoleFamily(role)) ? 8 : 0;
+  const familyBonus = map.bestRoles.some(
+    (item) => getRoleFamily(item) === getRoleFamily(role),
+  )
+    ? 8
+    : 0;
 
   if (role === "AWPer") {
-    return Math.min(100, Math.round(map.awpValue * 0.68 + map.ctSideStrength * 0.18 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.awpValue * 0.68 + map.ctSideStrength * 0.18 + directRoleBonus + familyBonus,
+      ),
+    );
   }
 
   if (role === "Entry" || role === "Star Rifler") {
-    return Math.min(100, Math.round(map.entryValue * 0.55 + map.tSideDifficulty * 0.18 + map.ctSideStrength * 0.12 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.entryValue * 0.55 +
+          map.tSideDifficulty * 0.18 +
+          map.ctSideStrength * 0.12 +
+          directRoleBonus +
+          familyBonus,
+      ),
+    );
   }
 
   if (role === "Anchor" || role === "Support" || role === "IGL") {
-    return Math.min(100, Math.round(map.anchorPressure * 0.46 + map.ctSideStrength * 0.24 + map.tSideDifficulty * 0.12 + directRoleBonus + familyBonus));
+    return Math.min(
+      100,
+      Math.round(
+        map.anchorPressure * 0.46 +
+          map.ctSideStrength * 0.24 +
+          map.tSideDifficulty * 0.12 +
+          directRoleBonus +
+          familyBonus,
+      ),
+    );
   }
 
-  return Math.min(100, Math.round(map.entryValue * 0.26 + map.anchorPressure * 0.24 + map.ctSideStrength * 0.18 + map.awpValue * 0.12 + directRoleBonus + familyBonus));
+  return Math.min(
+    100,
+    Math.round(
+      map.entryValue * 0.26 +
+        map.anchorPressure * 0.24 +
+        map.ctSideStrength * 0.18 +
+        map.awpValue * 0.12 +
+        directRoleBonus +
+        familyBonus,
+    ),
+  );
 }
 
 function getRoleMapReason(role: PlayerRole, map: CS2MapProfile) {
@@ -311,7 +360,10 @@ function getRoleMapReason(role: PlayerRole, map: CS2MapProfile) {
     return "Strong map for opening duels and rifle pressure.";
   }
 
-  if ((role === "Anchor" || role === "Support" || role === "IGL") && map.anchorPressure >= 82) {
+  if (
+    (role === "Anchor" || role === "Support" || role === "IGL") &&
+    map.anchorPressure >= 82
+  ) {
     return "High structure and site-defense value.";
   }
 
@@ -416,4 +468,3 @@ function getRoleFamily(role: PlayerRole) {
   if (role === "Anchor" || role === "Support" || role === "IGL") return "structure";
   return "other";
 }
-

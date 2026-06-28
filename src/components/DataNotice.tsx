@@ -18,9 +18,9 @@ export function DataNotice() {
           <h2 className="mt-2 text-xl font-black text-white">{statusLabel}</h2>
 
           <p className="mt-2 max-w-4xl text-slate-300">
-            Current ClutchLab ratings, prices, team scores, map fit scores and
-            custom indexes are manual MVP values for interface testing. They
-            should not be treated as live or official esports statistics.
+            Current ClutchLab ratings, prices, team scores, map fit scores and custom
+            indexes are manual MVP values for interface testing. They should not be
+            treated as live or official esports statistics.
           </p>
         </div>
 
@@ -44,9 +44,7 @@ export function DataNotice() {
 function DataNoticeMetric({ title, value }: { title: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-1 font-black text-amber-100">{value}</p>
     </div>
   );

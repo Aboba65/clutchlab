@@ -63,7 +63,8 @@ const roadmap: RoadmapItem[] = [
   {
     title: "MVP structure",
     status: "Done",
-    description: "Страницы, роутинг, AppShell, каталоги, билдер и сравнения вынесены отдельно.",
+    description:
+      "Страницы, роутинг, AppShell, каталоги, билдер и сравнения вынесены отдельно.",
   },
   {
     title: "UX layer",
@@ -78,7 +79,8 @@ const roadmap: RoadmapItem[] = [
   {
     title: "Real stats",
     status: "Later",
-    description: "Подключить обновляемые рейтинги, map stats, формы команд и историю матчей.",
+    description:
+      "Подключить обновляемые рейтинги, map stats, формы команд и историю матчей.",
   },
 ];
 
@@ -137,8 +139,7 @@ function getAverageImpact() {
   if (players.length === 0) return 0;
 
   return Math.round(
-    players.reduce((sum, player) => sum + getPlayerImpact(player), 0) /
-      players.length,
+    players.reduce((sum, player) => sum + getPlayerImpact(player), 0) / players.length,
   );
 }
 
@@ -153,9 +154,7 @@ function getAverageTeamScore() {
 function getAverageMapScore() {
   if (maps.length === 0) return 0;
 
-  return Math.round(
-    maps.reduce((sum, map) => sum + getMapScore(map), 0) / maps.length,
-  );
+  return Math.round(maps.reduce((sum, map) => sum + getMapScore(map), 0) / maps.length);
 }
 
 function getDatabasePrice() {
@@ -176,9 +175,7 @@ export function HomePage() {
   }, []);
 
   const bestValuePlayers = useMemo(() => {
-    return [...players]
-      .sort((a, b) => getPlayerValue(b) - getPlayerValue(a))
-      .slice(0, 5);
+    return [...players].sort((a, b) => getPlayerValue(b) - getPlayerValue(a)).slice(0, 5);
   }, []);
 
   const strongestMaps = useMemo(() => {
@@ -221,9 +218,9 @@ export function HomePage() {
             </h2>
 
             <p className="mt-5 max-w-3xl text-slate-300">
-              Главная теперь работает как dashboard: быстрые действия, top players,
-              top teams, value picks, strongest maps и статус развития продукта.
-              Данные пока MVP/demo, но интерфейс уже собран как аналитический продукт.
+              Главная теперь работает как dashboard: быстрые действия, top players, top
+              teams, value picks, strongest maps и статус развития продукта. Данные пока
+              MVP/demo, но интерфейс уже собран как аналитический продукт.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
@@ -261,8 +258,8 @@ export function HomePage() {
                   {featuredMatchup[1]?.name ?? "Challenger"}
                 </h3>
                 <p className="mt-2 text-sm text-slate-400">
-                  Быстрый вход в team compare: firepower, structure, map pool,
-                  roster strength и map overlap.
+                  Быстрый вход в team compare: firepower, structure, map pool, roster
+                  strength и map overlap.
                 </p>
               </div>
 
@@ -297,11 +294,31 @@ export function HomePage() {
         <StatCard title="Players" value={players.length.toString()} subtitle="database" />
         <StatCard title="Teams" value={teams.length.toString()} subtitle="profiles" />
         <StatCard title="Maps" value={maps.length.toString()} subtitle="map reads" />
-        <StatCard title="Roles" value={roleConfigs.length.toString()} subtitle="role pages" />
-        <StatCard title="Avg Impact" value={averageImpact.toString()} subtitle="player index" />
-        <StatCard title="Avg Team" value={averageTeamScore.toString()} subtitle="team score" />
-        <StatCard title="Avg Map" value={averageMapScore.toString()} subtitle="map intensity" />
-        <StatCard title="Market" value={`$${databasePrice}`} subtitle={`${premiumPlayers} premium`} />
+        <StatCard
+          title="Roles"
+          value={roleConfigs.length.toString()}
+          subtitle="role pages"
+        />
+        <StatCard
+          title="Avg Impact"
+          value={averageImpact.toString()}
+          subtitle="player index"
+        />
+        <StatCard
+          title="Avg Team"
+          value={averageTeamScore.toString()}
+          subtitle="team score"
+        />
+        <StatCard
+          title="Avg Map"
+          value={averageMapScore.toString()}
+          subtitle="map intensity"
+        />
+        <StatCard
+          title="Market"
+          value={`$${databasePrice}`}
+          subtitle={`${premiumPlayers} premium`}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-4">
@@ -388,8 +405,14 @@ export function HomePage() {
                 </div>
 
                 <div className="mt-4 grid gap-2 md:grid-cols-3">
-                  <MiniDashboardMetric title="Avg Impact" value={getTeamAverageImpact(team)} />
-                  <MiniDashboardMetric title="Role Depth" value={getTeamRoleDepth(team)} />
+                  <MiniDashboardMetric
+                    title="Avg Impact"
+                    value={getTeamAverageImpact(team)}
+                  />
+                  <MiniDashboardMetric
+                    title="Role Depth"
+                    value={getTeamRoleDepth(team)}
+                  />
                   <MiniDashboardMetric title="Map Pool" value={team.scores.mapPool} />
                 </div>
               </button>
@@ -486,8 +509,8 @@ export function HomePage() {
             </h3>
             <p className="mt-2 max-w-3xl text-sm text-slate-400">
               Players and teams use real CS2 names, while ratings, prices and custom
-              indexes are demo values. The next major milestone is replacing static
-              demo numbers with a cleaner data model and manually curated real stats.
+              indexes are demo values. The next major milestone is replacing static demo
+              numbers with a cleaner data model and manually curated real stats.
             </p>
           </div>
 
@@ -533,9 +556,7 @@ function QuickActionCard({
       <p className="mt-2 min-h-12 text-sm text-slate-400">{action.description}</p>
       <div
         className={`mt-4 inline-flex rounded-full px-3 py-1 text-sm font-bold ${
-          isPrimary
-            ? "bg-cyan-300 text-slate-950"
-            : "bg-cyan-300/10 text-cyan-200"
+          isPrimary ? "bg-cyan-300 text-slate-950" : "bg-cyan-300/10 text-cyan-200"
         }`}
       >
         {action.label}
@@ -547,9 +568,7 @@ function QuickActionCard({
 function MiniDashboardMetric({ title, value }: { title: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-        {title}
-      </p>
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{title}</p>
       <p className="mt-1 text-2xl font-black text-white">{value}</p>
     </div>
   );

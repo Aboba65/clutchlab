@@ -1,20 +1,8 @@
 export type PlayerRole =
-  | "AWPer"
-  | "Entry"
-  | "Star Rifler"
-  | "Lurker"
-  | "Anchor"
-  | "Support"
-  | "IGL"
-  | "Flex";
+  "AWPer" | "Entry" | "Star Rifler" | "Lurker" | "Anchor" | "Support" | "IGL" | "Flex";
 
 export type Region =
-  | "Europe"
-  | "CIS"
-  | "North America"
-  | "South America"
-  | "Asia"
-  | "International";
+  "Europe" | "CIS" | "North America" | "South America" | "Asia" | "International";
 
 export type CS2Player = {
   id: string;

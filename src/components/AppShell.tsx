@@ -24,12 +24,10 @@ function Header() {
         <p className="text-sm font-medium uppercase tracking-[0.35em] text-cyan-300">
           CS2 Analytics
         </p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight md:text-4xl">
-          ClutchLab
-        </h1>
+        <h1 className="mt-2 text-3xl font-black tracking-tight md:text-4xl">ClutchLab</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate-400">
-          Игроки, команды, роли, сравнение и сборка состава. MVP теперь работает
-          через нормальные URL.
+          Игроки, команды, роли, сравнение и сборка состава. MVP теперь работает через
+          нормальные URL.
         </p>
       </div>
 

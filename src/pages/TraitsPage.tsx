@@ -4,13 +4,7 @@ import { getPlayerImpact } from "../lib";
 import { Panel } from "../components/Panel";
 import { Score } from "../components/Score";
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -20,10 +14,16 @@ function PageTitle({
 }
 
 export function TraitsPage() {
-  const topImpact = [...players].sort((a, b) => getPlayerImpact(b) - getPlayerImpact(a)).slice(0, 5);
-  const topClutch = [...players].sort((a, b) => b.stats.clutch - a.stats.clutch).slice(0, 5);
+  const topImpact = [...players]
+    .sort((a, b) => getPlayerImpact(b) - getPlayerImpact(a))
+    .slice(0, 5);
+  const topClutch = [...players]
+    .sort((a, b) => b.stats.clutch - a.stats.clutch)
+    .slice(0, 5);
   const topAWP = [...players].sort((a, b) => b.stats.awp - a.stats.awp).slice(0, 5);
-  const topEntry = [...players].sort((a, b) => b.stats.opening - a.stats.opening).slice(0, 5);
+  const topEntry = [...players]
+    .sort((a, b) => b.stats.opening - a.stats.opening)
+    .slice(0, 5);
 
   return (
     <section className="grid gap-6">
@@ -33,10 +33,22 @@ export function TraitsPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-2">
-        <TraitList title="Highest Impact" players={topImpact} value={(p) => getPlayerImpact(p)} />
-        <TraitList title="Best Clutch" players={topClutch} value={(p) => p.stats.clutch} />
+        <TraitList
+          title="Highest Impact"
+          players={topImpact}
+          value={(p) => getPlayerImpact(p)}
+        />
+        <TraitList
+          title="Best Clutch"
+          players={topClutch}
+          value={(p) => p.stats.clutch}
+        />
         <TraitList title="Best AWPers" players={topAWP} value={(p) => p.stats.awp} />
-        <TraitList title="Best Entry Pressure" players={topEntry} value={(p) => p.stats.opening} />
+        <TraitList
+          title="Best Entry Pressure"
+          players={topEntry}
+          value={(p) => p.stats.opening}
+        />
       </div>
     </section>
   );

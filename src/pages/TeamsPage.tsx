@@ -6,13 +6,7 @@ import { Metric } from "../components/Metric";
 import { Score } from "../components/Score";
 
 type SortKey =
-  | "overall"
-  | "firepower"
-  | "structure"
-  | "mapPool"
-  | "clutch"
-  | "form"
-  | "players";
+  "overall" | "firepower" | "structure" | "mapPool" | "clutch" | "form" | "players";
 
 type SortDirection = "desc" | "asc";
 
@@ -34,13 +28,7 @@ const scoreThresholds = [
   { value: "90", label: "90+" },
 ] as const;
 
-function PageTitle({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PageTitle({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-3xl font-black tracking-tight md:text-5xl">{title}</h2>
@@ -143,8 +131,7 @@ export function TeamsPage() {
             player.nickname.toLowerCase().includes(normalizedQuery),
           );
 
-        const matchesRegion =
-          regionFilter === "All" || team.region === regionFilter;
+        const matchesRegion = regionFilter === "All" || team.region === regionFilter;
         const matchesMap = mapFilter === "All" || team.bestMaps.includes(mapFilter);
         const matchesScore = minScore === "All" || teamScore >= Number(minScore);
 
@@ -164,10 +151,7 @@ export function TeamsPage() {
   }, [searchQuery, regionFilter, mapFilter, minScore, sortBy, sortDirection]);
 
   const averageScore = useMemo(() => getAverageScore(filteredTeams), [filteredTeams]);
-  const averageMapPool = useMemo(
-    () => getAverageMapPool(filteredTeams),
-    [filteredTeams],
-  );
+  const averageMapPool = useMemo(() => getAverageMapPool(filteredTeams), [filteredTeams]);
 
   const activeRegionCount = useMemo(() => {
     return new Set(filteredTeams.map((team) => team.region)).size;
@@ -217,36 +201,28 @@ export function TeamsPage() {
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg Overall
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageScore}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageScore}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Avg Map Pool
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {averageMapPool}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{averageMapPool}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Regions
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {activeRegionCount}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{activeRegionCount}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Demo Players
           </p>
-          <p className="mt-2 text-3xl font-black text-cyan-200">
-            {activePlayerCount}
-          </p>
+          <p className="mt-2 text-3xl font-black text-cyan-200">{activePlayerCount}</p>
         </div>
       </div>
 
