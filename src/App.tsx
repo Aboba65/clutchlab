@@ -19,6 +19,7 @@ import { RoleDetailPage } from "./pages/RoleDetailPage";
 import { MapDetailPage } from "./pages/MapDetailPage";
 import { PlayerDetailPage } from "./pages/PlayerDetailPage";
 import { TeamDetailPage } from "./pages/TeamDetailPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const views: { path: string; label: string; end?: boolean }[] = [
   { path: "/", label: "Overview", end: true },
@@ -56,7 +57,7 @@ function App() {
             <Route path="/roles/:roleId" element={<RoleDetailPage />} />
             <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
             <Route path="/traits" element={<TraitsPage />} />
-            <Route path="*" element={<NotFoundView />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </main>
@@ -99,32 +100,6 @@ function Header() {
         ))}
       </nav>
     </header>
-  );
-}
-
-function NotFoundView({
-  title = "Page not found",
-  description = "Такой страницы нет. Вернись на главную или выбери раздел в навигации.",
-}: {
-  title?: string;
-  description?: string;
-}) {
-  return (
-    <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-8">
-      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
-        404
-      </p>
-      <h2 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">
-        {title}
-      </h2>
-      <p className="mt-4 max-w-2xl text-slate-400">{description}</p>
-      <NavLink
-        to="/"
-        className="mt-6 inline-flex rounded-full bg-cyan-300 px-5 py-3 font-bold text-slate-950 hover:bg-cyan-200"
-      >
-        Back to overview
-      </NavLink>
-    </section>
   );
 }
 
