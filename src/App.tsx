@@ -1,22 +1,23 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AppShell } from "./components/AppShell";
+import { AboutPage } from "./pages/AboutPage";
+import { ComparePage } from "./pages/ComparePage";
 import { HomePage } from "./pages/HomePage";
-import { PlayersPage } from "./pages/PlayersPage";
-import { TeamsPage } from "./pages/TeamsPage";
+import { MapDetailPage } from "./pages/MapDetailPage";
 import { MapsPage } from "./pages/MapsPage";
-import { TraitsPage } from "./pages/TraitsPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { PlayerDetailPage } from "./pages/PlayerDetailPage";
+import { PlayersPage } from "./pages/PlayersPage";
+import { RoleDetailPage } from "./pages/RoleDetailPage";
+import { RolesPage } from "./pages/RolesPage";
+import { RosterBuilderPage } from "./pages/RosterBuilderPage";
 import { SavedRostersPage } from "./pages/SavedRostersPage";
 import { TeamComparePage } from "./pages/TeamComparePage";
-import { ComparePage } from "./pages/ComparePage";
-import { RosterBuilderPage } from "./pages/RosterBuilderPage";
-import { RolesPage } from "./pages/RolesPage";
-import { RoleDetailPage } from "./pages/RoleDetailPage";
-import { MapDetailPage } from "./pages/MapDetailPage";
-import { PlayerDetailPage } from "./pages/PlayerDetailPage";
 import { TeamDetailPage } from "./pages/TeamDetailPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { AppShell } from "./components/AppShell";
+import { TeamsPage } from "./pages/TeamsPage";
+import { TraitsPage } from "./pages/TraitsPage";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <AppShell>
@@ -28,19 +29,18 @@ function App() {
           <Route path="/teams/:teamId" element={<TeamDetailPage />} />
           <Route path="/maps" element={<MapsPage />} />
           <Route path="/maps/:mapId" element={<MapDetailPage />} />
+          <Route path="/roles" element={<RolesPage />} />
+          <Route path="/roles/:roleId" element={<RoleDetailPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/team-compare" element={<TeamComparePage />} />
           <Route path="/roster-builder" element={<RosterBuilderPage />} />
           <Route path="/saved-rosters" element={<SavedRostersPage />} />
-          <Route path="/roles" element={<RolesPage />} />
-          <Route path="/roles/:roleId" element={<RoleDetailPage />} />
-          <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
           <Route path="/traits" element={<TraitsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AppShell>
     </BrowserRouter>
   );
 }
-
-export default App;
