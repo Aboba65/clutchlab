@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { views } from "../config/navigation";
+import { DataNotice } from "./DataNotice";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -9,6 +10,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Header />
 
         {children}
+
+        <DataNotice />
       </div>
     </main>
   );
