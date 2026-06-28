@@ -16,6 +16,12 @@ Repository: https://github.com/Aboba65/clutchlab
 
 ClutchLab is currently an MVP with a static local data layer.
 
+Current documented version:
+
+```text
+0.1.3 UX polish
+```
+
 The interface is built like a real analytics product, but the current ratings,
 prices, team scores, map scores and custom indexes are **demo/manual values**
 used for product testing. They should not be treated as live, official or current
@@ -37,7 +43,9 @@ esports statistics.
 - Saved Rosters manager using `localStorage`
 - Traits page
 - About / Methodology page
+- Route-based browser tab titles
 - Data notice shown in the app shell
+- Footer with version, data status and project links
 
 ## Tech stack
 
@@ -73,13 +81,37 @@ esports statistics.
 /builder                  Redirect to /roster-builder
 ```
 
+## Browser titles
+
+The app updates the browser tab title on route changes.
+
+```text
+/                         ClutchLab — CS2 Analytics
+/players                  ClutchLab — Players
+/players/:playerId        ClutchLab — Player Profile
+/teams                    ClutchLab — Teams
+/teams/:teamId            ClutchLab — Team Profile
+/maps                     ClutchLab — Maps
+/maps/:mapId              ClutchLab — Map Detail
+/roles                    ClutchLab — Roles
+/roles/:roleId            ClutchLab — Role Detail
+/compare                  ClutchLab — Player Compare
+/team-compare             ClutchLab — Team Compare
+/roster-builder           ClutchLab — Roster Builder
+/saved-rosters            ClutchLab — Saved Rosters
+/traits                   ClutchLab — Traits
+/about                    ClutchLab — About
+*                         ClutchLab — Not Found
+```
+
 ## Project structure
 
 ```text
 src/
-  components/             Shared UI components and app shell
+  components/             Shared UI components, app shell and footer
   config/                 Navigation, role profiles and map profiles
   data/                   Player data, team data and dataset metadata
+  hooks/                  Route/title hooks
   pages/                  Route-level pages
   App.tsx                 BrowserRouter and route table
   data.ts                 Compatibility data export
@@ -236,6 +268,19 @@ git push
 
 Vercel then builds the latest pushed version.
 
+## UX polish
+
+Current UX polish includes:
+
+```text
+[✓] route-based browser titles
+[✓] app-wide footer
+[✓] visible MVP version
+[✓] visible data status
+[✓] visible data updated date
+[✓] GitHub, Changelog, Data and Live site links
+```
+
 ## Methodology overview
 
 ### Player Impact
@@ -265,7 +310,7 @@ impact, player price, role coverage, roster cost and overall roster balance.
 - Track update dates and event windows
 - Separate identity data from current performance data
 - Add richer map-specific statistics
-- Add better saved roster export/import
+- Add better saved roster export/import if it becomes useful later
 - Add automated data generation or backend/API later
 
 ## Important note

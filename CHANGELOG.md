@@ -2,6 +2,39 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.3 — UX polish
+
+Date: 2026-06-28
+
+### Added
+
+- Route-based browser tab titles through `src/hooks/usePageTitle.ts`
+- Footer status block through `src/components/Footer.tsx`
+- App-wide footer rendering in `AppShell`
+- Footer MVP version display
+- Footer data status display from `dataMeta.status`
+- Footer data updated display from `dataMeta.lastUpdated`
+- Footer project links:
+  - About
+  - Changelog
+  - Data
+  - GitHub
+  - Live site
+- README UX polish section
+- Browser titles section in README
+
+### Improved
+
+- Browser tabs now show meaningful page names for key routes.
+- Users can see dataset status and project links at the bottom of every page.
+- Documentation now reflects route titles and footer/status polish.
+- Footer version was aligned with the documented project version.
+
+### Fixed
+
+- Fixed footer metadata field usage from `dataMeta.updatedAt` to
+  `dataMeta.lastUpdated`.
+
 ## 0.1.2 — Linting and formatting workflow
 
 Date: 2026-06-28
@@ -186,7 +219,7 @@ Planned next milestones:
 - Strengthen real-stat data model
 - Add source metadata per stat group
 - Add manual real-stat update workflow
-- Improve saved roster import/export
+- Improve mobile navigation polish
 - Expand player and team database
 - Add dynamic sitemap generation for detail pages
 - Add lightweight tests later

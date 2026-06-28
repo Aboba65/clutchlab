@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.2 MVP quality workflow
+0.1.3 UX polish
 ```
 
 ## Live site
@@ -27,8 +27,8 @@ https://github.com/Aboba65/clutchlab
 ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
-The product now has a complete first version of the interface and a stronger
-quality workflow:
+The product now has a complete first version of the interface, a stronger quality
+workflow and a small UX polish layer:
 
 - dashboard
 - catalogs
@@ -37,6 +37,8 @@ quality workflow:
 - roster builder
 - saved roster management
 - methodology page
+- route-based browser titles
+- footer with version/data status/project links
 - public project documentation
 - data validation script
 - linting
@@ -72,6 +74,8 @@ be described as live, official or current esports statistics.
 - Local data layer
 - Roster builder logic
 - Saved rosters via `localStorage`
+- Route title hook
+- Footer status block
 - Data validation script
 - ESLint config
 - Prettier config
@@ -120,7 +124,9 @@ be described as live, official or current esports statistics.
 [✓] Team comparison
 [✓] Roster Builder
 [✓] Saved Rosters manager
+[✓] Route page titles
 [✓] Data notice
+[✓] Footer status block
 [✓] About / Methodology page
 ```
 
@@ -130,6 +136,8 @@ be described as live, official or current esports statistics.
 [✓] React Router route table
 [✓] AppShell layout
 [✓] Shared UI components
+[✓] Route title hook
+[✓] Footer component
 [✓] Data layer split
 [✓] dataMeta
 [✓] Data layer README
@@ -280,15 +288,61 @@ npm run format:check
 npm run build
 ```
 
+## UX polish
+
+### Route titles
+
+Hook:
+
+```text
+src/hooks/usePageTitle.ts
+```
+
+The app updates `document.title` when routes change.
+
+Examples:
+
+```text
+/players          ClutchLab — Players
+/teams            ClutchLab — Teams
+/maps             ClutchLab — Maps
+/roster-builder   ClutchLab — Roster Builder
+/about            ClutchLab — About
+```
+
+### Footer
+
+Component:
+
+```text
+src/components/Footer.tsx
+```
+
+The footer shows:
+
+```text
+[✓] ClutchLab MVP
+[✓] version 0.1.3
+[✓] data status from dataMeta.status
+[✓] data updated from dataMeta.lastUpdated
+[✓] About link
+[✓] Changelog GitHub link
+[✓] Data GitHub link
+[✓] GitHub link
+[✓] Live site link
+```
+
 ## Important files
 
 ```text
 src/App.tsx
 src/components/AppShell.tsx
 src/components/DataNotice.tsx
+src/components/Footer.tsx
 src/config/navigation.ts
 src/config/maps.ts
 src/config/roles.ts
+src/hooks/usePageTitle.ts
 src/data.ts
 src/data/index.ts
 src/data/players.ts
@@ -331,7 +385,6 @@ public/sitemap.xml
 - Saved Rosters are stored only in the current browser via `localStorage`
 - No user accounts
 - No backend
-- No import/export for rosters yet
 - No dynamic sitemap for all detail pages yet
 
 ### Quality limitations
@@ -362,15 +415,15 @@ Create a documented workflow for replacing demo values:
 [ ] document manual adjustments
 ```
 
-### 2. Roster export/import
+### 2. Mobile navigation polish
 
-Improve Saved Rosters:
+Improve navigation on smaller screens:
 
 ```text
-[ ] export roster to JSON
-[ ] import roster from JSON
-[ ] copy roster summary
-[ ] share roster link later
+[ ] compact mobile header
+[ ] scrollable nav row or menu
+[ ] active route visibility
+[ ] reduced vertical height
 ```
 
 ### 3. Testing
@@ -386,11 +439,10 @@ Add project quality tools:
 ### 4. More real product polish
 
 ```text
-[ ] per-route page titles
+[ ] per-route meta descriptions
 [ ] detail-page sitemap entries
 [ ] loading/empty states audit
-[ ] mobile navigation polish
-[ ] better footer
+[ ] better public data methodology
 ```
 
 ## Build commands
