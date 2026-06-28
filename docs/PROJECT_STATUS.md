@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.0 MVP
+0.1.1 MVP quality workflow
 ```
 
 ## Live site
@@ -26,7 +26,19 @@ https://github.com/Aboba65/clutchlab
 
 ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles, roster construction and matchup comparison.
 
-The product now has a complete first version of the interface: dashboard, catalogs, detail pages, comparison tools, roster builder, saved roster management, methodology page and public project documentation.
+The product now has a complete first version of the interface and a basic quality workflow:
+
+- dashboard
+- catalogs
+- detail pages
+- comparison tools
+- roster builder
+- saved roster management
+- methodology page
+- public project documentation
+- data validation script
+- release check script
+- GitHub Actions CI
 
 ## Current data status
 
@@ -55,6 +67,9 @@ The current dataset is useful for product testing and UI logic, but it should no
 - Local data layer
 - Roster builder logic
 - Saved rosters via `localStorage`
+- Data validation script
+- Release check script
+- GitHub Actions CI
 - SEO files
 - Documentation structure
 - Vercel deployment setup
@@ -112,6 +127,7 @@ The current dataset is useful for product testing and UI logic, but it should no
 [✓] dataMeta
 [✓] Data layer README
 [✓] GitHub README
+[✓] README badges
 [✓] SEO meta tags
 [✓] favicon.svg
 [✓] og-image.svg
@@ -119,6 +135,90 @@ The current dataset is useful for product testing and UI logic, but it should no
 [✓] robots.txt
 [✓] sitemap.xml
 [✓] Vercel SPA rewrite
+[✓] Data validation script
+[✓] Release check script
+[✓] GitHub Actions CI
+```
+
+## Current quality workflow
+
+### Local checks
+
+Run this before committing:
+
+```bash
+npm run release:check
+```
+
+This runs:
+
+```bash
+npm run validate:data
+npm run build
+```
+
+### Data validation
+
+Command:
+
+```bash
+npm run validate:data
+```
+
+Script:
+
+```text
+scripts/validate-data.mjs
+```
+
+Current validation checks:
+
+```text
+[✓] player ids are unique
+[✓] team ids are unique
+[✓] map ids are unique
+[✓] map names are unique
+[✓] player.teamId exists in teams
+[✓] team.players ids exist in players
+[✓] team.bestMaps values exist in map profiles
+[✓] player roles are valid
+[✓] player prices are within expected builder range
+[✓] player score fields are within 0–100
+[✓] team score fields are within 0–100
+[✓] map score fields are within 0–100
+[✓] warnings for non-bidirectional player/team links
+```
+
+### Release check
+
+Command:
+
+```bash
+npm run release:check
+```
+
+Script:
+
+```text
+scripts/release-check.mjs
+```
+
+This is the preferred local pre-commit/pre-deploy command.
+
+### GitHub Actions CI
+
+Workflow:
+
+```text
+.github/workflows/ci.yml
+```
+
+GitHub runs on push and pull request to `main` or `master`:
+
+```bash
+npm ci
+npm run validate:data
+npm run build
 ```
 
 ## Important files
@@ -138,9 +238,14 @@ src/data/meta.ts
 src/data/README.md
 src/lib.ts
 src/types.ts
+scripts/validate-data.mjs
+scripts/release-check.mjs
+.github/workflows/ci.yml
 README.md
 CHANGELOG.md
 docs/PROJECT_STATUS.md
+docs/ARCHITECTURE.md
+docs/RELEASE_CHECKLIST.md
 vercel.json
 index.html
 public/robots.txt
@@ -167,7 +272,14 @@ public/sitemap.xml
 - No import/export for rosters yet
 - No advanced testing suite yet
 - No dynamic sitemap for all detail pages yet
-- No automated data validation scripts yet
+
+### Quality limitations
+
+- There is no ESLint configuration yet
+- There is no Prettier/format command yet
+- There are no unit tests yet
+- Data validation is source-text based, not AST-based
+- CI runs install, validation and build only
 
 ### SEO limitations
 
@@ -178,18 +290,14 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Data validation
-
-Add a script that checks:
+### 1. Add linting and formatting
 
 ```text
-[ ] player ids are unique
-[ ] team ids are unique
-[ ] every player.teamId exists
-[ ] every team.players id exists
-[ ] every team.bestMaps value matches a map profile
-[ ] player prices are within expected builder range
-[ ] score values are within 0–100
+[ ] add ESLint
+[ ] add format command
+[ ] add lint command
+[ ] include lint in release:check
+[ ] include lint in GitHub Actions CI
 ```
 
 ### 2. Real-stat data plan
@@ -220,10 +328,10 @@ Improve Saved Rosters:
 Add project quality tools:
 
 ```text
-[ ] lint command
-[ ] format command
-[ ] data validation command
-[ ] basic build check workflow
+[ ] basic smoke tests
+[ ] component tests for core pages
+[ ] data validation based on AST or generated JSON later
+[ ] CI badge monitoring
 ```
 
 ### 5. More real product polish
@@ -241,14 +349,16 @@ Add project quality tools:
 ```bash
 npm install
 npm run dev
+npm run validate:data
 npm run build
+npm run release:check
 npm run preview
 ```
 
 ## Deploy flow
 
 ```bash
-npm run build
+npm run release:check
 git add -A
 git commit -m "Your commit message"
 git push

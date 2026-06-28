@@ -2,6 +2,67 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.1 — Quality workflow and repository polish
+
+Date: 2026-06-28
+
+### Added
+
+- Data validation script: `scripts/validate-data.mjs`
+- NPM command: `npm run validate:data`
+- Release check script: `scripts/release-check.mjs`
+- NPM command: `npm run release:check`
+- GitHub Actions CI workflow: `.github/workflows/ci.yml`
+- README badges:
+  - CI status
+  - Vercel live site
+  - TypeScript
+  - React
+  - Vite
+- CI section in `README.md`
+- Quality workflow documentation in `docs/PROJECT_STATUS.md`
+
+### Improved
+
+- Local release flow now uses one command before commit/deploy:
+
+```bash
+npm run release:check
+```
+
+- `release:check` runs:
+
+```bash
+npm run validate:data
+npm run build
+```
+
+- GitHub CI now validates data and builds the project on push / pull request.
+- README deployment flow now recommends running `npm run release:check` before committing.
+
+### Fixed
+
+- Fixed data validation parser so it correctly reads arrays after TypeScript type annotations like:
+
+```ts
+export const players: CS2Player[] = [
+```
+
+- Fixed Windows compatibility issue in `release-check.mjs` by switching to `execSync` with `shell: true`.
+
+### Quality gates
+
+Current quality gates:
+
+```text
+[✓] Local data validation
+[✓] Local production build
+[✓] Local release check
+[✓] GitHub Actions install check
+[✓] GitHub Actions data validation
+[✓] GitHub Actions production build
+```
+
 ## 0.1.0 — MVP buildout
 
 Date: 2026-06-28
@@ -100,3 +161,4 @@ Planned next milestones:
 - Expand player and team database
 - Add dynamic sitemap generation for detail pages
 - Add lightweight testing and linting workflow
+- Add data validation to CI quality gates
