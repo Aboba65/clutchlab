@@ -13,6 +13,15 @@ import {
   sampleTeamRawStats,
   teams,
 } from "../data";
+import {
+  getSampleMapFitScore,
+  getSamplePlayerDerivedScore,
+  getSampleRosterValueScore,
+  getSampleTeamDerivedScore,
+  getScoreAdapterCoverageSummary,
+  scoreAdapterLayerMeta,
+  type ScoreAdapterResult,
+} from "../data/scoreAdapters";
 
 const playerDisplayNames = new Map([
   ["zywoo", "ZywOo"],
@@ -26,6 +35,7 @@ const mapDisplayNames = new Map([
 ]);
 
 const teamNames = new Map(teams.map((team) => [team.id, team.name]));
+const adapterCoverage = getScoreAdapterCoverageSummary();
 
 export function SampleDataPage() {
   return (
@@ -56,6 +66,7 @@ export function SampleDataPage() {
       </div>
 
       <WarningPanel />
+      <AdapterOverview />
 
       <Section
         eyebrow="Raw sample"
@@ -141,37 +152,43 @@ export function SampleDataPage() {
         description="Example calculated score rows using player-impact-v1. These scores are not wired into the public player catalog."
       >
         <div className="grid gap-4 lg:grid-cols-3">
-          {samplePlayerDerivedScores.map((row) => (
-            <DataCard key={row.playerId}>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
-                    {row.formulaId}
-                  </p>
-                  <h3 className="mt-2 text-2xl font-black text-white">
-                    <EntityLink to={`/players/${row.playerId}`}>
-                      {nameForPlayer(row.playerId)}
-                    </EntityLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Confidence: {row.confidence}
-                  </p>
-                </div>
-                <ScorePill value={row.impact} />
-              </div>
+          {samplePlayerDerivedScores.map((row) => {
+            const adapter = getSamplePlayerDerivedScore(row.playerId);
 
-              <MetricGrid>
-                <Metric label="Impact" value={row.impact} />
-                <Metric label="Clutch" value={row.clutch} />
-                <Metric label="Opening" value={row.opening} />
-                <Metric label="AWP" value={row.awp} />
-                <Metric label="Rifle" value={row.rifle} />
-                <Metric label="Consistency" value={row.consistency} />
-                <Metric label="Value" value={row.value} />
-                <Metric label="Components" value={row.components?.length ?? 0} />
-              </MetricGrid>
-            </DataCard>
-          ))}
+            return (
+              <DataCard key={row.playerId}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
+                      {row.formulaId}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-white">
+                      <EntityLink to={`/players/${row.playerId}`}>
+                        {nameForPlayer(row.playerId)}
+                      </EntityLink>
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Confidence: {row.confidence}
+                    </p>
+                  </div>
+                  <ScorePill value={row.impact} />
+                </div>
+
+                <MetricGrid>
+                  <Metric label="Impact" value={row.impact} />
+                  <Metric label="Clutch" value={row.clutch} />
+                  <Metric label="Opening" value={row.opening} />
+                  <Metric label="AWP" value={row.awp} />
+                  <Metric label="Rifle" value={row.rifle} />
+                  <Metric label="Consistency" value={row.consistency} />
+                  <Metric label="Value" value={row.value} />
+                  <Metric label="Components" value={row.components?.length ?? 0} />
+                </MetricGrid>
+
+                <AdapterMeta result={adapter} />
+              </DataCard>
+            );
+          })}
         </div>
       </Section>
 
@@ -181,36 +198,42 @@ export function SampleDataPage() {
         description="Example team-level derived rows using team-score-v1."
       >
         <div className="grid gap-4 lg:grid-cols-2">
-          {sampleTeamDerivedScores.map((row) => (
-            <DataCard key={row.teamId}>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
-                    {row.formulaId}
-                  </p>
-                  <h3 className="mt-2 text-2xl font-black text-white">
-                    <EntityLink to={`/teams/${row.teamId}`}>
-                      {nameForTeam(row.teamId)}
-                    </EntityLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Confidence: {row.confidence}
-                  </p>
-                </div>
-                <ScorePill value={row.overall} />
-              </div>
+          {sampleTeamDerivedScores.map((row) => {
+            const adapter = getSampleTeamDerivedScore(row.teamId);
 
-              <MetricGrid>
-                <Metric label="Overall" value={row.overall} />
-                <Metric label="Firepower" value={row.firepower} />
-                <Metric label="Structure" value={row.structure} />
-                <Metric label="Map pool" value={row.mapPool} />
-                <Metric label="Clutch" value={row.clutch} />
-                <Metric label="Form" value={row.form} />
-                <Metric label="Components" value={row.components?.length ?? 0} />
-              </MetricGrid>
-            </DataCard>
-          ))}
+            return (
+              <DataCard key={row.teamId}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
+                      {row.formulaId}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-white">
+                      <EntityLink to={`/teams/${row.teamId}`}>
+                        {nameForTeam(row.teamId)}
+                      </EntityLink>
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Confidence: {row.confidence}
+                    </p>
+                  </div>
+                  <ScorePill value={row.overall} />
+                </div>
+
+                <MetricGrid>
+                  <Metric label="Overall" value={row.overall} />
+                  <Metric label="Firepower" value={row.firepower} />
+                  <Metric label="Structure" value={row.structure} />
+                  <Metric label="Map pool" value={row.mapPool} />
+                  <Metric label="Clutch" value={row.clutch} />
+                  <Metric label="Form" value={row.form} />
+                  <Metric label="Components" value={row.components?.length ?? 0} />
+                </MetricGrid>
+
+                <AdapterMeta result={adapter} />
+              </DataCard>
+            );
+          })}
         </div>
       </Section>
 
@@ -220,37 +243,47 @@ export function SampleDataPage() {
         description="Example map-fit rows for player/team entities. These rows are not connected to map pages yet."
       >
         <div className="grid gap-4 lg:grid-cols-2">
-          {sampleMapFitScores.map((row) => (
-            <DataCard key={`${row.mapId}-${row.entityId}`}>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
-                    <EntityLink to={`/maps/${row.mapId}`}>
-                      {nameForMap(row.mapId)}
-                    </EntityLink>
-                  </p>
-                  <h3 className="mt-2 text-2xl font-black text-white">
-                    <EntityLink to={pathForEntity(row.entityId, row.entityType)}>
-                      {nameForEntity(row.entityId, row.entityType)}
-                    </EntityLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {row.entityType} · {row.formulaId}
-                  </p>
-                </div>
-                <ScorePill value={row.fit} />
-              </div>
+          {sampleMapFitScores.map((row) => {
+            const adapter = getSampleMapFitScore({
+              mapId: row.mapId,
+              entityId: row.entityId,
+              entityType: row.entityType,
+            });
 
-              <MetricGrid>
-                <Metric label="Fit" value={row.fit} />
-                <Metric label="AWP fit" value={row.awpFit} />
-                <Metric label="Entry fit" value={row.entryFit} />
-                <Metric label="Anchor fit" value={row.anchorFit} />
-                <Metric label="Lurk fit" value={row.lurkFit} />
-                <Metric label="Support fit" value={row.supportFit} />
-              </MetricGrid>
-            </DataCard>
-          ))}
+            return (
+              <DataCard key={`${row.mapId}-${row.entityId}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
+                      <EntityLink to={`/maps/${row.mapId}`}>
+                        {nameForMap(row.mapId)}
+                      </EntityLink>
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-white">
+                      <EntityLink to={pathForEntity(row.entityId, row.entityType)}>
+                        {nameForEntity(row.entityId, row.entityType)}
+                      </EntityLink>
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {row.entityType} · {row.formulaId}
+                    </p>
+                  </div>
+                  <ScorePill value={row.fit} />
+                </div>
+
+                <MetricGrid>
+                  <Metric label="Fit" value={row.fit} />
+                  <Metric label="AWP fit" value={row.awpFit} />
+                  <Metric label="Entry fit" value={row.entryFit} />
+                  <Metric label="Anchor fit" value={row.anchorFit} />
+                  <Metric label="Lurk fit" value={row.lurkFit} />
+                  <Metric label="Support fit" value={row.supportFit} />
+                </MetricGrid>
+
+                <AdapterMeta result={adapter} />
+              </DataCard>
+            );
+          })}
         </div>
       </Section>
 
@@ -260,49 +293,57 @@ export function SampleDataPage() {
         description="Example roster score shape for a future migration path from the current roster builder scoring."
       >
         <div className="grid gap-4">
-          {sampleRosterValueScores.map((row) => (
-            <DataCard key={row.rosterId}>
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
-                    {row.formulaId}
-                  </p>
-                  <h3 className="mt-2 text-2xl font-black text-white">{row.rosterId}</h3>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
-                    <span>Players:</span>
-                    {row.playerIds.map((playerId) => (
-                      <EntityLink key={playerId} to={`/players/${playerId}`}>
-                        {nameForPlayer(playerId)}
-                      </EntityLink>
-                    ))}
+          {sampleRosterValueScores.map((row) => {
+            const adapter = getSampleRosterValueScore(row.rosterId);
+
+            return (
+              <DataCard key={row.rosterId}>
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
+                      {row.formulaId}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-white">
+                      {row.rosterId}
+                    </h3>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+                      <span>Players:</span>
+                      {row.playerIds.map((playerId) => (
+                        <EntityLink key={playerId} to={`/players/${playerId}`}>
+                          {nameForPlayer(playerId)}
+                        </EntityLink>
+                      ))}
+                    </div>
                   </div>
+                  <ScorePill value={row.value} />
                 </div>
-                <ScorePill value={row.value} />
-              </div>
 
-              <MetricGrid>
-                <Metric label="Total cost" value={row.totalCost} digits={1} />
-                <Metric label="Budget limit" value={row.budgetLimit} digits={1} />
-                <Metric label="Value" value={row.value} />
-                <Metric label="Role coverage" value={row.roleCoverage} />
-                <Metric label="Firepower" value={row.firepower} />
-                <Metric label="Clutch" value={row.clutch} />
-                <Metric label="Map fit" value={row.mapFit} />
-                <Metric label="Balance" value={row.balance} />
-              </MetricGrid>
+                <MetricGrid>
+                  <Metric label="Total cost" value={row.totalCost} digits={1} />
+                  <Metric label="Budget limit" value={row.budgetLimit} digits={1} />
+                  <Metric label="Value" value={row.value} />
+                  <Metric label="Role coverage" value={row.roleCoverage} />
+                  <Metric label="Firepower" value={row.firepower} />
+                  <Metric label="Clutch" value={row.clutch} />
+                  <Metric label="Map fit" value={row.mapFit} />
+                  <Metric label="Balance" value={row.balance} />
+                </MetricGrid>
 
-              <div className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-200">
-                  Warnings
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-amber-100/90">
-                  {row.warnings.map((warning) => (
-                    <li key={warning}>{warning}</li>
-                  ))}
-                </ul>
-              </div>
-            </DataCard>
-          ))}
+                <div className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-200">
+                    Warnings
+                  </p>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-amber-100/90">
+                    {row.warnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <AdapterMeta result={adapter} />
+              </DataCard>
+            );
+          })}
         </div>
       </Section>
 
@@ -358,6 +399,33 @@ function WarningPanel() {
         They do not replace the current demo/manual player cards, team pages, map pages,
         compare pages or roster builder scoring.
       </p>
+    </div>
+  );
+}
+
+function AdapterOverview() {
+  return (
+    <div className="rounded-[2rem] border border-fuchsia-300/20 bg-fuchsia-300/10 p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-sm font-black uppercase tracking-[0.25em] text-fuchsia-200">
+            Score adapter layer
+          </p>
+          <p className="mt-3 max-w-4xl text-sm leading-7 text-fuchsia-50/85">
+            {scoreAdapterLayerMeta.description}
+          </p>
+          <p className="mt-2 max-w-4xl text-sm leading-7 text-fuchsia-50/70">
+            {scoreAdapterLayerMeta.publicUiBehavior}
+          </p>
+        </div>
+
+        <div className="grid min-w-full gap-3 sm:grid-cols-2 lg:min-w-[420px]">
+          <MiniStat label="Status" value={adapterCoverage.status} />
+          <MiniStat label="Player scores" value={adapterCoverage.playerScores} />
+          <MiniStat label="Team scores" value={adapterCoverage.teamScores} />
+          <MiniStat label="Map fit scores" value={adapterCoverage.mapFitScores} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -469,6 +537,61 @@ function ScorePill({
         {formatNumber(value)}
         {value === undefined ? "" : suffix}
       </p>
+    </div>
+  );
+}
+
+function AdapterMeta<T>({ result }: { result: ScoreAdapterResult<T> }) {
+  return (
+    <div className="mt-4 rounded-2xl border border-fuchsia-300/20 bg-fuchsia-300/10 p-4">
+      <div className="flex flex-wrap gap-2">
+        <StatusChip label="source" value={result.source} />
+        <StatusChip label="status" value={result.status} />
+        {result.confidence ? (
+          <StatusChip label="confidence" value={result.confidence} />
+        ) : null}
+        {result.formulaId ? (
+          <StatusChip label="formula" value={result.formulaId} />
+        ) : null}
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {result.periodStart ? (
+          <MiniStat label="Period start" value={result.periodStart} />
+        ) : null}
+        {result.periodEnd ? (
+          <MiniStat label="Period end" value={result.periodEnd} />
+        ) : null}
+      </div>
+
+      {result.sourceIds && result.sourceIds.length > 0 ? (
+        <p className="mt-3 text-xs leading-5 text-fuchsia-50/70">
+          Source ids: {result.sourceIds.join(", ")}
+        </p>
+      ) : null}
+
+      {result.reason ? (
+        <p className="mt-3 text-xs leading-5 text-amber-100">{result.reason}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function StatusChip({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="rounded-full border border-fuchsia-300/30 bg-fuchsia-300/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-fuchsia-100">
+      {label}: {value}
+    </span>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
+      <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+        {label}
+      </p>
+      <p className="mt-1 text-sm font-black text-white">{value}</p>
     </div>
   );
 }
