@@ -38,3 +38,12 @@ export type {
   ScoreScale,
   TeamDerivedScore,
 } from "./derivedScores";
+export {
+  samplePlayerRawStats,
+  samplePlayerStatWindow,
+  sampleRawStatsMeta,
+  sampleRawStatsSummary,
+  sampleTeamRawStats,
+  sampleTeamStatWindow,
+} from "./sampleRawStats";
+export type { SampleRawStatsMeta } from "./sampleRawStats";
