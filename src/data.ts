@@ -47,3 +47,12 @@ export {
   sampleTeamStatWindow,
 } from "./data/sampleRawStats";
 export type { SampleRawStatsMeta } from "./data/sampleRawStats";
+export {
+  sampleDerivedScoresMeta,
+  sampleDerivedScoresSummary,
+  sampleMapFitScores,
+  samplePlayerDerivedScores,
+  sampleRosterValueScores,
+  sampleTeamDerivedScores,
+} from "./data/sampleDerivedScores";
+export type { SampleDerivedScoresMeta } from "./data/sampleDerivedScores";
