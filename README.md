@@ -17,7 +17,7 @@ Repository: https://github.com/Aboba65/clutchlab
 Current documented version:
 
 ```text
-0.2.11 Rating explanation foundation
+0.2.12 RatingExplanationCard foundation
 ```
 
 ClutchLab is still an MVP with a static local data layer. Current ratings,
@@ -38,6 +38,7 @@ validation
 preview-only data page
 read-only preview component foundation
 rating/methodology explanation planning
+read-only rating explanation component foundation
 ```
 
 It is not a public scoring migration yet.
@@ -72,6 +73,7 @@ It is not a public scoring migration yet.
 - Detail score preview plan
 - Read-only `ScorePreviewCard` component foundation
 - Rating explanation plan for current demo/manual values
+- Read-only `RatingExplanationCard` component foundation
 - Dynamic sitemap generation
 - Route-based title/meta updates
 - GitHub Actions CI and local release gate
@@ -152,6 +154,13 @@ Plan:
 docs/RATING_EXPLANATION_PLAN.md
 ```
 
+Component files:
+
+```text
+src/components/RatingExplanationCard.tsx
+src/components/ratingExplanationItems.ts
+```
+
 Current goal:
 
 ```text
@@ -159,7 +168,7 @@ Explain current MVP/demo/manual ratings, prices and product scores before any
 public scoring migration.
 ```
 
-Terms covered by the plan:
+Terms covered by the default explanation items:
 
 ```text
 rating
@@ -167,27 +176,26 @@ price
 value
 clutch
 impact
-opening
 map fit
-role fit
-team score
 ```
 
 Current boundary:
 
 ```text
-[✓] no UI changes yet
+[✓] component exists
+[✓] reusable default explanation items exist
+[✓] no route usage yet
+[✓] no UI placement yet
 [✓] no scoring changes
 [✓] no sorting changes
 [✓] no roster-builder logic changes
 [✓] no public scoring migration
 ```
 
-Future component direction:
+Future route order:
 
 ```text
-src/components/RatingExplanationCard.tsx
-src/components/InfoTooltip.tsx
+/about → /roster-builder → /players/:playerId → detail pages → catalog pages last
 ```
 
 ## Generic score adapters
@@ -502,8 +510,7 @@ Vercel then builds the latest pushed version.
 
 ## Roadmap
 
-- Add `RatingExplanationCard` and/or `InfoTooltip`
-- Mount rating explanation first on `/about`
+- Mount `RatingExplanationCard` first on `/about`
 - Add roster-builder budget explanation later
 - Mount `ScorePreviewCard` on one public detail route later
 - Start score preview with `/players/:playerId`
@@ -519,5 +526,5 @@ ClutchLab is not currently a live ranking system. It is a product MVP with a cle
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample validation, derived-score model types, score adapters, real-derived score
 planning/scaffold validation, generic adapters with safe defaults, a sample-only
-adapter preview route, a read-only score preview component foundation, and a plan
-for explaining current demo/manual ratings to users.
+adapter preview route, a read-only score preview component foundation, and a
+read-only rating explanation component foundation.

@@ -26,8 +26,8 @@ export function Footer() {
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
           <FooterCard
             label="Version"
-            value="0.2.11"
-            detail="Rating explanation foundation"
+            value="0.2.12"
+            detail="RatingExplanationCard foundation"
           />
           <FooterCard
             label="Data updated"

@@ -2,6 +2,41 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.12 — RatingExplanationCard foundation
+
+Date: 2026-06-28
+
+### Added
+
+- Read-only rating explanation component:
+  `src/components/RatingExplanationCard.tsx`
+- Default rating explanation items:
+  `src/components/ratingExplanationItems.ts`
+- Default explanation copy for:
+  - Rating
+  - Price
+  - Value
+  - Clutch
+  - Impact
+  - Map fit
+- Default disclaimer that current values are demo/manual MVP values, not live
+  official esports statistics.
+- Footer version display updated to `0.2.12`.
+
+### Fixed
+
+- Moved reusable explanation constants out of `RatingExplanationCard.tsx` to avoid
+  the React Refresh warning from `react-refresh/only-export-components`.
+
+### Notes
+
+This release is still part of the 0.2.x infrastructure and explanation line.
+
+The component is not mounted on public pages yet.
+
+No UI placement, route, scoring, sorting, comparison or roster-builder behavior
+changed.
+
 ## 0.2.11 — Rating explanation foundation
 
 Date: 2026-06-28

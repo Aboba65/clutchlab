@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.11 Rating explanation foundation
+0.2.12 RatingExplanationCard foundation
 ```
 
 ## Live site
@@ -38,8 +38,8 @@ real-derived scaffold, real-derived scaffold validation, generic score adapter
 documentation, generic score adapters implemented in code, validation for generic
 adapter safety rules, `/sample-data` migrated to generic adapters with
 `allowSample=true`, a detail score preview plan, a read-only `ScorePreviewCard`
-foundation component, and a rating explanation plan for current demo/manual MVP
-values.
+foundation component, a rating explanation plan for current demo/manual MVP
+values, and a read-only `RatingExplanationCard` foundation component.
 
 ## Current data status
 
@@ -92,6 +92,8 @@ Implemented real-stat and adapter files:
 [✓] docs/RATING_EXPLANATION_PLAN.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/components/ScorePreviewCard.tsx
+[✓] src/components/RatingExplanationCard.tsx
+[✓] src/components/ratingExplanationItems.ts
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
 [✓] src/data/sampleRawStats.ts
@@ -116,13 +118,20 @@ Plan:
 docs/RATING_EXPLANATION_PLAN.md
 ```
 
+Component files:
+
+```text
+src/components/RatingExplanationCard.tsx
+src/components/ratingExplanationItems.ts
+```
+
 Current status:
 
 ```text
-planning only
+component exists but is not mounted on public pages yet
 ```
 
-The plan explains how future UI should describe current MVP values:
+Default explanation items cover:
 
 ```text
 rating
@@ -130,16 +139,13 @@ price
 value
 clutch
 impact
-opening
 map fit
-role fit
-team score
 ```
 
 Current boundary:
 
 ```text
-[✓] no UI changes yet
+[✓] no public page usage yet
 [✓] no route changes
 [✓] no scoring changes
 [✓] no sorting changes
@@ -147,11 +153,15 @@ Current boundary:
 [✓] no real-derived rows
 ```
 
-Future component direction:
+Future route order:
 
 ```text
-src/components/RatingExplanationCard.tsx
-src/components/InfoTooltip.tsx
+/about
+/roster-builder
+/players/:playerId
+/teams/:teamId
+/maps/:mapId
+catalog pages last
 ```
 
 ## Score preview foundation
@@ -406,6 +416,7 @@ Role routes:   8
 [✓] Adapter metadata on Sample Data page
 [✓] ScorePreviewCard foundation component
 [✓] Rating explanation plan
+[✓] RatingExplanationCard foundation component
 [✓] Route page titles
 [✓] Route meta descriptions
 [✓] Open Graph route meta
@@ -429,7 +440,7 @@ Role routes:   8
 - Real-derived layer is a planned empty scaffold
 - Generic helpers are implemented but not used by public scoring pages yet
 - ScorePreviewCard is implemented but not mounted yet
-- Rating explanation UI is planned but not implemented yet
+- RatingExplanationCard is implemented but not mounted yet
 - Only SampleDataPage may opt into sample rows with `allowSample=true`
 - Public pages intentionally do not import sampleDerivedScores or realDerivedScores
 - Sample rows do not replace demo/manual UI scores
@@ -452,21 +463,21 @@ Role routes:   8
 
 ## Recommended next steps
 
-### 1. Add rating explanation component
-
-```text
-[ ] src/components/RatingExplanationCard.tsx
-[ ] optional src/components/InfoTooltip.tsx
-[ ] no scoring changes
-[ ] no sorting changes
-```
-
-### 2. Mount explanation on a low-risk route
+### 1. Mount rating explanation on a low-risk route
 
 ```text
 [ ] /about methodology section
-[ ] then /roster-builder budget explanation
-[ ] then detail pages
+[ ] no scoring changes
+[ ] no sorting changes
+[ ] no roster-builder logic changes
+```
+
+### 2. Add route-specific explanation later
+
+```text
+[ ] /roster-builder budget explanation
+[ ] /players/:playerId rating explanation
+[ ] /teams/:teamId score explanation
 [ ] catalog pages last
 ```
 
