@@ -3,14 +3,15 @@ import { AppShell } from "./components/AppShell";
 import { AboutPage } from "./pages/AboutPage";
 import { ComparePage } from "./pages/ComparePage";
 import { HomePage } from "./pages/HomePage";
-import { MapDetailPage } from "./pages/MapDetailPage";
 import { MapsPage } from "./pages/MapsPage";
+import { MapDetailPage } from "./pages/MapDetailPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { PlayerDetailPage } from "./pages/PlayerDetailPage";
 import { PlayersPage } from "./pages/PlayersPage";
-import { RoleDetailPage } from "./pages/RoleDetailPage";
 import { RolesPage } from "./pages/RolesPage";
+import { RoleDetailPage } from "./pages/RoleDetailPage";
 import { RosterBuilderPage } from "./pages/RosterBuilderPage";
+import { SampleDataPage } from "./pages/SampleDataPage";
 import { SavedRostersPage } from "./pages/SavedRostersPage";
 import { TeamComparePage } from "./pages/TeamComparePage";
 import { TeamDetailPage } from "./pages/TeamDetailPage";
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/team-compare" element={<TeamComparePage />} />
           <Route path="/roster-builder" element={<RosterBuilderPage />} />
           <Route path="/saved-rosters" element={<SavedRostersPage />} />
+          <Route path="/sample-data" element={<SampleDataPage />} />
           <Route path="/traits" element={<TraitsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/builder" element={<Navigate to="/roster-builder" replace />} />
