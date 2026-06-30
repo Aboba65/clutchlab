@@ -2,6 +2,45 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.4 — Score adapter validation
+
+Date: 2026-06-28
+
+### Added
+
+- Score adapter layer: `src/data/scoreAdapters.ts`
+- Score adapter documentation: `docs/SCORE_ADAPTERS.md`
+- Score adapter validation script: `scripts/validate-score-adapters.mjs`
+- Score adapter validation documentation: `docs/SCORE_ADAPTERS_VALIDATION.md`
+- NPM command: `npm run validate:score-adapters`
+- Score adapter validation in `scripts/release-check.mjs`
+- Score adapter validation in GitHub Actions CI
+- README score adapter section
+- Project status score adapter section
+- Footer links to score adapter documentation
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run validate:sample-stats
+npm run validate:sample-derived-scores
+npm run validate:score-adapters
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs `npm run validate:score-adapters`.
+- The quality gate now checks the adapter boundary before lint/build.
+- Validation confirms public pages do not import `scoreAdapters.ts` yet.
+- Footer version display was updated to `0.2.4`.
+
 ## 0.2.3 — Sample data preview page
 
 Date: 2026-06-28
@@ -49,22 +88,8 @@ Date: 2026-06-28
 
 ### Improved
 
-- `npm run release:check` now runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run validate:sample-stats
-npm run validate:sample-derived-scores
-npm run lint
-npm run format:check
-npm run build
-```
-
 - GitHub Actions CI now runs `npm run validate:sample-derived-scores`.
-- The quality gate now checks the manual sample derived-score rows before lint/build.
+- The quality gate checks manual sample derived-score rows before lint/build.
 - Footer version display was updated to `0.2.2`.
 
 ## 0.2.1 — Sample stats validation

@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.2.3 Sample data preview page
+0.2.4 Score adapter validation
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -54,6 +54,7 @@ esports statistics.
 - Footer with version, data status and project links
 - Dynamic sitemap generation for static and detail routes
 - Real-stat data migration plan
+- UI migration plan
 - Source metadata scaffold
 - Source metadata validation
 - Raw stat type model
@@ -63,6 +64,8 @@ esports statistics.
 - Sample raw-stat row validation
 - Manual sample derived-score scaffold
 - Sample derived-score row validation
+- Score adapter layer
+- Score adapter validation
 - Product-facing sample data preview route
 
 ## Tech stack
@@ -122,6 +125,7 @@ scripts/
   validate-models.mjs                     Local raw/derived model validation
   validate-sample-stats.mjs               Local sample raw-stat row validation
   validate-sample-derived-scores.mjs      Local sample derived-score row validation
+  validate-score-adapters.mjs             Local score adapter validation
   release-check.mjs                       Local release gate
 ```
 
@@ -135,6 +139,7 @@ src/data/rawStats.ts             Future raw-stat type model
 src/data/sampleRawStats.ts       Manual sample raw-stat scaffold
 src/data/derivedScores.ts        Future derived-score type model
 src/data/sampleDerivedScores.ts  Manual sample derived-score scaffold
+src/data/scoreAdapters.ts        Read-only score adapter layer
 src/data/meta.ts                 Dataset version, status and source notes
 src/data/index.ts                Public data exports
 src/data/README.md               Data rules and future real-stat notes
@@ -159,6 +164,9 @@ docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 docs/SAMPLE_DATA_PAGE.md
+docs/UI_MIGRATION_PLAN.md
+docs/SCORE_ADAPTERS.md
+docs/SCORE_ADAPTERS_VALIDATION.md
 docs/MODEL_VALIDATION.md
 docs/REAL_STATS_PLAN.md
 ```
@@ -168,7 +176,7 @@ docs/REAL_STATS_PLAN.md
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → sample preview page → future UI scores
 ```
 
 Current model files:
@@ -179,6 +187,7 @@ src/data/rawStats.ts
 src/data/sampleRawStats.ts
 src/data/derivedScores.ts
 src/data/sampleDerivedScores.ts
+src/data/scoreAdapters.ts
 ```
 
 Current model documentation:
@@ -192,8 +201,77 @@ docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 docs/SAMPLE_DATA_PAGE.md
+docs/UI_MIGRATION_PLAN.md
+docs/SCORE_ADAPTERS.md
+docs/SCORE_ADAPTERS_VALIDATION.md
 docs/MODEL_VALIDATION.md
 ```
+
+## Score adapters
+
+The score adapter layer is defined in:
+
+```text
+src/data/scoreAdapters.ts
+```
+
+Documentation:
+
+```text
+docs/SCORE_ADAPTERS.md
+```
+
+Validation:
+
+```bash
+npm run validate:score-adapters
+```
+
+Validation documentation:
+
+```text
+docs/SCORE_ADAPTERS_VALIDATION.md
+```
+
+Current adapter status:
+
+```text
+sample-only
+```
+
+Current helpers:
+
+```text
+getSamplePlayerDerivedScore(playerId)
+getSampleTeamDerivedScore(teamId)
+getSampleMapFitScoresForEntity(entityId, entityType)
+getSampleMapFitScore({ mapId, entityId, entityType })
+getSampleRosterValueScore(rosterId)
+hasSamplePlayerDerivedScore(playerId)
+hasSampleTeamDerivedScore(teamId)
+hasSampleRosterValueScore(rosterId)
+getScoreAdapterCoverageSummary()
+```
+
+The adapter layer returns a shared result shape:
+
+```text
+ScoreAdapterResult<T>
+```
+
+The adapter layer does not change public scoring behavior. Public pages should
+not import `scoreAdapters.ts` until the UI migration plan explicitly allows that.
+
+## UI migration plan
+
+The UI migration plan is documented in:
+
+```text
+docs/UI_MIGRATION_PLAN.md
+```
+
+It defines how to safely move from demo/manual UI values to future derived scores
+without accidentally presenting sample data as live official statistics.
 
 ## Sample Data preview page
 
@@ -283,50 +361,10 @@ Manual sample derived scores are defined in:
 src/data/sampleDerivedScores.ts
 ```
 
-They include:
-
-```text
-sampleDerivedScoresMeta
-samplePlayerDerivedScores
-sampleTeamDerivedScores
-sampleMapFitScores
-sampleRosterValueScores
-sampleDerivedScoresSummary
-```
-
-Current sample derived-score coverage:
-
-```text
-Player derived scores: 3
-Team derived scores:   2
-Map fit scores:        2
-Roster value scores:   1
-```
-
-Sample derived-score documentation:
-
-```text
-docs/SAMPLE_DERIVED_SCORES.md
-```
-
-## Sample derived-score validation
-
-Sample derived-score validation is handled by:
-
-```text
-scripts/validate-sample-derived-scores.mjs
-```
-
-Command:
+Current sample derived-score validation command:
 
 ```bash
 npm run validate:sample-derived-scores
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 ```
 
 ## Model validation
@@ -399,6 +437,12 @@ Validate sample derived scores:
 npm run validate:sample-derived-scores
 ```
 
+Validate score adapters:
+
+```bash
+npm run validate:score-adapters
+```
+
 Lint source files:
 
 ```bash
@@ -452,6 +496,7 @@ npm run validate:sources
 npm run validate:models
 npm run validate:sample-stats
 npm run validate:sample-derived-scores
+npm run validate:score-adapters
 npm run lint
 npm run format:check
 npm run build
@@ -466,6 +511,7 @@ scripts/validate-sources.mjs
 scripts/validate-models.mjs
 scripts/validate-sample-stats.mjs
 scripts/validate-sample-derived-scores.mjs
+scripts/validate-score-adapters.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -487,6 +533,7 @@ npm run validate:sources
 npm run validate:models
 npm run validate:sample-stats
 npm run validate:sample-derived-scores
+npm run validate:score-adapters
 npm run lint
 npm run format:check
 npm run build
@@ -571,15 +618,17 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sources, Sample stats, Sample scores and Live site links
+[✓] GitHub, Changelog, Data, Sources, Sample stats, Sample scores, Score adapters and Live site links
 ```
 
 ## Roadmap
 
 - Improve Sample Data page display names once the player model exposes a display name
-- Add a UI migration plan for moving demo/manual scores to derived scores
+- Use score adapters only in explicitly labeled preview contexts
+- Add adapter-based preview cards without changing public scoring
+- Add a real-derived score layer after real data coverage exists
+- Add a UI migration plan implementation checklist to future PRs
 - Expand manual sample stat coverage
-- Connect a non-production analytics preview to more sample fields
 - Replace demo/manual values with manually curated real statistics later
 - Track update dates and event windows
 - Add richer map-specific statistics
@@ -590,5 +639,5 @@ Current SEO/UX polish includes:
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample raw-stat validation, derived-score model types, sample derived-score
-validation, a visible sample data preview page and clear boundaries around
-demo/manual scoring.
+validation, a score adapter layer with validation, a visible sample data preview
+page and clear boundaries around demo/manual scoring.

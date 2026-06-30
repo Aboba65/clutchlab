@@ -24,7 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.2.3" detail="Sample data preview page" />
+          <FooterCard label="Version" value="0.2.4" detail="Score adapter validation" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -66,6 +66,17 @@ export function Footer() {
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/SAMPLE_DATA_PAGE.md`}>
             Sample data docs
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/UI_MIGRATION_PLAN.md`}>
+            UI migration
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/SCORE_ADAPTERS.md`}>
+            Score adapters
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/SCORE_ADAPTERS_VALIDATION.md`}
+          >
+            Adapter validation
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/RAW_STATS_MODEL.md`}>
             Raw stats
