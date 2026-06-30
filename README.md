@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.9 Derived score model
+0.2.0 Model validation
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -57,6 +57,7 @@ esports statistics.
 - Source metadata validation
 - Raw stat type model
 - Derived score type model
+- Model validation for raw-stat and derived-score scaffolds
 
 ## Tech stack
 
@@ -127,10 +128,11 @@ src/
   types.ts                Shared TypeScript types
 
 scripts/
+  generate-sitemap.mjs    Dynamic sitemap generator
   validate-data.mjs       Local data integrity validation
   validate-sources.mjs    Local source metadata validation
+  validate-models.mjs     Local raw/derived model validation
   release-check.mjs       Local release gate
-  generate-sitemap.mjs    Dynamic sitemap generator
 ```
 
 ## Data layer
@@ -160,7 +162,33 @@ Data and model documentation:
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
 docs/DERIVED_SCORES_MODEL.md
+docs/MODEL_VALIDATION.md
 docs/REAL_STATS_PLAN.md
+```
+
+## Real-stat architecture
+
+Current architecture direction:
+
+```text
+source metadata → raw stats → derived scores → UI scores
+```
+
+Current model files:
+
+```text
+src/data/sources.ts
+src/data/rawStats.ts
+src/data/derivedScores.ts
+```
+
+Current model documentation:
+
+```text
+docs/DATA_SOURCES.md
+docs/RAW_STATS_MODEL.md
+docs/DERIVED_SCORES_MODEL.md
+docs/MODEL_VALIDATION.md
 ```
 
 ## Source metadata
@@ -176,13 +204,6 @@ It exports:
 ```text
 dataSources
 sourceGroups
-```
-
-Current source groups:
-
-```text
-current-mvp-demo-layer
-future-real-stat-layer
 ```
 
 Current source validation command:
@@ -243,12 +264,6 @@ Derived score documentation:
 docs/DERIVED_SCORES_MODEL.md
 ```
 
-The intended architecture is:
-
-```text
-source metadata → raw stats → derived scores → UI scores
-```
-
 Current formula scaffolds:
 
 ```text
@@ -259,6 +274,41 @@ roster-value-v1
 ```
 
 These are scaffolds only. They are not connected to real-stat rows yet.
+
+## Model validation
+
+Model validation is handled by:
+
+```text
+scripts/validate-models.mjs
+```
+
+Command:
+
+```bash
+npm run validate:models
+```
+
+Documentation:
+
+```text
+docs/MODEL_VALIDATION.md
+```
+
+The validator checks:
+
+```text
+[✓] rawStatDatasetMeta status
+[✓] derivedScoreDatasetMeta status
+[✓] rawStatFieldGroups baseline groups and fields
+[✓] derivedScoreFieldGroups baseline groups and fields
+[✓] scoreFormulaScaffolds
+[✓] unique formula ids
+[✓] formula sourceIds exist in src/data/sources.ts
+[✓] formula inputFields and outputFields
+[✓] formula outputFields match derivedScoreFieldGroups
+[✓] low-confidence formulas include notes
+```
 
 ## Local setup
 
@@ -290,6 +340,12 @@ Validate source metadata:
 
 ```bash
 npm run validate:sources
+```
+
+Validate model scaffolds:
+
+```bash
+npm run validate:models
 ```
 
 Lint source files:
@@ -342,6 +398,7 @@ The release check runs:
 npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
+npm run validate:models
 npm run lint
 npm run format:check
 npm run build
@@ -353,6 +410,7 @@ Quality config files:
 scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/validate-sources.mjs
+scripts/validate-models.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -371,6 +429,7 @@ npm ci
 npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
+npm run validate:models
 npm run lint
 npm run format:check
 npm run build
@@ -457,14 +516,14 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sources, Raw stats, Derived scores and Live site links
+[✓] GitHub, Changelog, Data, Sources, Raw stats, Derived scores, Model validation and Live site links
 ```
 
 ## Roadmap
 
-- Add validation for raw stat model references
-- Add validation for derived score formula references
 - Add manually curated real-stat sample
+- Add raw stat row validation when sample data exists
+- Add derived score row validation when sample data exists
 - Replace demo/manual values with manually curated real statistics later
 - Track update dates and event windows
 - Separate identity data from current performance data
@@ -475,4 +534,5 @@ Current SEO/UX polish includes:
 
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
-derived-score model types and clear boundaries around demo/manual scoring.
+derived-score model types, model validation and clear boundaries around
+demo/manual scoring.

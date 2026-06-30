@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.9 Derived score model
+0.2.0 Model validation
 ```
 
 ## Live site
@@ -29,8 +29,8 @@ roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
 workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
-real-stat migration plan, source metadata, raw-stat model types and derived-score
-model types.
+real-stat migration plan, source metadata, raw-stat model types, derived-score
+model types and model validation.
 
 ## Current data status
 
@@ -56,9 +56,47 @@ Implemented model scaffolds:
 [✓] docs/DATA_SOURCES.md
 [✓] docs/RAW_STATS_MODEL.md
 [✓] docs/DERIVED_SCORES_MODEL.md
+[✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
 [✓] src/data/derivedScores.ts
+[✓] scripts/validate-sources.mjs
+[✓] scripts/validate-models.mjs
+```
+
+## Model validation
+
+Command:
+
+```bash
+npm run validate:models
+```
+
+Script:
+
+```text
+scripts/validate-models.mjs
+```
+
+Documentation:
+
+```text
+docs/MODEL_VALIDATION.md
+```
+
+Current model validation checks:
+
+```text
+[✓] rawStatDatasetMeta status
+[✓] derivedScoreDatasetMeta status
+[✓] rawStatFieldGroups baseline groups and fields
+[✓] derivedScoreFieldGroups baseline groups and fields
+[✓] scoreFormulaScaffolds
+[✓] unique formula ids
+[✓] formula sourceIds exist in src/data/sources.ts
+[✓] formula inputFields and outputFields
+[✓] formula outputFields match derivedScoreFieldGroups
+[✓] low-confidence formulas include notes
 ```
 
 ## Derived score model
@@ -198,6 +236,7 @@ Current raw stat scaffold includes:
 [✓] source metadata validation
 [✓] raw stat type model
 [✓] derived score type model
+[✓] model validation
 [✓] Data layer README
 [✓] GitHub README
 [✓] README badges
@@ -235,6 +274,7 @@ This runs:
 npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
+npm run validate:models
 npm run lint
 npm run format:check
 npm run build
@@ -270,6 +310,18 @@ Validator:
 scripts/validate-sources.mjs
 ```
 
+### Model validation
+
+```bash
+npm run validate:models
+```
+
+Validator:
+
+```text
+scripts/validate-models.mjs
+```
+
 ### Linting and formatting
 
 ```bash
@@ -287,6 +339,7 @@ npm ci
 npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
+npm run validate:models
 npm run lint
 npm run format:check
 npm run build
@@ -301,6 +354,7 @@ docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
 docs/DERIVED_SCORES_MODEL.md
+docs/MODEL_VALIDATION.md
 ```
 
 Current data architecture direction:
@@ -311,9 +365,11 @@ Current data architecture direction:
 [✓] planned real-stat source placeholders exist
 [✓] raw stat model exists
 [✓] derived score model exists
-[ ] raw stat validation
-[ ] derived score validation
+[✓] source validation exists
+[✓] model validation exists
 [ ] manually curated real-stat sample
+[ ] raw stat row validation
+[ ] derived score row validation
 ```
 
 ## SEO and UX polish
@@ -357,6 +413,7 @@ src/types.ts
 scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/validate-sources.mjs
+scripts/validate-models.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -370,6 +427,7 @@ docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
 docs/DERIVED_SCORES_MODEL.md
+docs/MODEL_VALIDATION.md
 docs/ARCHITECTURE.md
 docs/RELEASE_CHECKLIST.md
 vercel.json
@@ -402,9 +460,10 @@ public/sitemap.xml
 
 - There are no unit tests yet
 - There are no component tests yet
-- Data validation, source validation and sitemap generation are source-text based,
-  not AST-based
-- Raw stat and derived score validation scripts do not exist yet
+- Data validation, source validation, model validation and sitemap generation are
+  source-text based, not AST-based
+- Raw stat row and derived score row validation do not exist yet because real-stat
+  rows do not exist yet
 
 ### SEO limitations
 
@@ -413,7 +472,16 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Raw stat validation
+### 1. Manual real-stat sample
+
+```text
+[ ] choose one source window
+[ ] add small player raw-stat sample
+[ ] add small team raw-stat sample
+[ ] document source and period
+```
+
+### 2. Raw stat row validation
 
 ```text
 [ ] validate sourceId references
@@ -423,22 +491,13 @@ public/sitemap.xml
 [ ] validate percentage ranges
 ```
 
-### 2. Derived score validation
+### 3. Derived score row validation
 
 ```text
 [ ] validate formula ids
 [ ] validate formula source ids
 [ ] validate score ranges
 [ ] validate low-confidence notes
-```
-
-### 3. Manual real-stat sample
-
-```text
-[ ] choose one source window
-[ ] add small player raw-stat sample
-[ ] add small team raw-stat sample
-[ ] document source and period
 ```
 
 ## Build commands
@@ -449,6 +508,7 @@ npm run dev
 npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
+npm run validate:models
 npm run lint
 npm run format
 npm run format:check

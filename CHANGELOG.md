@@ -2,6 +2,40 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.0 — Model validation
+
+Date: 2026-06-28
+
+### Added
+
+- Model validation script: `scripts/validate-models.mjs`
+- Model validation documentation: `docs/MODEL_VALIDATION.md`
+- NPM command: `npm run validate:models`
+- Model validation in `scripts/release-check.mjs`
+- Model validation in GitHub Actions CI
+- README model validation section
+- Project status model validation section
+- Footer link to model validation documentation
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs `npm run validate:models`.
+- The quality gate now checks source metadata, raw-stat model scaffolds and
+  derived-score formula scaffolds before lint/build.
+- Footer version display was updated to `0.2.0`.
+
 ## 0.1.9 — Derived score model
 
 Date: 2026-06-28

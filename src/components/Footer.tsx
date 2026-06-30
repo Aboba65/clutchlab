@@ -24,7 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.1.9" detail="Derived score model" />
+          <FooterCard label="Version" value="0.2.0" detail="Model validation" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -52,6 +52,9 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/DERIVED_SCORES_MODEL.md`}
           >
             Derived scores
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/MODEL_VALIDATION.md`}>
+            Model validation
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/SITEMAP.md`}>
             Sitemap
