@@ -2,6 +2,32 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.10 — Score preview foundation
+
+Date: 2026-06-28
+
+### Added
+
+- Detail score preview plan:
+  `docs/DETAIL_SCORE_PREVIEW_PLAN.md`
+- Read-only score preview component:
+  `src/components/ScorePreviewCard.tsx`
+- Documentation for safe future detail-page preview blocks.
+- Documentation for public page boundaries:
+  - no catalog sorting change
+  - no roster-builder scoring change
+  - no sample rows on public pages
+  - no public scoring migration yet
+- Footer version display updated to `0.2.10`.
+
+### Notes
+
+This release is still part of the 0.2.x infrastructure line.
+
+`ScorePreviewCard` is not mounted on public pages yet.
+
+No public scoring, sorting, comparison or roster-builder behavior changed.
+
 ## 0.2.9 — Sample Data generic adapters
 
 Date: 2026-06-28

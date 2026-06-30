@@ -17,13 +17,29 @@ Repository: https://github.com/Aboba65/clutchlab
 Current documented version:
 
 ```text
-0.2.9 Sample Data generic adapters
+0.2.10 Score preview foundation
 ```
 
 ClutchLab is still an MVP with a static local data layer. Current ratings,
 prices, team scores, map scores and custom indexes are **demo/manual values**
 used for product testing. They should not be treated as live, official or current
 esports statistics.
+
+## What 0.2.x means
+
+The current 0.2.x line is infrastructure work:
+
+```text
+data models
+sample data
+derived score schemas
+score adapters
+validation
+preview-only data page
+read-only preview component foundation
+```
+
+It is not a public scoring migration yet.
 
 ## Features
 
@@ -52,6 +68,8 @@ esports statistics.
 - Real-derived score plan, scaffold and validation
 - Generic score adapters implemented with safe defaults
 - Generic score adapter validation
+- Detail score preview plan
+- Read-only `ScorePreviewCard` component foundation
 - Dynamic sitemap generation
 - Route-based title/meta updates
 - GitHub Actions CI and local release gate
@@ -96,7 +114,7 @@ esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → future UI scores
 ```
 
 Current data/model files:
@@ -151,16 +169,6 @@ getMapFitScore({ mapId, entityId, entityType }, options?)
 getRosterValueScore(rosterId, options?)
 ```
 
-Implemented support API:
-
-```text
-ScoreAdapterOptions
-defaultScoreAdapterOptions
-resolveScoreAdapterOptions
-hasScoreAdapterValue(result)
-getScoreAdapterCoverageSummary()
-```
-
 Safe defaults:
 
 ```text
@@ -197,12 +205,6 @@ Page file:
 src/pages/SampleDataPage.tsx
 ```
 
-Documentation:
-
-```text
-docs/SAMPLE_DATA_PAGE.md
-```
-
 Current behavior:
 
 ```text
@@ -218,6 +220,53 @@ Current behavior:
 
 `allowSample=true` is safe here because `/sample-data` is a labeled preview route.
 Validation still protects other pages from sample-derived usage.
+
+## Score preview foundation
+
+Plan:
+
+```text
+docs/DETAIL_SCORE_PREVIEW_PLAN.md
+```
+
+Component:
+
+```text
+src/components/ScorePreviewCard.tsx
+```
+
+Current status:
+
+```text
+foundation only
+```
+
+The component is intentionally not mounted on public pages yet.
+
+It can display:
+
+```text
+source
+status
+confidence
+formulaId
+periodStart
+periodEnd
+sourceIds
+fallback reason
+not-used-for-ranking disclaimer
+```
+
+Current boundary:
+
+```text
+[✓] no public page usage yet
+[✓] no scoring changes
+[✓] no sorting changes
+[✓] no roster-builder scoring changes
+[✓] no sampleDerivedScores import
+[✓] no realDerivedScores import
+```
 
 ## Score adapter validation
 
@@ -241,9 +290,6 @@ Validation protects:
 [✓] public pages do not call getSample* helpers
 [✓] public pages do not import sampleDerivedScores or realDerivedScores directly
 ```
-
-`SampleDataPage.tsx` remains the only allowed sample-helper / sample-preview
-exception because it is a sample-only preview route.
 
 ## Real-derived score layer
 
@@ -309,6 +355,7 @@ docs/REAL_DERIVED_SCORES.md
 docs/REAL_DERIVED_SCORES_VALIDATION.md
 docs/GENERIC_SCORE_ADAPTERS_PLAN.md
 docs/GENERIC_SCORE_ADAPTERS.md
+docs/DETAIL_SCORE_PREVIEW_PLAN.md
 docs/MODEL_VALIDATION.md
 docs/SITEMAP.md
 ```
@@ -417,17 +464,20 @@ Vercel then builds the latest pushed version.
 
 ## Roadmap
 
-- Add read-only generic adapter preview blocks to detail pages later
+- Mount `ScorePreviewCard` on one public detail route later
+- Start with `/players/:playerId`
+- Keep the block read-only
+- Do not use `allowSample=true` on public pages
+- Add read-only preview blocks to team/map details later
 - Extend real-derived validation when real rows exist
 - Add real-derived row coverage gates
 - Keep public scoring stable until coverage gates pass
 - Replace demo/manual values only after validated real-derived coverage exists
-- Add backend/API or automated ingestion later
 
 ## Important note
 
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample validation, derived-score model types, score adapters, real-derived score
-planning/scaffold validation, generic adapters with safe defaults, and clear
-boundaries around demo/manual scoring.
+planning/scaffold validation, generic adapters with safe defaults, a sample-only
+adapter preview route, and a read-only score preview component foundation.

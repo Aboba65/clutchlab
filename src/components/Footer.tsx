@@ -24,11 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard
-            label="Version"
-            value="0.2.9"
-            detail="Sample Data generic adapters"
-          />
+          <FooterCard label="Version" value="0.2.10" detail="Score preview foundation" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -91,6 +87,11 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/GENERIC_SCORE_ADAPTERS.md`}
           >
             Generic adapters
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/DETAIL_SCORE_PREVIEW_PLAN.md`}
+          >
+            Detail preview plan
           </FooterExternalLink>
           <FooterExternalLink
             href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES_PLAN.md`}

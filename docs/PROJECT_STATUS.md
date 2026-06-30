@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.9 Sample Data generic adapters
+0.2.10 Score preview foundation
 ```
 
 ## Live site
@@ -36,8 +36,9 @@ Sample Data preview page, a score adapter layer, score adapter validation,
 adapter metadata displayed on `/sample-data`, a real-derived score plan, a
 real-derived scaffold, real-derived scaffold validation, generic score adapter
 documentation, generic score adapters implemented in code, validation for generic
-adapter safety rules, and `/sample-data` migrated to generic adapters with
-`allowSample=true`.
+adapter safety rules, `/sample-data` migrated to generic adapters with
+`allowSample=true`, a detail score preview plan, and a read-only
+`ScorePreviewCard` foundation component.
 
 ## Current data status
 
@@ -48,12 +49,21 @@ demo/manual data
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
 
+## Version meaning
+
+Current work remains in the `0.2.x` line because it is infrastructure.
+
+```text
+0.2.x: data/model/adapter/preview infrastructure
+0.3.0: first public detail-page derived preview block
+```
+
 ## Data architecture
 
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → future UI scores
 ```
 
 Implemented real-stat and adapter files:
@@ -76,7 +86,9 @@ Implemented real-stat and adapter files:
 [✓] docs/REAL_DERIVED_SCORES_VALIDATION.md
 [✓] docs/GENERIC_SCORE_ADAPTERS_PLAN.md
 [✓] docs/GENERIC_SCORE_ADAPTERS.md
+[✓] docs/DETAIL_SCORE_PREVIEW_PLAN.md
 [✓] docs/MODEL_VALIDATION.md
+[✓] src/components/ScorePreviewCard.tsx
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
 [✓] src/data/sampleRawStats.ts
@@ -91,6 +103,52 @@ Implemented real-stat and adapter files:
 [✓] scripts/validate-sample-derived-scores.mjs
 [✓] scripts/validate-score-adapters.mjs
 [✓] scripts/validate-real-derived-scores.mjs
+```
+
+## Score preview foundation
+
+Plan:
+
+```text
+docs/DETAIL_SCORE_PREVIEW_PLAN.md
+```
+
+Component:
+
+```text
+src/components/ScorePreviewCard.tsx
+```
+
+Current status:
+
+```text
+component exists but is not mounted on public pages yet
+```
+
+The component can display:
+
+```text
+source
+status
+confidence
+formulaId
+periodStart
+periodEnd
+sourceIds
+fallback reason
+not-used-for-ranking disclaimer
+```
+
+Current boundary:
+
+```text
+[✓] no public page usage yet
+[✓] no route changes
+[✓] no scoring changes
+[✓] no sorting changes
+[✓] no roster-builder scoring changes
+[✓] no sampleDerivedScores import
+[✓] no realDerivedScores import
 ```
 
 ## Generic score adapters
@@ -109,16 +167,6 @@ Implemented generic helper API:
 [✓] getMapFitScoresForEntity(entityId, entityType, options?)
 [✓] getMapFitScore({ mapId, entityId, entityType }, options?)
 [✓] getRosterValueScore(rosterId, options?)
-```
-
-Implemented support API:
-
-```text
-[✓] ScoreAdapterOptions
-[✓] defaultScoreAdapterOptions
-[✓] resolveScoreAdapterOptions
-[✓] hasScoreAdapterValue(result)
-[✓] getScoreAdapterCoverageSummary()
 ```
 
 Safe defaults:
@@ -307,6 +355,7 @@ Role routes:   8
 [✓] Sample Data preview page
 [✓] Sample Data generic adapter usage
 [✓] Adapter metadata on Sample Data page
+[✓] ScorePreviewCard foundation component
 [✓] Route page titles
 [✓] Route meta descriptions
 [✓] Open Graph route meta
@@ -329,6 +378,7 @@ Role routes:   8
 - Prices are internal MVP values
 - Real-derived layer is a planned empty scaffold
 - Generic helpers are implemented but not used by public scoring pages yet
+- ScorePreviewCard is implemented but not mounted yet
 - Only SampleDataPage may opt into sample rows with `allowSample=true`
 - Public pages intentionally do not import sampleDerivedScores or realDerivedScores
 - Sample rows do not replace demo/manual UI scores
@@ -351,23 +401,24 @@ Role routes:   8
 
 ## Recommended next steps
 
-### 1. Add read-only generic adapter preview blocks later
+### 1. Start 0.3.0 with one public detail preview block
 
 ```text
-[ ] /players/:playerId preview block
-[ ] /teams/:teamId preview block
-[ ] no catalog sorting migration yet
-[ ] no roster-builder scoring migration yet
+[ ] mount ScorePreviewCard on /players/:playerId
+[ ] call getPlayerDerivedScore(player.id)
+[ ] do not pass allowSample=true
+[ ] show fallback when no real-derived row exists
+[ ] keep player rating/scoring unchanged
+[ ] keep catalog sorting unchanged
 ```
 
-### 2. Add real-derived row validation when real data exists
+### 2. Add team/map detail preview later
 
 ```text
-[ ] validate real player derived rows
-[ ] validate real team derived rows
-[ ] validate real map fit rows
-[ ] validate real roster value rows
-[ ] validate coverage gates
+[ ] /teams/:teamId preview block
+[ ] /maps/:mapId preview block or explanatory note
+[ ] no catalog sorting migration yet
+[ ] no roster-builder scoring migration yet
 ```
 
 ## Build commands
