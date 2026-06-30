@@ -2,6 +2,41 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.7 — Generic score adapter documentation
+
+Date: 2026-06-28
+
+### Added
+
+- Generic score adapters plan: `docs/GENERIC_SCORE_ADAPTERS_PLAN.md`
+- Generic score adapters API documentation: `docs/GENERIC_SCORE_ADAPTERS.md`
+- Documentation for future helper API:
+  - `getPlayerDerivedScore(playerId, options?)`
+  - `getTeamDerivedScore(teamId, options?)`
+  - `getMapFitScoresForEntity(entityId, entityType, options?)`
+  - `getMapFitScore({ mapId, entityId, entityType }, options?)`
+  - `getRosterValueScore(rosterId, options?)`
+- Documentation for future `ScoreAdapterOptions`
+- Documentation for safe defaults:
+  - `allowSample=false`
+  - `preferReal=true`
+- Documentation for future source priority:
+  - `real-derived → sample-derived → demo-manual fallback`
+- Footer links to generic score adapter documentation
+
+### Improved
+
+- README now documents generic score adapter planning.
+- Project status now documents generic score adapter planning.
+- Footer version display was updated to `0.2.7`.
+
+### Notes
+
+This release is documentation-only for generic score adapters.
+
+No public UI behavior, scoring behavior, validation behavior or data arrays were
+changed.
+
 ## 0.2.6 — Real-derived scaffold validation
 
 Date: 2026-06-28
@@ -19,30 +54,6 @@ Date: 2026-06-28
 - Real-derived score validation in `scripts/release-check.mjs`
 - Real-derived score validation in GitHub Actions CI
 - Real-derived scaffold exports through `src/data/index.ts` and `src/data.ts`
-- Footer links to real-derived documentation
-
-### Improved
-
-- `npm run release:check` now runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run validate:sample-stats
-npm run validate:sample-derived-scores
-npm run validate:score-adapters
-npm run validate:real-derived-scores
-npm run lint
-npm run format:check
-npm run build
-```
-
-- GitHub Actions CI now runs `npm run validate:real-derived-scores`.
-- The real-derived scaffold is protected from fake rows and accidental public UI
-  imports.
-- Footer version display was updated to `0.2.6`.
 
 ## 0.2.5 — Adapter metadata on Sample Data
 
@@ -52,23 +63,9 @@ Date: 2026-06-28
 
 - Adapter metadata display on `/sample-data`
 - Adapter overview block on `SampleDataPage`
-- Derived sample cards now show:
-  - `source`
-  - `status`
-  - `confidence`
-  - `formulaId`
-  - `periodStart`
-  - `periodEnd`
-  - `sourceIds`
-  - fallback reason when relevant
+- Derived sample cards now show source, status, confidence, formulaId, period,
+  source ids and fallback reason when relevant.
 - `SampleDataPage` now uses score adapter helpers.
-
-### Improved
-
-- Score adapter validation now allows `scoreAdapters.ts` imports only in
-  `src/pages/SampleDataPage.tsx`.
-- Other public pages remain protected from directly importing score adapters.
-- Footer version display was updated to `0.2.5`.
 
 ## 0.2.4 — Score adapter validation
 

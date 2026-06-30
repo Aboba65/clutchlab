@@ -26,8 +26,8 @@ export function Footer() {
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
           <FooterCard
             label="Version"
-            value="0.2.6"
-            detail="Real-derived scaffold validation"
+            value="0.2.7"
+            detail="Generic score adapter documentation"
           />
           <FooterCard
             label="Data updated"
@@ -81,6 +81,16 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/SCORE_ADAPTERS_VALIDATION.md`}
           >
             Adapter validation
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/GENERIC_SCORE_ADAPTERS_PLAN.md`}
+          >
+            Generic adapter plan
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/GENERIC_SCORE_ADAPTERS.md`}
+          >
+            Generic adapters
           </FooterExternalLink>
           <FooterExternalLink
             href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES_PLAN.md`}

@@ -17,7 +17,7 @@ Repository: https://github.com/Aboba65/clutchlab
 Current documented version:
 
 ```text
-0.2.6 Real-derived scaffold validation
+0.2.7 Generic score adapter documentation
 ```
 
 ClutchLab is still an MVP with a static local data layer. Current ratings,
@@ -48,6 +48,7 @@ esports statistics.
 - Derived-score model and sample derived-score validation
 - Score adapter layer and validation
 - Real-derived score plan, scaffold and validation
+- Generic score adapter plan and API documentation
 - Dynamic sitemap generation
 - Route-based title/meta updates
 - GitHub Actions CI and local release gate
@@ -92,7 +93,7 @@ esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapter plan → sample preview page → future UI scores
 ```
 
 Current data/model files:
@@ -119,6 +120,41 @@ Status: demo/manual data
 Purpose: MVP navigation, UI testing and product logic
 Not intended as: live esports statistics
 ```
+
+## Generic score adapters
+
+Generic adapter planning documentation:
+
+```text
+docs/GENERIC_SCORE_ADAPTERS_PLAN.md
+docs/GENERIC_SCORE_ADAPTERS.md
+```
+
+Future generic helper API:
+
+```text
+getPlayerDerivedScore(playerId, options?)
+getTeamDerivedScore(teamId, options?)
+getMapFitScoresForEntity(entityId, entityType, options?)
+getMapFitScore({ mapId, entityId, entityType }, options?)
+getRosterValueScore(rosterId, options?)
+```
+
+Future safe defaults:
+
+```text
+allowSample=false
+preferReal=true
+```
+
+Future source priority:
+
+```text
+real-derived → sample-derived → demo-manual fallback
+```
+
+This is currently documentation only. It does not change `scoreAdapters.ts`, public
+UI scoring or validation behavior yet.
 
 ## Score adapters
 
@@ -156,8 +192,6 @@ Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
 Other public route pages are protected by `validate:score-adapters`.
 
 ## Real-derived score layer
-
-The real-derived layer is a planned production-derived score layer.
 
 Plan:
 
@@ -199,12 +233,6 @@ realRosterValueScores: []
 
 The scaffold intentionally contains no fake real-derived rows and does not change
 public UI scoring.
-
-Future adapter priority:
-
-```text
-real-derived → sample-derived → demo-manual fallback
-```
 
 ## Sample Data preview page
 
@@ -264,6 +292,8 @@ docs/SCORE_ADAPTERS_VALIDATION.md
 docs/REAL_DERIVED_SCORES_PLAN.md
 docs/REAL_DERIVED_SCORES.md
 docs/REAL_DERIVED_SCORES_VALIDATION.md
+docs/GENERIC_SCORE_ADAPTERS_PLAN.md
+docs/GENERIC_SCORE_ADAPTERS.md
 docs/MODEL_VALIDATION.md
 docs/SITEMAP.md
 ```
@@ -280,78 +310,6 @@ Run development server:
 
 ```bash
 npm run dev
-```
-
-Generate sitemap:
-
-```bash
-npm run generate:sitemap
-```
-
-Validate local data:
-
-```bash
-npm run validate:data
-```
-
-Validate source metadata:
-
-```bash
-npm run validate:sources
-```
-
-Validate model scaffolds:
-
-```bash
-npm run validate:models
-```
-
-Validate sample raw stats:
-
-```bash
-npm run validate:sample-stats
-```
-
-Validate sample derived scores:
-
-```bash
-npm run validate:sample-derived-scores
-```
-
-Validate score adapters:
-
-```bash
-npm run validate:score-adapters
-```
-
-Validate real-derived scaffold:
-
-```bash
-npm run validate:real-derived-scores
-```
-
-Lint source files:
-
-```bash
-npm run lint
-```
-
-Format files:
-
-```bash
-npm run format
-```
-
-Check formatting without writing changes:
-
-```bash
-npm run format:check
-```
-
-Build production bundle:
-
-```bash
-npm run build
 ```
 
 Run full release check:
@@ -405,12 +363,6 @@ npm run format:check
 npm run build
 ```
 
-Workflow file:
-
-```text
-.github/workflows/ci.yml
-```
-
 ## Sitemap
 
 Dynamic sitemap generator:
@@ -450,7 +402,8 @@ Vercel then builds the latest pushed version.
 
 ## Roadmap
 
-- Extend score adapters to support generic real/sample/fallback helpers later
+- Implement generic score adapter helpers without changing UI
+- Extend score adapter validation for generic helper safety rules
 - Add real-derived row validation once real rows exist
 - Add preview-only real-derived display before any public scoring migration
 - Keep public scoring stable until coverage gates pass
@@ -462,4 +415,5 @@ Vercel then builds the latest pushed version.
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample validation, derived-score model types, score adapters, real-derived score
-planning/scaffold validation, and clear boundaries around demo/manual scoring.
+planning/scaffold validation, generic adapter planning, and clear boundaries
+around demo/manual scoring.

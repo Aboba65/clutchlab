@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.6 Real-derived scaffold validation
+0.2.7 Generic score adapter documentation
 ```
 
 ## Live site
@@ -34,7 +34,8 @@ raw stats, raw-stat sample validation, derived-score model types, manual sample
 derived scores, derived-score sample validation, model validation, a visible
 Sample Data preview page, a score adapter layer, score adapter validation,
 adapter metadata displayed on `/sample-data`, a real-derived score plan, a
-real-derived scaffold and real-derived scaffold validation.
+real-derived scaffold, real-derived scaffold validation, and generic score adapter
+planning/API documentation.
 
 ## Current data status
 
@@ -50,10 +51,10 @@ be described as live, official or current esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapter plan → sample preview page → future UI scores
 ```
 
-Implemented real-stat files:
+Implemented real-stat and adapter files:
 
 ```text
 [✓] docs/REAL_STATS_PLAN.md
@@ -71,6 +72,8 @@ Implemented real-stat files:
 [✓] docs/REAL_DERIVED_SCORES_PLAN.md
 [✓] docs/REAL_DERIVED_SCORES.md
 [✓] docs/REAL_DERIVED_SCORES_VALIDATION.md
+[✓] docs/GENERIC_SCORE_ADAPTERS_PLAN.md
+[✓] docs/GENERIC_SCORE_ADAPTERS.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
@@ -87,6 +90,51 @@ Implemented real-stat files:
 [✓] scripts/validate-score-adapters.mjs
 [✓] scripts/validate-real-derived-scores.mjs
 ```
+
+## Generic score adapters
+
+Plan:
+
+```text
+docs/GENERIC_SCORE_ADAPTERS_PLAN.md
+```
+
+API documentation:
+
+```text
+docs/GENERIC_SCORE_ADAPTERS.md
+```
+
+Future generic helper API:
+
+```text
+getPlayerDerivedScore(playerId, options?)
+getTeamDerivedScore(teamId, options?)
+getMapFitScoresForEntity(entityId, entityType, options?)
+getMapFitScore({ mapId, entityId, entityType }, options?)
+getRosterValueScore(rosterId, options?)
+```
+
+Future safe defaults:
+
+```text
+allowSample=false
+preferReal=true
+```
+
+Future source priority:
+
+```text
+real-derived → sample-derived → demo-manual fallback
+```
+
+Current status:
+
+```text
+documentation only
+```
+
+No code behavior or public UI behavior changed in this step.
 
 ## Real-derived score layer
 
@@ -109,12 +157,6 @@ Validation:
 npm run validate:real-derived-scores
 ```
 
-Validation docs:
-
-```text
-docs/REAL_DERIVED_SCORES_VALIDATION.md
-```
-
 Current state:
 
 ```text
@@ -125,18 +167,6 @@ realPlayerDerivedScores: []
 realTeamDerivedScores: []
 realMapFitScores: []
 realRosterValueScores: []
-```
-
-Validation currently protects:
-
-```text
-[✓] real-derived arrays stay empty
-[✓] metadata status remains planned
-[✓] source remains real-derived
-[✓] readyForPublicUi remains false
-[✓] coverage summary derives counts from arrays
-[✓] exports are wired through src/data/index.ts and src/data.ts
-[✓] no public page imports realDerivedScores directly
 ```
 
 ## Score adapters
@@ -157,12 +187,6 @@ Current adapter boundary:
 
 ```text
 Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
-```
-
-Future adapter priority:
-
-```text
-real-derived → sample-derived → demo-manual fallback
 ```
 
 ## Sample Data preview page
@@ -298,6 +322,7 @@ Role routes:   8
 - Ratings are not live
 - Prices are internal MVP values
 - Score adapters currently read sample-derived rows only
+- Generic score adapters are documented but not implemented yet
 - Real-derived layer is a planned empty scaffold
 - Only SampleDataPage may import score adapters
 - Public pages intentionally do not import score adapters or realDerivedScores
@@ -322,27 +347,27 @@ Role routes:   8
 
 ## Recommended next steps
 
-### 1. Generic score adapter plan
+### 1. Implement generic score adapters
 
 ```text
-[ ] define getPlayerDerivedScore(playerId, options)
-[ ] define getTeamDerivedScore(teamId, options)
-[ ] define getMapFitScore(args, options)
-[ ] define getRosterValueScore(rosterId, options)
-[ ] default allowSample=false
-[ ] default preferReal=true
+[ ] ScoreAdapterOptions
+[ ] defaultScoreAdapterOptions
+[ ] resolveScoreAdapterOptions
+[ ] getPlayerDerivedScore(playerId, options?)
+[ ] getTeamDerivedScore(teamId, options?)
+[ ] getMapFitScoresForEntity(entityId, entityType, options?)
+[ ] getMapFitScore(args, options?)
+[ ] getRosterValueScore(rosterId, options?)
 ```
 
-### 2. Future real-derived row validation
+### 2. Expand score adapter validation
 
 ```text
-[ ] validate player ids
-[ ] validate team ids
-[ ] validate map ids
-[ ] validate formula ids
-[ ] validate source ids
-[ ] validate confidence
-[ ] validate score ranges
+[ ] validate default allowSample=false
+[ ] validate default preferReal=true
+[ ] validate generic helper exports
+[ ] validate public pages do not pass allowSample=true
+[ ] validate public pages do not call getSample* helpers
 ```
 
 ## Build commands
