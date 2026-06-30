@@ -21,3 +21,20 @@ export type {
   StatWindow,
   TeamRawStats,
 } from "./rawStats";
+export {
+  derivedScoreDatasetMeta,
+  derivedScoreFieldGroups,
+  scoreFormulaScaffolds,
+} from "./derivedScores";
+export type {
+  DerivedScoreDatasetMeta,
+  MapFitScore,
+  PlayerDerivedScore,
+  RosterValueScore,
+  ScoreComponent,
+  ScoreConfidence,
+  ScoreDatasetStatus,
+  ScoreFormulaMeta,
+  ScoreScale,
+  TeamDerivedScore,
+} from "./derivedScores";
