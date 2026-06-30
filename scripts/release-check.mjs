@@ -10,6 +10,10 @@ const checks = [
     command: "npm run validate:data",
   },
   {
+    name: "Validate sources",
+    command: "npm run validate:sources",
+  },
+  {
     name: "Lint source",
     command: "npm run lint",
   },

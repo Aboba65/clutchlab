@@ -12,7 +12,8 @@
     "release:check": "node scripts/release-check.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "generate:sitemap": "node scripts/generate-sitemap.mjs"
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "validate:sources": "node scripts/validate-sources.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
