@@ -26,8 +26,8 @@ export function Footer() {
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
           <FooterCard
             label="Version"
-            value="0.2.5"
-            detail="Adapter metadata on Sample Data"
+            value="0.2.6"
+            detail="Real-derived scaffold validation"
           />
           <FooterCard
             label="Data updated"
@@ -81,6 +81,19 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/SCORE_ADAPTERS_VALIDATION.md`}
           >
             Adapter validation
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES_PLAN.md`}
+          >
+            Real-derived plan
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES.md`}>
+            Real-derived
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES_VALIDATION.md`}
+          >
+            Real-derived validation
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/RAW_STATS_MODEL.md`}>
             Raw stats

@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.5 Adapter metadata on Sample Data
+0.2.6 Real-derived scaffold validation
 ```
 
 ## Live site
@@ -32,8 +32,9 @@ workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
 real-stat migration plan, source metadata, raw-stat model types, manual sample
 raw stats, raw-stat sample validation, derived-score model types, manual sample
 derived scores, derived-score sample validation, model validation, a visible
-Sample Data preview page, a score adapter layer, score adapter validation and
-adapter metadata displayed on `/sample-data`.
+Sample Data preview page, a score adapter layer, score adapter validation,
+adapter metadata displayed on `/sample-data`, a real-derived score plan, a
+real-derived scaffold and real-derived scaffold validation.
 
 ## Current data status
 
@@ -44,15 +45,15 @@ demo/manual data
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
 
-## Real-stat architecture
+## Data architecture
 
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → sample preview page → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → sample preview page → future UI scores
 ```
 
-Implemented real-stat scaffold files:
+Implemented real-stat files:
 
 ```text
 [✓] docs/REAL_STATS_PLAN.md
@@ -67,6 +68,9 @@ Implemented real-stat scaffold files:
 [✓] docs/UI_MIGRATION_PLAN.md
 [✓] docs/SCORE_ADAPTERS.md
 [✓] docs/SCORE_ADAPTERS_VALIDATION.md
+[✓] docs/REAL_DERIVED_SCORES_PLAN.md
+[✓] docs/REAL_DERIVED_SCORES.md
+[✓] docs/REAL_DERIVED_SCORES_VALIDATION.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
@@ -74,12 +78,91 @@ Implemented real-stat scaffold files:
 [✓] src/data/derivedScores.ts
 [✓] src/data/sampleDerivedScores.ts
 [✓] src/data/scoreAdapters.ts
+[✓] src/data/realDerivedScores.ts
 [✓] src/pages/SampleDataPage.tsx
 [✓] scripts/validate-sources.mjs
 [✓] scripts/validate-models.mjs
 [✓] scripts/validate-sample-stats.mjs
 [✓] scripts/validate-sample-derived-scores.mjs
 [✓] scripts/validate-score-adapters.mjs
+[✓] scripts/validate-real-derived-scores.mjs
+```
+
+## Real-derived score layer
+
+Plan:
+
+```text
+docs/REAL_DERIVED_SCORES_PLAN.md
+```
+
+Scaffold:
+
+```text
+src/data/realDerivedScores.ts
+docs/REAL_DERIVED_SCORES.md
+```
+
+Validation:
+
+```bash
+npm run validate:real-derived-scores
+```
+
+Validation docs:
+
+```text
+docs/REAL_DERIVED_SCORES_VALIDATION.md
+```
+
+Current state:
+
+```text
+status: planned
+source: real-derived
+readyForPublicUi: false
+realPlayerDerivedScores: []
+realTeamDerivedScores: []
+realMapFitScores: []
+realRosterValueScores: []
+```
+
+Validation currently protects:
+
+```text
+[✓] real-derived arrays stay empty
+[✓] metadata status remains planned
+[✓] source remains real-derived
+[✓] readyForPublicUi remains false
+[✓] coverage summary derives counts from arrays
+[✓] exports are wired through src/data/index.ts and src/data.ts
+[✓] no public page imports realDerivedScores directly
+```
+
+## Score adapters
+
+Source file:
+
+```text
+src/data/scoreAdapters.ts
+```
+
+Validation:
+
+```bash
+npm run validate:score-adapters
+```
+
+Current adapter boundary:
+
+```text
+Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
+```
+
+Future adapter priority:
+
+```text
+real-derived → sample-derived → demo-manual fallback
 ```
 
 ## Sample Data preview page
@@ -96,24 +179,11 @@ Page file:
 src/pages/SampleDataPage.tsx
 ```
 
-Documentation:
-
-```text
-docs/SAMPLE_DATA_PAGE.md
-```
-
 The page is clearly marked:
 
 ```text
 Sample only / not live stats
 ```
-
-The page does not replace current demo/manual UI scoring.
-
-## Adapter metadata on Sample Data
-
-`SampleDataPage` now imports score adapter helpers and shows adapter metadata on
-derived sample cards.
 
 Displayed adapter metadata:
 
@@ -129,59 +199,65 @@ Displayed adapter metadata:
 [✓] adapter coverage summary
 ```
 
-Used helpers:
+## Current quality workflow
 
-```text
-[✓] getSamplePlayerDerivedScore
-[✓] getSampleTeamDerivedScore
-[✓] getSampleMapFitScore
-[✓] getSampleRosterValueScore
-[✓] getScoreAdapterCoverageSummary
-[✓] scoreAdapterLayerMeta
-```
-
-Important boundary:
-
-```text
-Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
-```
-
-Other public pages remain protected by:
+Run this before committing:
 
 ```bash
-npm run validate:score-adapters
+npm run release:check
 ```
 
-## Score adapters
-
-Source file:
-
-```text
-src/data/scoreAdapters.ts
-```
-
-Documentation:
-
-```text
-docs/SCORE_ADAPTERS.md
-```
-
-Validation:
+This runs:
 
 ```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run validate:sample-stats
+npm run validate:sample-derived-scores
 npm run validate:score-adapters
+npm run validate:real-derived-scores
+npm run lint
+npm run format:check
+npm run build
 ```
 
-Validation documentation:
+## CI
 
-```text
-docs/SCORE_ADAPTERS_VALIDATION.md
+GitHub runs:
+
+```bash
+npm ci
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run validate:sample-stats
+npm run validate:sample-derived-scores
+npm run validate:score-adapters
+npm run validate:real-derived-scores
+npm run lint
+npm run format:check
+npm run build
 ```
 
-Current adapter status:
+## Current sitemap
+
+Current generated route count:
 
 ```text
-sample-only
+75
+```
+
+Current sitemap breakdown:
+
+```text
+Static routes: 12
+Player routes: 40
+Team routes:   8
+Map routes:    7
+Role routes:   8
 ```
 
 ## Completed product features
@@ -213,148 +289,6 @@ sample-only
 [✓] About / Methodology page
 ```
 
-## Completed technical work
-
-```text
-[✓] React Router route table
-[✓] AppShell layout
-[✓] Shared UI components
-[✓] Route title/meta hook
-[✓] Mobile navigation polish
-[✓] Footer component
-[✓] Data layer split
-[✓] dataMeta
-[✓] source metadata scaffold
-[✓] source metadata validation
-[✓] raw stat type model
-[✓] sample raw-stat scaffold
-[✓] sample stats validation
-[✓] derived score type model
-[✓] sample derived-score scaffold
-[✓] sample derived-score validation
-[✓] sample data preview page
-[✓] UI migration plan
-[✓] score adapter layer
-[✓] score adapter validation
-[✓] adapter metadata on sample data page
-[✓] model validation
-[✓] GitHub README
-[✓] README badges
-[✓] SEO meta tags
-[✓] route meta descriptions
-[✓] dynamic sitemap generator
-[✓] /sample-data sitemap route
-[✓] real-stat data plan
-[✓] Vercel SPA rewrite
-[✓] Data validation script
-[✓] ESLint config
-[✓] Prettier config
-[✓] Release check script
-[✓] GitHub Actions CI
-```
-
-## Current quality workflow
-
-Run this before committing:
-
-```bash
-npm run release:check
-```
-
-This runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run validate:sample-stats
-npm run validate:sample-derived-scores
-npm run validate:score-adapters
-npm run lint
-npm run format:check
-npm run build
-```
-
-## CI
-
-GitHub runs:
-
-```bash
-npm ci
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run validate:sample-stats
-npm run validate:sample-derived-scores
-npm run validate:score-adapters
-npm run lint
-npm run format:check
-npm run build
-```
-
-## Current sitemap
-
-Current generated route count:
-
-```text
-75
-```
-
-Current sitemap breakdown:
-
-```text
-Static routes: 12
-Player routes: 40
-Team routes:   8
-Map routes:    7
-Role routes:   8
-```
-
-## Data roadmap
-
-Documents:
-
-```text
-docs/REAL_STATS_PLAN.md
-docs/DATA_SOURCES.md
-docs/RAW_STATS_MODEL.md
-docs/SAMPLE_REAL_STATS.md
-docs/SAMPLE_STATS_VALIDATION.md
-docs/DERIVED_SCORES_MODEL.md
-docs/SAMPLE_DERIVED_SCORES.md
-docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
-docs/SAMPLE_DATA_PAGE.md
-docs/UI_MIGRATION_PLAN.md
-docs/SCORE_ADAPTERS.md
-docs/SCORE_ADAPTERS_VALIDATION.md
-docs/MODEL_VALIDATION.md
-```
-
-Current data architecture direction:
-
-```text
-[✓] demo/manual status is explicit
-[✓] source scaffolding exists
-[✓] planned real-stat source placeholders exist
-[✓] raw stat model exists
-[✓] sample raw-stat rows exist
-[✓] sample stats validation exists
-[✓] derived score model exists
-[✓] sample derived-score rows exist
-[✓] sample derived-score validation exists
-[✓] sample data preview page exists
-[✓] UI migration plan exists
-[✓] score adapter layer exists
-[✓] score adapter validation exists
-[✓] adapter metadata visible on sample page
-[✓] source validation exists
-[✓] model validation exists
-[ ] real-derived score layer
-[ ] public UI migration after real coverage
-```
-
 ## Known limitations
 
 ### Data limitations
@@ -364,11 +298,11 @@ Current data architecture direction:
 - Ratings are not live
 - Prices are internal MVP values
 - Score adapters currently read sample-derived rows only
+- Real-derived layer is a planned empty scaffold
 - Only SampleDataPage may import score adapters
-- Public pages intentionally do not import score adapters yet
+- Public pages intentionally do not import score adapters or realDerivedScores
 - Source metadata exists but real-stat rows are not connected to UI yet
-- Sample raw-stat rows exist but do not replace demo/manual UI data
-- Sample derived-score rows exist but do not replace demo/manual UI scores
+- Sample rows do not replace demo/manual UI scores
 - No automatic match updates
 - No event-window filtering yet
 
@@ -383,25 +317,32 @@ Current data architecture direction:
 - There are no unit tests yet
 - There are no component tests yet
 - Data validation, source validation, model validation, sample validation, adapter
-  validation and sitemap generation are source-text based, not AST-based
+  validation, real-derived validation and sitemap generation are source-text
+  based, not AST-based
 
 ## Recommended next steps
 
-### 1. Real-derived score layer plan
+### 1. Generic score adapter plan
 
 ```text
-[ ] define future realDerivedScores file shape
-[ ] extend adapters to prefer real-derived rows later
-[ ] preserve demo/manual fallback
-[ ] keep score source visible
+[ ] define getPlayerDerivedScore(playerId, options)
+[ ] define getTeamDerivedScore(teamId, options)
+[ ] define getMapFitScore(args, options)
+[ ] define getRosterValueScore(rosterId, options)
+[ ] default allowSample=false
+[ ] default preferReal=true
 ```
 
-### 2. Sample Data page polish
+### 2. Future real-derived row validation
 
 ```text
-[ ] improve density of adapter metadata cards
-[ ] add filters for raw stats vs derived scores
-[ ] add component breakdown expansion
+[ ] validate player ids
+[ ] validate team ids
+[ ] validate map ids
+[ ] validate formula ids
+[ ] validate source ids
+[ ] validate confidence
+[ ] validate score ranges
 ```
 
 ## Build commands
@@ -416,6 +357,7 @@ npm run validate:models
 npm run validate:sample-stats
 npm run validate:sample-derived-scores
 npm run validate:score-adapters
+npm run validate:real-derived-scores
 npm run lint
 npm run format
 npm run format:check
