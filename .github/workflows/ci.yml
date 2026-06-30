@@ -46,6 +46,9 @@ jobs:
       - name: Validate sample derived scores
         run: npm run validate:sample-derived-scores
 
+      - name: Validate score adapters
+        run: npm run validate:score-adapters
+
       - name: Lint
         run: npm run lint
 

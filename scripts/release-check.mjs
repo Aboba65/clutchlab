@@ -26,6 +26,10 @@ const checks = [
     command: "npm run validate:sample-derived-scores",
   },
   {
+    name: "Validate score adapters",
+    command: "npm run validate:score-adapters",
+  },
+  {
     name: "Lint source",
     command: "npm run lint",
   },

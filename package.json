@@ -16,7 +16,8 @@
     "validate:sources": "node scripts/validate-sources.mjs",
     "validate:models": "node scripts/validate-models.mjs",
     "validate:sample-stats": "node scripts/validate-sample-stats.mjs",
-    "validate:sample-derived-scores": "node scripts/validate-sample-derived-scores.mjs"
+    "validate:sample-derived-scores": "node scripts/validate-sample-derived-scores.mjs",
+    "validate:score-adapters": "node scripts/validate-score-adapters.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
