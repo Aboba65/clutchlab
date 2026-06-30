@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.6 Dynamic sitemap generation
+0.1.7 Real-stat data plan
 ```
 
 ## Live site
@@ -28,7 +28,8 @@ ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
-workflow, mobile polish, route-level SEO metadata and dynamic sitemap generation.
+workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation and
+a documented plan for moving from demo/manual values to real-stat data.
 
 ## Current data status
 
@@ -38,6 +39,37 @@ demo/manual data
 
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
+
+## Real-stat data plan
+
+Document:
+
+```text
+docs/REAL_STATS_PLAN.md
+```
+
+The plan defines how future real statistics should be structured:
+
+```text
+[✓] identity data
+[✓] raw performance data
+[✓] source metadata
+[✓] derived scores
+[✓] manual adjustments
+[✓] validation rules
+[✓] UI disclosure rules
+```
+
+Recommended future implementation sequence:
+
+```text
+1. Add source metadata scaffolding.
+2. Add raw stat types.
+3. Add derived score types.
+4. Add real-stat validation.
+5. Add a small manually curated real-stat sample.
+6. Only then consider semi-structured import or API/backend work.
+```
 
 ## Completed product features
 
@@ -84,6 +116,7 @@ be described as live, official or current esports statistics.
 [✓] route meta descriptions
 [✓] dynamic sitemap generator
 [✓] generated sitemap detail routes
+[✓] real-stat data plan
 [✓] favicon.svg
 [✓] og-image.svg
 [✓] site.webmanifest
@@ -119,16 +152,8 @@ npm run build
 
 ### Sitemap generation
 
-Command:
-
 ```bash
 npm run generate:sitemap
-```
-
-Script:
-
-```text
-scripts/generate-sitemap.mjs
 ```
 
 Output:
@@ -137,62 +162,10 @@ Output:
 public/sitemap.xml
 ```
 
-The generator reads:
-
-```text
-src/data/players.ts
-src/data/teams.ts
-src/config/maps.ts
-src/config/roles.ts
-src/data/meta.ts
-```
-
-Current sitemap coverage:
-
-```text
-[✓] static routes
-[✓] player detail routes
-[✓] team detail routes
-[✓] map detail routes
-[✓] role detail routes
-```
-
-Detailed sitemap documentation:
-
-```text
-docs/SITEMAP.md
-```
-
 ### Data validation
-
-Command:
 
 ```bash
 npm run validate:data
-```
-
-Script:
-
-```text
-scripts/validate-data.mjs
-```
-
-Current validation checks:
-
-```text
-[✓] player ids are unique
-[✓] team ids are unique
-[✓] map ids are unique
-[✓] map names are unique
-[✓] player.teamId exists in teams
-[✓] team.players ids exist in players
-[✓] team.bestMaps values exist in map profiles
-[✓] player roles are valid
-[✓] player prices are within expected builder range
-[✓] player score fields are within 0–100
-[✓] team score fields are within 0–100
-[✓] map score fields are within 0–100
-[✓] warnings for non-bidirectional player/team links
 ```
 
 ### Linting and formatting
@@ -203,21 +176,7 @@ npm run format
 npm run format:check
 ```
 
-Config files:
-
-```text
-eslint.config.js
-.prettierrc
-.prettierignore
-```
-
 ### GitHub Actions CI
-
-Workflow:
-
-```text
-.github/workflows/ci.yml
-```
 
 GitHub runs:
 
@@ -276,6 +235,7 @@ README.md
 CHANGELOG.md
 docs/PROJECT_STATUS.md
 docs/SITEMAP.md
+docs/REAL_STATS_PLAN.md
 docs/ARCHITECTURE.md
 docs/RELEASE_CHECKLIST.md
 vercel.json
@@ -315,30 +275,31 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Real-stat data plan
+### 1. Source metadata scaffolding
 
 ```text
-[ ] define sources
-[ ] define update date
-[ ] define event/time window
-[ ] separate raw stats from derived scores
-[ ] document manual adjustments
+[ ] add source-related TypeScript types
+[ ] add src/data/sources.ts
+[ ] validate source ids
+[ ] connect dataMeta with source status
+[ ] add docs/DATA_SOURCES.md
 ```
 
-### 2. Testing
+### 2. Real-stat validation
+
+```text
+[ ] validate sourceId references
+[ ] validate stat periods
+[ ] validate minimum sample sizes
+[ ] validate derived score ranges
+```
+
+### 3. Testing
 
 ```text
 [ ] basic smoke tests
 [ ] component tests for core pages
 [ ] CI test step
-```
-
-### 3. Product polish
-
-```text
-[ ] loading/empty states audit
-[ ] better public data methodology
-[ ] static OG image polish
 ```
 
 ## Build commands

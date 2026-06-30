@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.6 Dynamic sitemap generation
+0.1.7 Real-stat data plan
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -52,6 +52,7 @@ esports statistics.
 - Data notice shown in the app shell
 - Footer with version, data status and project links
 - Dynamic sitemap generation for static and detail routes
+- Real-stat data migration plan
 
 ## Tech stack
 
@@ -137,14 +138,18 @@ src/data/index.ts         Public data exports
 src/data/README.md        Data rules and future real-stat notes
 ```
 
-`src/data.ts` remains as a compatibility export so older imports continue to work.
-
 Current data status:
 
 ```text
 Status: demo/manual data
 Purpose: MVP navigation, UI testing and product logic
 Not intended as: live esports statistics
+```
+
+Real-stat migration plan:
+
+```text
+docs/REAL_STATS_PLAN.md
 ```
 
 ## Local setup
@@ -161,16 +166,16 @@ Run development server:
 npm run dev
 ```
 
-Validate local data:
-
-```bash
-npm run validate:data
-```
-
 Generate sitemap:
 
 ```bash
 npm run generate:sitemap
+```
+
+Validate local data:
+
+```bash
+npm run validate:data
 ```
 
 Lint source files:
@@ -274,44 +279,34 @@ Output:
 public/sitemap.xml
 ```
 
-The generator reads:
-
-```text
-src/data/players.ts
-src/data/teams.ts
-src/config/maps.ts
-src/config/roles.ts
-src/data/meta.ts
-```
-
-It includes:
-
-```text
-[✓] main static routes
-[✓] /players/:playerId
-[✓] /teams/:teamId
-[✓] /maps/:mapId
-[✓] /roles/:roleId
-```
-
 Detailed sitemap documentation:
 
 ```text
 docs/SITEMAP.md
 ```
 
+## Data roadmap
+
+ClutchLab should move from demo/manual values to real statistics in phases:
+
+```text
+1. Keep identity data separate from performance data.
+2. Add source metadata for every raw stat group.
+3. Store raw stats separately from derived scores.
+4. Make manual adjustments explicit.
+5. Validate sources, periods, sample sizes and derived score ranges.
+6. Keep UI disclosure clear: demo/manual vs real-stat.
+```
+
+Detailed plan:
+
+```text
+docs/REAL_STATS_PLAN.md
+```
+
 ## Deployment
 
 The project is configured for Vercel.
-
-`vercel.json` contains a SPA rewrite so React Router routes work after refresh:
-
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-}
-```
 
 Typical deployment flow:
 
@@ -345,12 +340,16 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data and Live site links
+[✓] GitHub, Changelog, Data, Sitemap and Live site links
 ```
 
 ## Roadmap
 
-- Replace demo/manual values with manually curated real statistics
+- Add source metadata scaffolding
+- Add raw stats type definitions
+- Add derived score type definitions
+- Add real-stat validation script
+- Replace demo/manual values with manually curated real statistics later
 - Add source metadata per stat group
 - Track update dates and event windows
 - Separate identity data from current performance data
