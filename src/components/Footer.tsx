@@ -24,11 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard
-            label="Version"
-            value="0.2.2"
-            detail="Sample derived-score validation"
-          />
+          <FooterCard label="Version" value="0.2.3" detail="Sample data preview page" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -40,6 +36,7 @@ export function Footer() {
       <div className="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between">
         <nav className="flex flex-wrap gap-2">
           <FooterLink to="/about">About</FooterLink>
+          <FooterLink to="/sample-data">Sample Data</FooterLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/CHANGELOG.md`}>
             Changelog
           </FooterExternalLink>
@@ -66,6 +63,9 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/SAMPLE_DERIVED_SCORES_VALIDATION.md`}
           >
             Score validation
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/SAMPLE_DATA_PAGE.md`}>
+            Sample data docs
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/RAW_STATS_MODEL.md`}>
             Raw stats

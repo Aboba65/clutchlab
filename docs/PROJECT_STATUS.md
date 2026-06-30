@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.2 Sample derived-score validation
+0.2.3 Sample data preview page
 ```
 
 ## Live site
@@ -31,7 +31,8 @@ The product now has a complete first version of the interface, a stronger qualit
 workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
 real-stat migration plan, source metadata, raw-stat model types, manual sample
 raw stats, raw-stat sample validation, derived-score model types, manual sample
-derived scores, derived-score sample validation and model validation.
+derived scores, derived-score sample validation, model validation and a visible
+Sample Data preview page.
 
 ## Current data status
 
@@ -47,7 +48,7 @@ be described as live, official or current esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → future UI scores
+source metadata → sample raw stats → sample derived scores → sample preview page → future UI scores
 ```
 
 Implemented real-stat scaffold files:
@@ -61,17 +62,62 @@ Implemented real-stat scaffold files:
 [✓] docs/DERIVED_SCORES_MODEL.md
 [✓] docs/SAMPLE_DERIVED_SCORES.md
 [✓] docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+[✓] docs/SAMPLE_DATA_PAGE.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
 [✓] src/data/sampleRawStats.ts
 [✓] src/data/derivedScores.ts
 [✓] src/data/sampleDerivedScores.ts
+[✓] src/pages/SampleDataPage.tsx
 [✓] scripts/validate-sources.mjs
 [✓] scripts/validate-models.mjs
 [✓] scripts/validate-sample-stats.mjs
 [✓] scripts/validate-sample-derived-scores.mjs
 ```
+
+## Sample Data preview page
+
+Route:
+
+```text
+/sample-data
+```
+
+Page file:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DATA_PAGE.md
+```
+
+The page displays:
+
+```text
+[✓] samplePlayerRawStats
+[✓] sampleTeamRawStats
+[✓] sampleRawStatsSummary
+[✓] sampleRawStatsMeta
+[✓] samplePlayerDerivedScores
+[✓] sampleTeamDerivedScores
+[✓] sampleMapFitScores
+[✓] sampleRosterValueScores
+[✓] sampleDerivedScoresSummary
+[✓] sampleDerivedScoresMeta
+```
+
+The page is clearly marked:
+
+```text
+Sample only / not live stats
+```
+
+The page does not replace current demo/manual UI scoring.
 
 ## Sample derived scores
 
@@ -96,39 +142,10 @@ Map fit scores:        2
 Roster value scores:   1
 ```
 
-The sample is not connected to current UI scoring.
-
-## Sample derived-score validation
-
-Command:
+Validation:
 
 ```bash
 npm run validate:sample-derived-scores
-```
-
-Script:
-
-```text
-scripts/validate-sample-derived-scores.mjs
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
-```
-
-Current sample derived-score validation checks:
-
-```text
-[✓] sample player ids exist
-[✓] sample team ids exist
-[✓] sample map ids exist
-[✓] sample source ids exist
-[✓] sample formula ids exist
-[✓] score fields are between 0 and 100
-[✓] low-confidence rows include notes
-[✓] sampleDerivedScoresSummary derives counts from sample arrays
 ```
 
 ## Sample raw stats
@@ -234,6 +251,7 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] Team comparison
 [✓] Roster Builder
 [✓] Saved Rosters manager
+[✓] Sample Data preview page
 [✓] Route page titles
 [✓] Route meta descriptions
 [✓] Open Graph route meta
@@ -265,6 +283,7 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] derived score type model
 [✓] sample derived-score scaffold
 [✓] sample derived-score validation
+[✓] sample data preview page
 [✓] model validation
 [✓] Data layer README
 [✓] GitHub README
@@ -273,6 +292,7 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] route meta descriptions
 [✓] dynamic sitemap generator
 [✓] generated sitemap detail routes
+[✓] /sample-data sitemap route
 [✓] real-stat data plan
 [✓] Vercel SPA rewrite
 [✓] Data validation script
@@ -310,6 +330,22 @@ npm run build
 
 ```bash
 npm run generate:sitemap
+```
+
+Current generated route count:
+
+```text
+75
+```
+
+Current sitemap breakdown:
+
+```text
+Static routes: 12
+Player routes: 40
+Team routes:   8
+Map routes:    7
+Role routes:   8
 ```
 
 ### Data validation
@@ -380,6 +416,7 @@ docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+docs/SAMPLE_DATA_PAGE.md
 docs/MODEL_VALIDATION.md
 ```
 
@@ -395,10 +432,11 @@ Current data architecture direction:
 [✓] derived score model exists
 [✓] sample derived-score rows exist
 [✓] sample derived-score validation exists
+[✓] sample data preview page exists
 [✓] source validation exists
 [✓] model validation exists
-[ ] sample analytics preview page
 [ ] UI migration plan
+[ ] player display names in sample preview
 ```
 
 ## Important files
@@ -412,6 +450,7 @@ src/config/navigation.ts
 src/config/maps.ts
 src/config/roles.ts
 src/hooks/usePageTitle.ts
+src/pages/SampleDataPage.tsx
 src/data.ts
 src/data/index.ts
 src/data/players.ts
@@ -444,6 +483,7 @@ docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+docs/SAMPLE_DATA_PAGE.md
 docs/MODEL_VALIDATION.md
 vercel.json
 index.html
@@ -462,6 +502,8 @@ public/sitemap.xml
 - Source metadata exists but real-stat rows are not connected to UI yet
 - Sample raw-stat rows exist but do not replace demo/manual UI data
 - Sample derived-score rows exist but do not replace demo/manual UI scores
+- Sample Data page currently displays player ids because `CS2Player` does not
+  expose a display name field
 - No automatic match updates
 - No event-window filtering yet
 
@@ -480,21 +522,20 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Sample analytics preview page
-
-```text
-[ ] add /sample-data route
-[ ] display sample raw stats
-[ ] display sample derived scores
-[ ] clearly mark as non-production/sample
-```
-
-### 2. UI migration plan
+### 1. UI migration plan
 
 ```text
 [ ] document how demo/manual player scores could move to derived scores
 [ ] document how team scores could move to derived scores
 [ ] document how roster builder could consume RosterValueScore later
+```
+
+### 2. Sample Data page polish
+
+```text
+[ ] improve player display names
+[ ] add links from sample rows to player/team/map detail pages
+[ ] add filters for raw stats vs derived scores
 ```
 
 ## Build commands

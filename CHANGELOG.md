@@ -2,6 +2,35 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.3 — Sample data preview page
+
+Date: 2026-06-28
+
+### Added
+
+- Product-facing Sample Data preview page: `/sample-data`
+- Page file: `src/pages/SampleDataPage.tsx`
+- Documentation: `docs/SAMPLE_DATA_PAGE.md`
+- Navigation item: `Sample Data`
+- Route title and meta description for `/sample-data`
+- `/sample-data` route in dynamic sitemap generation
+- Footer internal link to `/sample-data`
+- README documentation for the Sample Data preview page
+- Project status documentation for the Sample Data preview page
+
+### Improved
+
+- The real-stat scaffold is now visible in the interface without replacing the
+  main demo/manual player, team, map, compare or roster builder pages.
+- The sample data page clearly marks the preview as `Sample only / not live stats`.
+- Generated sitemap now contains 75 routes:
+  - 12 static routes
+  - 40 player routes
+  - 8 team routes
+  - 7 map routes
+  - 8 role routes
+- Footer version display was updated to `0.2.3`.
+
 ## 0.2.2 — Sample derived-score validation
 
 Date: 2026-06-28

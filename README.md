@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.2.2 Sample derived-score validation
+0.2.3 Sample data preview page
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -43,6 +43,7 @@ esports statistics.
 - Saved Rosters manager using `localStorage`
 - Traits page
 - About / Methodology page
+- Sample Data preview page
 - Route-based browser tab titles
 - Route-based meta descriptions
 - Open Graph title/description updates
@@ -62,6 +63,7 @@ esports statistics.
 - Sample raw-stat row validation
 - Manual sample derived-score scaffold
 - Sample derived-score row validation
+- Product-facing sample data preview route
 
 ## Tech stack
 
@@ -92,6 +94,7 @@ esports statistics.
 /team-compare             Team comparison
 /roster-builder           Roster Builder
 /saved-rosters            Saved Rosters
+/sample-data              Sample Data preview
 /traits                   Traits
 /about                    About / Methodology
 /builder                  Redirect to /roster-builder
@@ -155,6 +158,7 @@ docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+docs/SAMPLE_DATA_PAGE.md
 docs/MODEL_VALIDATION.md
 docs/REAL_STATS_PLAN.md
 ```
@@ -164,7 +168,7 @@ docs/REAL_STATS_PLAN.md
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → future UI scores
+source metadata → sample raw stats → sample derived scores → sample preview page → future UI scores
 ```
 
 Current model files:
@@ -187,8 +191,49 @@ docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/SAMPLE_DERIVED_SCORES.md
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+docs/SAMPLE_DATA_PAGE.md
 docs/MODEL_VALIDATION.md
 ```
+
+## Sample Data preview page
+
+The sample data layer is visible at:
+
+```text
+/sample-data
+```
+
+Page file:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DATA_PAGE.md
+```
+
+The page previews:
+
+```text
+samplePlayerRawStats
+sampleTeamRawStats
+samplePlayerDerivedScores
+sampleTeamDerivedScores
+sampleMapFitScores
+sampleRosterValueScores
+```
+
+It is clearly marked as:
+
+```text
+Sample only / not live stats
+```
+
+The page does not replace the current player catalog, team pages, map pages,
+compare pages or roster builder scoring.
 
 ## Source metadata
 
@@ -282,19 +327,6 @@ Documentation:
 
 ```text
 docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
-```
-
-The validator checks:
-
-```text
-[✓] player ids exist in src/data/players.ts
-[✓] team ids exist in src/data/teams.ts
-[✓] map ids exist in src/config/maps.ts
-[✓] formula ids exist in scoreFormulaScaffolds
-[✓] source ids exist in src/data/sources.ts
-[✓] score fields are between 0 and 100
-[✓] low-confidence rows include notes
-[✓] sampleDerivedScoresSummary derives counts from sample arrays
 ```
 
 ## Model validation
@@ -480,6 +512,22 @@ Output:
 public/sitemap.xml
 ```
 
+Current generated sitemap route count:
+
+```text
+75 routes
+```
+
+The sitemap includes:
+
+```text
+12 static routes
+40 player routes
+8 team routes
+7 map routes
+8 role routes
+```
+
 Detailed sitemap documentation:
 
 ```text
@@ -513,6 +561,7 @@ Current SEO/UX polish includes:
 [✓] Twitter title/description route updates
 [✓] generated sitemap.xml
 [✓] sitemap detail routes
+[✓] /sample-data sitemap route
 [✓] robots.txt
 [✓] compact mobile header
 [✓] horizontal mobile navigation
@@ -527,9 +576,10 @@ Current SEO/UX polish includes:
 
 ## Roadmap
 
-- Add a real-stat migration note in the UI
+- Improve Sample Data page display names once the player model exposes a display name
+- Add a UI migration plan for moving demo/manual scores to derived scores
 - Expand manual sample stat coverage
-- Connect a non-production analytics preview page to sample data
+- Connect a non-production analytics preview to more sample fields
 - Replace demo/manual values with manually curated real statistics later
 - Track update dates and event windows
 - Add richer map-specific statistics
@@ -540,4 +590,5 @@ Current SEO/UX polish includes:
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample raw-stat validation, derived-score model types, sample derived-score
-validation and clear boundaries around demo/manual scoring.
+validation, a visible sample data preview page and clear boundaries around
+demo/manual scoring.
