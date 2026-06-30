@@ -24,7 +24,11 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.2.1" detail="Sample stats validation" />
+          <FooterCard
+            label="Version"
+            value="0.2.2"
+            detail="Sample derived-score validation"
+          />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -52,6 +56,16 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/SAMPLE_STATS_VALIDATION.md`}
           >
             Sample validation
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/SAMPLE_DERIVED_SCORES.md`}
+          >
+            Sample scores
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/SAMPLE_DERIVED_SCORES_VALIDATION.md`}
+          >
+            Score validation
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/blob/main/docs/RAW_STATS_MODEL.md`}>
             Raw stats

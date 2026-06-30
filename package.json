@@ -15,7 +15,8 @@
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "validate:sources": "node scripts/validate-sources.mjs",
     "validate:models": "node scripts/validate-models.mjs",
-    "validate:sample-stats": "node scripts/validate-sample-stats.mjs"
+    "validate:sample-stats": "node scripts/validate-sample-stats.mjs",
+    "validate:sample-derived-scores": "node scripts/validate-sample-derived-scores.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",

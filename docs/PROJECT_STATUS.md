@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.1 Sample stats validation
+0.2.2 Sample derived-score validation
 ```
 
 ## Live site
@@ -29,9 +29,9 @@ roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
 workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
-real-stat migration plan, source metadata, raw-stat model types, a manual sample
-raw-stat scaffold, sample stats validation, derived-score model types and model
-validation.
+real-stat migration plan, source metadata, raw-stat model types, manual sample
+raw stats, raw-stat sample validation, derived-score model types, manual sample
+derived scores, derived-score sample validation and model validation.
 
 ## Current data status
 
@@ -47,7 +47,7 @@ be described as live, official or current esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → raw stats → sample raw stats → derived scores → UI scores
+source metadata → sample raw stats → sample derived scores → future UI scores
 ```
 
 Implemented real-stat scaffold files:
@@ -59,14 +59,76 @@ Implemented real-stat scaffold files:
 [✓] docs/SAMPLE_REAL_STATS.md
 [✓] docs/SAMPLE_STATS_VALIDATION.md
 [✓] docs/DERIVED_SCORES_MODEL.md
+[✓] docs/SAMPLE_DERIVED_SCORES.md
+[✓] docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
 [✓] src/data/sampleRawStats.ts
 [✓] src/data/derivedScores.ts
+[✓] src/data/sampleDerivedScores.ts
 [✓] scripts/validate-sources.mjs
 [✓] scripts/validate-models.mjs
 [✓] scripts/validate-sample-stats.mjs
+[✓] scripts/validate-sample-derived-scores.mjs
+```
+
+## Sample derived scores
+
+Source file:
+
+```text
+src/data/sampleDerivedScores.ts
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DERIVED_SCORES.md
+```
+
+Current sample contents:
+
+```text
+Player derived scores: 3
+Team derived scores:   2
+Map fit scores:        2
+Roster value scores:   1
+```
+
+The sample is not connected to current UI scoring.
+
+## Sample derived-score validation
+
+Command:
+
+```bash
+npm run validate:sample-derived-scores
+```
+
+Script:
+
+```text
+scripts/validate-sample-derived-scores.mjs
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
+```
+
+Current sample derived-score validation checks:
+
+```text
+[✓] sample player ids exist
+[✓] sample team ids exist
+[✓] sample map ids exist
+[✓] sample source ids exist
+[✓] sample formula ids exist
+[✓] score fields are between 0 and 100
+[✓] low-confidence rows include notes
+[✓] sampleDerivedScoresSummary derives counts from sample arrays
 ```
 
 ## Sample raw stats
@@ -83,63 +145,10 @@ Documentation:
 docs/SAMPLE_REAL_STATS.md
 ```
 
-Current sample contents:
-
-```text
-Players: 3
-Teams:   2
-Windows: 2
-```
-
-Current sample player ids:
-
-```text
-zywoo
-donk
-monesy
-```
-
-Current sample team ids:
-
-```text
-vitality
-spirit
-```
-
-The sample is not connected to current UI scoring.
-
-## Sample stats validation
-
-Command:
+Validation:
 
 ```bash
 npm run validate:sample-stats
-```
-
-Script:
-
-```text
-scripts/validate-sample-stats.mjs
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_STATS_VALIDATION.md
-```
-
-Current sample validation checks:
-
-```text
-[✓] sample player ids exist
-[✓] sample team ids exist
-[✓] sample source ids exist
-[✓] stat window dates are valid
-[✓] periodStart is before or equal to periodEnd
-[✓] mapsPlayed and roundsPlayed are positive
-[✓] non-negative numeric fields are not negative
-[✓] percentage fields are between 0 and 100
-[✓] sampleRawStatsSummary derives counts from sample arrays
 ```
 
 ## Model validation
@@ -254,6 +263,8 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] sample raw-stat scaffold
 [✓] sample stats validation
 [✓] derived score type model
+[✓] sample derived-score scaffold
+[✓] sample derived-score validation
 [✓] model validation
 [✓] Data layer README
 [✓] GitHub README
@@ -289,6 +300,7 @@ npm run validate:data
 npm run validate:sources
 npm run validate:models
 npm run validate:sample-stats
+npm run validate:sample-derived-scores
 npm run lint
 npm run format:check
 npm run build
@@ -318,10 +330,16 @@ npm run validate:sources
 npm run validate:models
 ```
 
-### Sample stats validation
+### Sample raw-stat validation
 
 ```bash
 npm run validate:sample-stats
+```
+
+### Sample derived-score validation
+
+```bash
+npm run validate:sample-derived-scores
 ```
 
 ### Linting and formatting
@@ -343,6 +361,7 @@ npm run validate:data
 npm run validate:sources
 npm run validate:models
 npm run validate:sample-stats
+npm run validate:sample-derived-scores
 npm run lint
 npm run format:check
 npm run build
@@ -359,6 +378,8 @@ docs/RAW_STATS_MODEL.md
 docs/SAMPLE_REAL_STATS.md
 docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
+docs/SAMPLE_DERIVED_SCORES.md
+docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 docs/MODEL_VALIDATION.md
 ```
 
@@ -372,10 +393,12 @@ Current data architecture direction:
 [✓] sample raw-stat rows exist
 [✓] sample stats validation exists
 [✓] derived score model exists
+[✓] sample derived-score rows exist
+[✓] sample derived-score validation exists
 [✓] source validation exists
 [✓] model validation exists
-[ ] derived score sample rows
-[ ] derived score row validation
+[ ] sample analytics preview page
+[ ] UI migration plan
 ```
 
 ## Important files
@@ -397,6 +420,7 @@ src/data/sources.ts
 src/data/rawStats.ts
 src/data/sampleRawStats.ts
 src/data/derivedScores.ts
+src/data/sampleDerivedScores.ts
 src/data/meta.ts
 src/lib.ts
 src/types.ts
@@ -405,6 +429,7 @@ scripts/validate-data.mjs
 scripts/validate-sources.mjs
 scripts/validate-models.mjs
 scripts/validate-sample-stats.mjs
+scripts/validate-sample-derived-scores.mjs
 scripts/release-check.mjs
 .github/workflows/ci.yml
 README.md
@@ -417,6 +442,8 @@ docs/RAW_STATS_MODEL.md
 docs/SAMPLE_REAL_STATS.md
 docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
+docs/SAMPLE_DERIVED_SCORES.md
+docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
 docs/MODEL_VALIDATION.md
 vercel.json
 index.html
@@ -434,7 +461,7 @@ public/sitemap.xml
 - Prices are internal MVP values
 - Source metadata exists but real-stat rows are not connected to UI yet
 - Sample raw-stat rows exist but do not replace demo/manual UI data
-- Derived score types exist but no derived-score rows are connected yet
+- Sample derived-score rows exist but do not replace demo/manual UI scores
 - No automatic match updates
 - No event-window filtering yet
 
@@ -450,27 +477,24 @@ public/sitemap.xml
 - There are no component tests yet
 - Data validation, source validation, model validation, sample validation and
   sitemap generation are source-text based, not AST-based
-- Derived score row validation does not exist yet because derived score rows do
-  not exist yet
 
 ## Recommended next steps
 
-### 1. Derived score sample rows
+### 1. Sample analytics preview page
 
 ```text
-[ ] add src/data/sampleDerivedScores.ts
-[ ] add sample player derived scores
-[ ] add sample team derived scores
-[ ] document source/formula relationship
+[ ] add /sample-data route
+[ ] display sample raw stats
+[ ] display sample derived scores
+[ ] clearly mark as non-production/sample
 ```
 
-### 2. Derived score row validation
+### 2. UI migration plan
 
 ```text
-[ ] validate formula ids
-[ ] validate formula source ids
-[ ] validate score ranges
-[ ] validate low-confidence notes
+[ ] document how demo/manual player scores could move to derived scores
+[ ] document how team scores could move to derived scores
+[ ] document how roster builder could consume RosterValueScore later
 ```
 
 ## Build commands
@@ -483,6 +507,7 @@ npm run validate:data
 npm run validate:sources
 npm run validate:models
 npm run validate:sample-stats
+npm run validate:sample-derived-scores
 npm run lint
 npm run format
 npm run format:check

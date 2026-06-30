@@ -43,6 +43,9 @@ jobs:
       - name: Validate sample stats
         run: npm run validate:sample-stats
 
+      - name: Validate sample derived scores
+        run: npm run validate:sample-derived-scores
+
       - name: Lint
         run: npm run lint
 

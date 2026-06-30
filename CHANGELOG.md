@@ -2,6 +2,42 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.2 — Sample derived-score validation
+
+Date: 2026-06-28
+
+### Added
+
+- Sample derived-score validation script: `scripts/validate-sample-derived-scores.mjs`
+- Sample derived-score validation documentation:
+  `docs/SAMPLE_DERIVED_SCORES_VALIDATION.md`
+- NPM command: `npm run validate:sample-derived-scores`
+- Sample derived-score validation in `scripts/release-check.mjs`
+- Sample derived-score validation in GitHub Actions CI
+- README sample derived-score validation section
+- Project status sample derived-score validation section
+- Footer links to sample derived-score documentation
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run validate:sample-stats
+npm run validate:sample-derived-scores
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs `npm run validate:sample-derived-scores`.
+- The quality gate now checks the manual sample derived-score rows before lint/build.
+- Footer version display was updated to `0.2.2`.
+
 ## 0.2.1 — Sample stats validation
 
 Date: 2026-06-28
@@ -19,20 +55,7 @@ Date: 2026-06-28
 
 ### Improved
 
-- `npm run release:check` now runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run validate:sample-stats
-npm run lint
-npm run format:check
-npm run build
-```
-
-- GitHub Actions CI now runs `npm run validate:sample-stats`.
+- `npm run release:check` now runs sample raw-stat validation.
 - The quality gate now checks the manual sample raw-stat rows before lint/build.
 - Footer version display was updated to `0.2.1`.
 
@@ -53,20 +76,7 @@ Date: 2026-06-28
 
 ### Improved
 
-- `npm run release:check` now runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run validate:models
-npm run lint
-npm run format:check
-npm run build
-```
-
-- GitHub Actions CI now runs `npm run validate:models`.
-- The quality gate now checks source metadata, raw-stat model scaffolds and
+- The quality gate checks source metadata, raw-stat model scaffolds and
   derived-score formula scaffolds before lint/build.
 - Footer version display was updated to `0.2.0`.
 
@@ -88,26 +98,16 @@ Date: 2026-06-28
 - `derivedScoreDatasetMeta`
 - `scoreFormulaScaffolds`
 - `derivedScoreFieldGroups`
-- Derived score exports from `src/data/index.ts`
-- Derived score compatibility exports from `src/data.ts`
-- README derived score model section
-- Project status derived score model section
 
 ### Improved
 
-- The real-stat architecture is now documented as:
+- The real-stat architecture is documented as:
 
 ```text
 source metadata → raw stats → derived scores → UI scores
 ```
 
-- The project now has planned formula scaffolds for:
-  - `player-impact-v1`
-  - `team-score-v1`
-  - `map-fit-v1`
-  - `roster-value-v1`
 - Footer version display was updated to `0.1.9`.
-- Footer now links to derived score documentation.
 
 ## 0.1.8 — Source metadata scaffold
 
@@ -119,18 +119,7 @@ Date: 2026-06-28
 - Source metadata documentation: `docs/DATA_SOURCES.md`
 - Source validation script: `scripts/validate-sources.mjs`
 - NPM command: `npm run validate:sources`
-- Source exports from `src/data/index.ts`
-- Source compatibility exports from `src/data.ts`
-- Source validation in `scripts/release-check.mjs`
-- Source validation in GitHub Actions CI
-- README source metadata section
-- Project status source metadata section
-
-### Improved
-
-- `npm run release:check` now runs source validation.
-- The project now distinguishes demo/manual MVP data from planned future real-stat sources.
-- Footer version display was updated to `0.1.8`.
+- Source validation in release check and CI.
 
 ## 0.1.7 — Real-stat data plan
 
@@ -143,13 +132,6 @@ Date: 2026-06-28
   derived scores and manual adjustments.
 - Manual real-stat update workflow
 - Future validation rules for real-stat data
-- UI disclosure rules for source, period and data status
-
-### Improved
-
-- README now links to the real-stat migration plan.
-- Project status now documents the planned path away from demo/manual values.
-- Footer version display was updated to `0.1.7`.
 
 ## 0.1.6 — Dynamic sitemap generation
 
@@ -161,12 +143,6 @@ Date: 2026-06-28
 - NPM command: `npm run generate:sitemap`
 - Sitemap documentation: `docs/SITEMAP.md`
 - Generated detail routes for players, teams, maps and roles.
-
-### Improved
-
-- Release check and CI now run sitemap generation.
-- `public/sitemap.xml` is generated from local data/config source files.
-- Footer version display was updated to `0.1.6`.
 
 ## 0.1.5 — SEO route meta polish
 
