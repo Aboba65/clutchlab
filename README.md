@@ -17,7 +17,7 @@ Repository: https://github.com/Aboba65/clutchlab
 Current documented version:
 
 ```text
-0.2.10 Score preview foundation
+0.2.11 Rating explanation foundation
 ```
 
 ClutchLab is still an MVP with a static local data layer. Current ratings,
@@ -27,7 +27,7 @@ esports statistics.
 
 ## What 0.2.x means
 
-The current 0.2.x line is infrastructure work:
+The current 0.2.x line is infrastructure and explanation work:
 
 ```text
 data models
@@ -37,6 +37,7 @@ score adapters
 validation
 preview-only data page
 read-only preview component foundation
+rating/methodology explanation planning
 ```
 
 It is not a public scoring migration yet.
@@ -70,6 +71,7 @@ It is not a public scoring migration yet.
 - Generic score adapter validation
 - Detail score preview plan
 - Read-only `ScorePreviewCard` component foundation
+- Rating explanation plan for current demo/manual values
 - Dynamic sitemap generation
 - Route-based title/meta updates
 - GitHub Actions CI and local release gate
@@ -114,7 +116,7 @@ It is not a public scoring migration yet.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → rating explanations → future UI scores
 ```
 
 Current data/model files:
@@ -140,6 +142,52 @@ Current data status:
 Status: demo/manual data
 Purpose: MVP navigation, UI testing and product logic
 Not intended as: live esports statistics
+```
+
+## Rating explanation foundation
+
+Plan:
+
+```text
+docs/RATING_EXPLANATION_PLAN.md
+```
+
+Current goal:
+
+```text
+Explain current MVP/demo/manual ratings, prices and product scores before any
+public scoring migration.
+```
+
+Terms covered by the plan:
+
+```text
+rating
+price
+value
+clutch
+impact
+opening
+map fit
+role fit
+team score
+```
+
+Current boundary:
+
+```text
+[✓] no UI changes yet
+[✓] no scoring changes
+[✓] no sorting changes
+[✓] no roster-builder logic changes
+[✓] no public scoring migration
+```
+
+Future component direction:
+
+```text
+src/components/RatingExplanationCard.tsx
+src/components/InfoTooltip.tsx
 ```
 
 ## Generic score adapters
@@ -257,17 +305,6 @@ fallback reason
 not-used-for-ranking disclaimer
 ```
 
-Current boundary:
-
-```text
-[✓] no public page usage yet
-[✓] no scoring changes
-[✓] no sorting changes
-[✓] no roster-builder scoring changes
-[✓] no sampleDerivedScores import
-[✓] no realDerivedScores import
-```
-
 ## Score adapter validation
 
 Command:
@@ -356,6 +393,7 @@ docs/REAL_DERIVED_SCORES_VALIDATION.md
 docs/GENERIC_SCORE_ADAPTERS_PLAN.md
 docs/GENERIC_SCORE_ADAPTERS.md
 docs/DETAIL_SCORE_PREVIEW_PLAN.md
+docs/RATING_EXPLANATION_PLAN.md
 docs/MODEL_VALIDATION.md
 docs/SITEMAP.md
 ```
@@ -464,15 +502,16 @@ Vercel then builds the latest pushed version.
 
 ## Roadmap
 
+- Add `RatingExplanationCard` and/or `InfoTooltip`
+- Mount rating explanation first on `/about`
+- Add roster-builder budget explanation later
 - Mount `ScorePreviewCard` on one public detail route later
-- Start with `/players/:playerId`
-- Keep the block read-only
+- Start score preview with `/players/:playerId`
+- Keep all preview/explanation blocks read-only
 - Do not use `allowSample=true` on public pages
-- Add read-only preview blocks to team/map details later
 - Extend real-derived validation when real rows exist
 - Add real-derived row coverage gates
 - Keep public scoring stable until coverage gates pass
-- Replace demo/manual values only after validated real-derived coverage exists
 
 ## Important note
 
@@ -480,4 +519,5 @@ ClutchLab is not currently a live ranking system. It is a product MVP with a cle
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample validation, derived-score model types, score adapters, real-derived score
 planning/scaffold validation, generic adapters with safe defaults, a sample-only
-adapter preview route, and a read-only score preview component foundation.
+adapter preview route, a read-only score preview component foundation, and a plan
+for explaining current demo/manual ratings to users.

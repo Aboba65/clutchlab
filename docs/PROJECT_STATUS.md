@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.10 Score preview foundation
+0.2.11 Rating explanation foundation
 ```
 
 ## Live site
@@ -37,8 +37,9 @@ adapter metadata displayed on `/sample-data`, a real-derived score plan, a
 real-derived scaffold, real-derived scaffold validation, generic score adapter
 documentation, generic score adapters implemented in code, validation for generic
 adapter safety rules, `/sample-data` migrated to generic adapters with
-`allowSample=true`, a detail score preview plan, and a read-only
-`ScorePreviewCard` foundation component.
+`allowSample=true`, a detail score preview plan, a read-only `ScorePreviewCard`
+foundation component, and a rating explanation plan for current demo/manual MVP
+values.
 
 ## Current data status
 
@@ -51,10 +52,11 @@ be described as live, official or current esports statistics.
 
 ## Version meaning
 
-Current work remains in the `0.2.x` line because it is infrastructure.
+Current work remains in the `0.2.x` line because it is infrastructure and
+explanation work.
 
 ```text
-0.2.x: data/model/adapter/preview infrastructure
+0.2.x: data/model/adapter/preview/explanation infrastructure
 0.3.0: first public detail-page derived preview block
 ```
 
@@ -63,7 +65,7 @@ Current work remains in the `0.2.x` line because it is infrastructure.
 Current architecture direction:
 
 ```text
-source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → future UI scores
+source metadata → sample raw stats → sample derived scores → score adapters → real-derived scaffold → generic adapters → sample preview page → read-only preview components → rating explanations → future UI scores
 ```
 
 Implemented real-stat and adapter files:
@@ -87,6 +89,7 @@ Implemented real-stat and adapter files:
 [✓] docs/GENERIC_SCORE_ADAPTERS_PLAN.md
 [✓] docs/GENERIC_SCORE_ADAPTERS.md
 [✓] docs/DETAIL_SCORE_PREVIEW_PLAN.md
+[✓] docs/RATING_EXPLANATION_PLAN.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/components/ScorePreviewCard.tsx
 [✓] src/data/sources.ts
@@ -103,6 +106,52 @@ Implemented real-stat and adapter files:
 [✓] scripts/validate-sample-derived-scores.mjs
 [✓] scripts/validate-score-adapters.mjs
 [✓] scripts/validate-real-derived-scores.mjs
+```
+
+## Rating explanation foundation
+
+Plan:
+
+```text
+docs/RATING_EXPLANATION_PLAN.md
+```
+
+Current status:
+
+```text
+planning only
+```
+
+The plan explains how future UI should describe current MVP values:
+
+```text
+rating
+price
+value
+clutch
+impact
+opening
+map fit
+role fit
+team score
+```
+
+Current boundary:
+
+```text
+[✓] no UI changes yet
+[✓] no route changes
+[✓] no scoring changes
+[✓] no sorting changes
+[✓] no roster-builder logic changes
+[✓] no real-derived rows
+```
+
+Future component direction:
+
+```text
+src/components/RatingExplanationCard.tsx
+src/components/InfoTooltip.tsx
 ```
 
 ## Score preview foundation
@@ -356,6 +405,7 @@ Role routes:   8
 [✓] Sample Data generic adapter usage
 [✓] Adapter metadata on Sample Data page
 [✓] ScorePreviewCard foundation component
+[✓] Rating explanation plan
 [✓] Route page titles
 [✓] Route meta descriptions
 [✓] Open Graph route meta
@@ -379,6 +429,7 @@ Role routes:   8
 - Real-derived layer is a planned empty scaffold
 - Generic helpers are implemented but not used by public scoring pages yet
 - ScorePreviewCard is implemented but not mounted yet
+- Rating explanation UI is planned but not implemented yet
 - Only SampleDataPage may opt into sample rows with `allowSample=true`
 - Public pages intentionally do not import sampleDerivedScores or realDerivedScores
 - Sample rows do not replace demo/manual UI scores
@@ -401,7 +452,25 @@ Role routes:   8
 
 ## Recommended next steps
 
-### 1. Start 0.3.0 with one public detail preview block
+### 1. Add rating explanation component
+
+```text
+[ ] src/components/RatingExplanationCard.tsx
+[ ] optional src/components/InfoTooltip.tsx
+[ ] no scoring changes
+[ ] no sorting changes
+```
+
+### 2. Mount explanation on a low-risk route
+
+```text
+[ ] /about methodology section
+[ ] then /roster-builder budget explanation
+[ ] then detail pages
+[ ] catalog pages last
+```
+
+### 3. Start 0.3.0 later with one public detail preview block
 
 ```text
 [ ] mount ScorePreviewCard on /players/:playerId
@@ -410,15 +479,6 @@ Role routes:   8
 [ ] show fallback when no real-derived row exists
 [ ] keep player rating/scoring unchanged
 [ ] keep catalog sorting unchanged
-```
-
-### 2. Add team/map detail preview later
-
-```text
-[ ] /teams/:teamId preview block
-[ ] /maps/:mapId preview block or explanatory note
-[ ] no catalog sorting migration yet
-[ ] no roster-builder scoring migration yet
 ```
 
 ## Build commands

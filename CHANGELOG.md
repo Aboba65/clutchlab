@@ -2,6 +2,37 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.11 — Rating explanation foundation
+
+Date: 2026-06-28
+
+### Added
+
+- Rating explanation plan:
+  `docs/RATING_EXPLANATION_PLAN.md`
+- Documentation direction for explaining current demo/manual ratings.
+- Documentation direction for explaining:
+  - rating
+  - price
+  - value
+  - clutch
+  - impact
+  - opening
+  - map fit
+  - role fit
+  - team score
+- Tooltip copy rules for future explanation UI.
+- Future `RatingExplanationCard` direction.
+- Future `InfoTooltip` direction.
+- Footer version display updated to `0.2.11`.
+- Footer link to `RATING_EXPLANATION_PLAN.md`.
+
+### Notes
+
+This release is still part of the 0.2.x infrastructure and explanation line.
+
+No UI, scoring, sorting, comparison or roster-builder behavior changed.
+
 ## 0.2.10 — Score preview foundation
 
 Date: 2026-06-28

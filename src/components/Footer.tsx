@@ -24,7 +24,11 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.2.10" detail="Score preview foundation" />
+          <FooterCard
+            label="Version"
+            value="0.2.11"
+            detail="Rating explanation foundation"
+          />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -92,6 +96,11 @@ export function Footer() {
             href={`${githubUrl}/blob/main/docs/DETAIL_SCORE_PREVIEW_PLAN.md`}
           >
             Detail preview plan
+          </FooterExternalLink>
+          <FooterExternalLink
+            href={`${githubUrl}/blob/main/docs/RATING_EXPLANATION_PLAN.md`}
+          >
+            Rating explanation
           </FooterExternalLink>
           <FooterExternalLink
             href={`${githubUrl}/blob/main/docs/REAL_DERIVED_SCORES_PLAN.md`}
