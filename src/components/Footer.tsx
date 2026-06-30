@@ -24,7 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard label="Version" value="0.1.5" detail="SEO route meta polish" />
+          <FooterCard label="Version" value="0.1.6" detail="Dynamic sitemap generation" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
@@ -41,6 +41,9 @@ export function Footer() {
           </FooterExternalLink>
           <FooterExternalLink href={`${githubUrl}/tree/main/src/data`}>
             Data
+          </FooterExternalLink>
+          <FooterExternalLink href={`${githubUrl}/blob/main/docs/SITEMAP.md`}>
+            Sitemap
           </FooterExternalLink>
           <FooterExternalLink href={githubUrl}>GitHub</FooterExternalLink>
           <FooterExternalLink href={liveUrl}>Live site</FooterExternalLink>

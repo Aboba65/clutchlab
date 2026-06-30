@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.5 SEO route meta polish
+0.1.6 Dynamic sitemap generation
 ```
 
 ## Live site
@@ -28,27 +28,7 @@ ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
-workflow, mobile polish and route-level SEO metadata:
-
-- dashboard
-- catalogs
-- detail pages
-- comparison tools
-- roster builder
-- saved roster management
-- methodology page
-- route-based browser titles
-- route-based meta descriptions
-- Open Graph and Twitter route meta updates
-- compact mobile header
-- horizontal mobile navigation
-- footer with version/data status/project links
-- public project documentation
-- data validation script
-- linting
-- formatting
-- release check script
-- GitHub Actions CI
+workflow, mobile polish, route-level SEO metadata and dynamic sitemap generation.
 
 ## Current data status
 
@@ -59,72 +39,17 @@ demo/manual data
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
 
-### What is demo/manual
-
-- Player ratings
-- Player prices
-- Team scores
-- Map scores
-- Player impact index
-- Map fit calculations
-- Roster value calculations
-- Team comparison scores
-
-### What is real project structure
-
-- Routing
-- Components
-- Pages
-- Local data layer
-- Roster builder logic
-- Saved rosters via `localStorage`
-- Route title/meta hook
-- Compact mobile navigation
-- Footer status block
-- Data validation script
-- ESLint config
-- Prettier config
-- Release check script
-- GitHub Actions CI
-- SEO files
-- Documentation structure
-- Vercel deployment setup
-
-## Completed pages
-
-```text
-[✓] HomePage
-[✓] PlayersPage
-[✓] PlayerDetailPage
-[✓] TeamsPage
-[✓] TeamDetailPage
-[✓] MapsPage
-[✓] MapDetailPage
-[✓] RolesPage
-[✓] RoleDetailPage
-[✓] ComparePage
-[✓] TeamComparePage
-[✓] RosterBuilderPage
-[✓] SavedRostersPage
-[✓] TraitsPage
-[✓] AboutPage
-[✓] NotFoundPage
-```
-
 ## Completed product features
 
 ```text
 [✓] Dashboard homepage
-[✓] Player catalog filters
-[✓] Player catalog sorting
-[✓] Team catalog filters
-[✓] Team catalog sorting
-[✓] Map catalog filters
-[✓] Map catalog sorting
-[✓] Player detail analytics
-[✓] Team detail analytics
-[✓] Map detail analytics
-[✓] Role detail analytics
+[✓] Player catalog filters and sorting
+[✓] Player profile pages
+[✓] Team catalog filters and sorting
+[✓] Team profile pages
+[✓] Map catalog filters and sorting
+[✓] Map detail pages
+[✓] Role pages and role detail pages
 [✓] Player comparison
 [✓] Team comparison
 [✓] Roster Builder
@@ -137,6 +62,7 @@ be described as live, official or current esports statistics.
 [✓] Horizontal mobile navigation
 [✓] Data notice
 [✓] Footer status block
+[✓] Dynamic sitemap generation
 [✓] About / Methodology page
 ```
 
@@ -156,6 +82,8 @@ be described as live, official or current esports statistics.
 [✓] README badges
 [✓] SEO meta tags
 [✓] route meta descriptions
+[✓] dynamic sitemap generator
+[✓] generated sitemap detail routes
 [✓] favicon.svg
 [✓] og-image.svg
 [✓] site.webmanifest
@@ -182,10 +110,57 @@ npm run release:check
 This runs:
 
 ```bash
+npm run generate:sitemap
 npm run validate:data
 npm run lint
 npm run format:check
 npm run build
+```
+
+### Sitemap generation
+
+Command:
+
+```bash
+npm run generate:sitemap
+```
+
+Script:
+
+```text
+scripts/generate-sitemap.mjs
+```
+
+Output:
+
+```text
+public/sitemap.xml
+```
+
+The generator reads:
+
+```text
+src/data/players.ts
+src/data/teams.ts
+src/config/maps.ts
+src/config/roles.ts
+src/data/meta.ts
+```
+
+Current sitemap coverage:
+
+```text
+[✓] static routes
+[✓] player detail routes
+[✓] team detail routes
+[✓] map detail routes
+[✓] role detail routes
+```
+
+Detailed sitemap documentation:
+
+```text
+docs/SITEMAP.md
 ```
 
 ### Data validation
@@ -220,53 +195,20 @@ Current validation checks:
 [✓] warnings for non-bidirectional player/team links
 ```
 
-### Linting
-
-Command:
+### Linting and formatting
 
 ```bash
 npm run lint
-```
-
-Config:
-
-```text
-eslint.config.js
-```
-
-### Formatting
-
-Format files:
-
-```bash
 npm run format
-```
-
-Check formatting:
-
-```bash
 npm run format:check
 ```
 
 Config files:
 
 ```text
+eslint.config.js
 .prettierrc
 .prettierignore
-```
-
-### Release check
-
-Command:
-
-```bash
-npm run release:check
-```
-
-Script:
-
-```text
-scripts/release-check.mjs
 ```
 
 ### GitHub Actions CI
@@ -277,10 +219,11 @@ Workflow:
 .github/workflows/ci.yml
 ```
 
-GitHub runs on push and pull request to `main` or `master`:
+GitHub runs:
 
 ```bash
 npm ci
+npm run generate:sitemap
 npm run validate:data
 npm run lint
 npm run format:check
@@ -289,76 +232,18 @@ npm run build
 
 ## SEO and UX polish
 
-### Route titles and metadata
-
-Hook:
-
 ```text
-src/hooks/usePageTitle.ts
-```
-
-The app updates route metadata on route changes:
-
-```text
-[✓] document.title
-[✓] meta[name="description"]
-[✓] meta[property="og:title"]
-[✓] meta[property="og:description"]
-[✓] meta[name="twitter:title"]
-[✓] meta[name="twitter:description"]
-```
-
-Example route titles:
-
-```text
-/players          ClutchLab — Players
-/teams            ClutchLab — Teams
-/maps             ClutchLab — Maps
-/roster-builder   ClutchLab — Roster Builder
-/about            ClutchLab — About
-```
-
-### Mobile navigation
-
-Component:
-
-```text
-src/components/AppShell.tsx
-```
-
-The mobile header and navigation use:
-
-```text
-[✓] tighter mobile page padding
-[✓] smaller mobile header radius and spacing
-[✓] smaller mobile title scale
-[✓] horizontal mobile nav scroll
-[✓] non-wrapping mobile nav items
-[✓] active nav item highlight
-[✓] keyboard focus ring
-[✓] preserved desktop wrapped navigation
-```
-
-### Footer
-
-Component:
-
-```text
-src/components/Footer.tsx
-```
-
-The footer shows:
-
-```text
-[✓] ClutchLab MVP
-[✓] version 0.1.5
-[✓] data status from dataMeta.status
-[✓] data updated from dataMeta.lastUpdated
-[✓] About link
-[✓] Changelog GitHub link
-[✓] Data GitHub link
-[✓] GitHub link
-[✓] Live site link
+[✓] static index.html meta
+[✓] route-based browser titles
+[✓] route-based meta descriptions
+[✓] Open Graph title/description route updates
+[✓] Twitter title/description route updates
+[✓] generated sitemap.xml
+[✓] sitemap detail routes
+[✓] robots.txt
+[✓] compact mobile header
+[✓] horizontal mobile navigation
+[✓] footer status block
 ```
 
 ## Important files
@@ -380,6 +265,7 @@ src/data/meta.ts
 src/data/README.md
 src/lib.ts
 src/types.ts
+scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/release-check.mjs
 eslint.config.js
@@ -389,6 +275,7 @@ eslint.config.js
 README.md
 CHANGELOG.md
 docs/PROJECT_STATUS.md
+docs/SITEMAP.md
 docs/ARCHITECTURE.md
 docs/RELEASE_CHECKLIST.md
 vercel.json
@@ -414,27 +301,21 @@ public/sitemap.xml
 - Saved Rosters are stored only in the current browser via `localStorage`
 - No user accounts
 - No backend
-- No dynamic sitemap for all detail pages yet
 
 ### Quality limitations
 
 - There are no unit tests yet
 - There are no component tests yet
-- Data validation is source-text based, not AST-based
-- CI currently runs install, validation, lint, format check and build only
+- Data validation and sitemap generation are source-text based, not AST-based
 
 ### SEO limitations
 
-- Main routes are listed in sitemap
-- Detail pages are not listed yet
 - Open Graph image is still a static SVG placeholder
 - Route metadata is client-side because the app is a client-side SPA
 
 ## Recommended next steps
 
 ### 1. Real-stat data plan
-
-Create a documented workflow for replacing demo values:
 
 ```text
 [ ] define sources
@@ -446,18 +327,15 @@ Create a documented workflow for replacing demo values:
 
 ### 2. Testing
 
-Add project quality tools:
-
 ```text
 [ ] basic smoke tests
 [ ] component tests for core pages
 [ ] CI test step
 ```
 
-### 3. More real product polish
+### 3. Product polish
 
 ```text
-[ ] detail-page sitemap entries
 [ ] loading/empty states audit
 [ ] better public data methodology
 [ ] static OG image polish
@@ -468,6 +346,7 @@ Add project quality tools:
 ```bash
 npm install
 npm run dev
+npm run generate:sitemap
 npm run validate:data
 npm run lint
 npm run format

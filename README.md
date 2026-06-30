@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.5 SEO route meta polish
+0.1.6 Dynamic sitemap generation
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -51,6 +51,7 @@ esports statistics.
 - Horizontal mobile navigation
 - Data notice shown in the app shell
 - Footer with version, data status and project links
+- Dynamic sitemap generation for static and detail routes
 
 ## Tech stack
 
@@ -105,27 +106,6 @@ meta[name="twitter:title"]
 meta[name="twitter:description"]
 ```
 
-Example route titles:
-
-```text
-/                         ClutchLab — CS2 Analytics
-/players                  ClutchLab — Players
-/players/:playerId        ClutchLab — Player Profile
-/teams                    ClutchLab — Teams
-/teams/:teamId            ClutchLab — Team Profile
-/maps                     ClutchLab — Maps
-/maps/:mapId              ClutchLab — Map Detail
-/roles                    ClutchLab — Roles
-/roles/:roleId            ClutchLab — Role Detail
-/compare                  ClutchLab — Player Compare
-/team-compare             ClutchLab — Team Compare
-/roster-builder           ClutchLab — Roster Builder
-/saved-rosters            ClutchLab — Saved Rosters
-/traits                   ClutchLab — Traits
-/about                    ClutchLab — About
-*                         ClutchLab — Not Found
-```
-
 ## Project structure
 
 ```text
@@ -140,6 +120,11 @@ src/
   index.css               Global styles
   lib.ts                  Shared scoring and helper functions
   types.ts                Shared TypeScript types
+
+scripts/
+  validate-data.mjs       Local data integrity validation
+  release-check.mjs       Local release gate
+  generate-sitemap.mjs    Dynamic sitemap generator
 ```
 
 ## Data layer
@@ -176,16 +161,16 @@ Run development server:
 npm run dev
 ```
 
-Build production bundle:
-
-```bash
-npm run build
-```
-
 Validate local data:
 
 ```bash
 npm run validate:data
+```
+
+Generate sitemap:
+
+```bash
+npm run generate:sitemap
 ```
 
 Lint source files:
@@ -204,6 +189,12 @@ Check formatting without writing changes:
 
 ```bash
 npm run format:check
+```
+
+Build production bundle:
+
+```bash
+npm run build
 ```
 
 Run full release check:
@@ -229,6 +220,7 @@ npm run release:check
 The release check runs:
 
 ```bash
+npm run generate:sitemap
 npm run validate:data
 npm run lint
 npm run format:check
@@ -238,6 +230,7 @@ npm run build
 Quality config files:
 
 ```text
+scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/release-check.mjs
 eslint.config.js
@@ -254,6 +247,7 @@ The CI workflow runs:
 
 ```bash
 npm ci
+npm run generate:sitemap
 npm run validate:data
 npm run lint
 npm run format:check
@@ -264,6 +258,46 @@ Workflow file:
 
 ```text
 .github/workflows/ci.yml
+```
+
+## Sitemap
+
+The sitemap is generated from local source files by:
+
+```text
+scripts/generate-sitemap.mjs
+```
+
+Output:
+
+```text
+public/sitemap.xml
+```
+
+The generator reads:
+
+```text
+src/data/players.ts
+src/data/teams.ts
+src/config/maps.ts
+src/config/roles.ts
+src/data/meta.ts
+```
+
+It includes:
+
+```text
+[✓] main static routes
+[✓] /players/:playerId
+[✓] /teams/:teamId
+[✓] /maps/:mapId
+[✓] /roles/:roleId
+```
+
+Detailed sitemap documentation:
+
+```text
+docs/SITEMAP.md
 ```
 
 ## Deployment
@@ -300,7 +334,8 @@ Current SEO/UX polish includes:
 [✓] route-based meta descriptions
 [✓] Open Graph title/description route updates
 [✓] Twitter title/description route updates
-[✓] sitemap.xml
+[✓] generated sitemap.xml
+[✓] sitemap detail routes
 [✓] robots.txt
 [✓] compact mobile header
 [✓] horizontal mobile navigation
@@ -313,36 +348,13 @@ Current SEO/UX polish includes:
 [✓] GitHub, Changelog, Data and Live site links
 ```
 
-## Methodology overview
-
-### Player Impact
-
-A custom MVP index for comparing individual players. It blends demo values such
-as rating, ADR, K/D, KAST, opening, clutch, AWP/rifle value and consistency into
-a 0–100 style read.
-
-### Team Score
-
-A weighted team profile using firepower, structure, map pool, clutch and form.
-
-### Map Fit
-
-A map-specific read based on AWP value, entry value, anchor pressure, side
-profile and preferred roles.
-
-### Roster Value
-
-A budget-aware read used in Roster Builder and Saved Rosters. It considers player
-impact, player price, role coverage, roster cost and overall roster balance.
-
 ## Roadmap
 
 - Replace demo/manual values with manually curated real statistics
-- Add source metadata per dataset
+- Add source metadata per stat group
 - Track update dates and event windows
 - Separate identity data from current performance data
 - Add richer map-specific statistics
-- Add better saved roster export/import if it becomes useful later
 - Add automated data generation or backend/API later
 
 ## Important note
