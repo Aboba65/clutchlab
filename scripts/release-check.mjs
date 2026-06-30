@@ -2,6 +2,10 @@ import { execSync } from "node:child_process";
 
 const checks = [
   {
+    name: "Generate sitemap",
+    command: "npm run generate:sitemap",
+  },
+  {
     name: "Validate data",
     command: "npm run validate:data",
   },
