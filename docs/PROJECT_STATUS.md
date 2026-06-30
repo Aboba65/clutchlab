@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.8 Source metadata scaffold
+0.1.9 Derived score model
 ```
 
 ## Live site
@@ -29,7 +29,8 @@ roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
 workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
-real-stat migration plan and a source metadata scaffold.
+real-stat migration plan, source metadata, raw-stat model types and derived-score
+model types.
 
 ## Current data status
 
@@ -39,6 +40,66 @@ demo/manual data
 
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
+
+## Real-stat architecture
+
+Current architecture direction:
+
+```text
+source metadata → raw stats → derived scores → UI scores
+```
+
+Implemented model scaffolds:
+
+```text
+[✓] docs/REAL_STATS_PLAN.md
+[✓] docs/DATA_SOURCES.md
+[✓] docs/RAW_STATS_MODEL.md
+[✓] docs/DERIVED_SCORES_MODEL.md
+[✓] src/data/sources.ts
+[✓] src/data/rawStats.ts
+[✓] src/data/derivedScores.ts
+```
+
+## Derived score model
+
+Source file:
+
+```text
+src/data/derivedScores.ts
+```
+
+Documentation:
+
+```text
+docs/DERIVED_SCORES_MODEL.md
+```
+
+Current derived score scaffold includes:
+
+```text
+[✓] ScoreFormulaMeta
+[✓] ScoreComponent
+[✓] PlayerDerivedScore
+[✓] TeamDerivedScore
+[✓] MapFitScore
+[✓] RosterValueScore
+[✓] DerivedScoreDatasetMeta
+[✓] derivedScoreDatasetMeta
+[✓] scoreFormulaScaffolds
+[✓] derivedScoreFieldGroups
+```
+
+Current planned formula scaffolds:
+
+```text
+player-impact-v1
+team-score-v1
+map-fit-v1
+roster-value-v1
+```
+
+These are scaffolds only. They are not connected to real-stat rows yet.
 
 ## Source metadata scaffold
 
@@ -60,18 +121,6 @@ Validation:
 npm run validate:sources
 ```
 
-Current source scaffold includes:
-
-```text
-[✓] dataSources
-[✓] sourceGroups
-[✓] SourceStatus
-[✓] SourceKind
-[✓] SourceConfidence
-[✓] ClutchLabDataSource
-[✓] ClutchLabSourceGroup
-```
-
 Current source groups:
 
 ```text
@@ -79,15 +128,32 @@ current-mvp-demo-layer
 future-real-stat-layer
 ```
 
-Current sources:
+## Raw stat model
+
+Source file:
 
 ```text
-demo-player-ratings
-demo-team-ratings
-demo-map-profiles
-demo-role-profiles
-future-real-player-stats
-future-real-team-stats
+src/data/rawStats.ts
+```
+
+Documentation:
+
+```text
+docs/RAW_STATS_MODEL.md
+```
+
+Current raw stat scaffold includes:
+
+```text
+[✓] StatWindow
+[✓] SampleSizeRules
+[✓] PlayerRawStats
+[✓] TeamRawStats
+[✓] MapRawStats
+[✓] RoleRawStats
+[✓] RawStatDatasetMeta
+[✓] rawStatDatasetMeta
+[✓] rawStatFieldGroups
 ```
 
 ## Completed product features
@@ -130,6 +196,8 @@ future-real-team-stats
 [✓] dataMeta
 [✓] source metadata scaffold
 [✓] source metadata validation
+[✓] raw stat type model
+[✓] derived score type model
 [✓] Data layer README
 [✓] GitHub README
 [✓] README badges
@@ -202,21 +270,6 @@ Validator:
 scripts/validate-sources.mjs
 ```
 
-Checks:
-
-```text
-[✓] dataSources export exists
-[✓] sourceGroups export exists
-[✓] source ids are unique
-[✓] source group ids are unique
-[✓] each source has id, name and description
-[✓] each source has valid kind
-[✓] each source has valid status
-[✓] each source has valid confidence
-[✓] each source covers at least one app area
-[✓] sourceGroups reference existing source ids
-```
-
 ### Linting and formatting
 
 ```bash
@@ -246,6 +299,8 @@ Documents:
 ```text
 docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
+docs/RAW_STATS_MODEL.md
+docs/DERIVED_SCORES_MODEL.md
 ```
 
 Current data architecture direction:
@@ -254,9 +309,10 @@ Current data architecture direction:
 [✓] demo/manual status is explicit
 [✓] source scaffolding exists
 [✓] planned real-stat source placeholders exist
-[ ] raw stat type definitions
-[ ] derived score type definitions
-[ ] real-stat validation script
+[✓] raw stat model exists
+[✓] derived score model exists
+[ ] raw stat validation
+[ ] derived score validation
 [ ] manually curated real-stat sample
 ```
 
@@ -292,6 +348,8 @@ src/data/index.ts
 src/data/players.ts
 src/data/teams.ts
 src/data/sources.ts
+src/data/rawStats.ts
+src/data/derivedScores.ts
 src/data/meta.ts
 src/data/README.md
 src/lib.ts
@@ -310,6 +368,8 @@ docs/PROJECT_STATUS.md
 docs/SITEMAP.md
 docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
+docs/RAW_STATS_MODEL.md
+docs/DERIVED_SCORES_MODEL.md
 docs/ARCHITECTURE.md
 docs/RELEASE_CHECKLIST.md
 vercel.json
@@ -327,6 +387,8 @@ public/sitemap.xml
 - Ratings are not live
 - Prices are internal MVP values
 - Source metadata exists but real-stat rows are not connected yet
+- Raw stat types exist but no raw-stat rows are connected yet
+- Derived score types exist but no derived-score rows are connected yet
 - No automatic match updates
 - No event-window filtering yet
 
@@ -342,6 +404,7 @@ public/sitemap.xml
 - There are no component tests yet
 - Data validation, source validation and sitemap generation are source-text based,
   not AST-based
+- Raw stat and derived score validation scripts do not exist yet
 
 ### SEO limitations
 
@@ -350,32 +413,32 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Raw stat type definitions
-
-```text
-[ ] PlayerRawStats
-[ ] TeamRawStats
-[ ] MapRawStats
-[ ] SourceWindow
-[ ] SampleSizeRules
-```
-
-### 2. Derived score type definitions
-
-```text
-[ ] PlayerDerivedScore
-[ ] TeamDerivedScore
-[ ] MapFitScore
-[ ] RosterValueScore
-```
-
-### 3. Real-stat validation
+### 1. Raw stat validation
 
 ```text
 [ ] validate sourceId references
+[ ] validate playerId/teamId/mapId/roleId references
 [ ] validate stat periods
 [ ] validate minimum sample sizes
-[ ] validate derived score ranges
+[ ] validate percentage ranges
+```
+
+### 2. Derived score validation
+
+```text
+[ ] validate formula ids
+[ ] validate formula source ids
+[ ] validate score ranges
+[ ] validate low-confidence notes
+```
+
+### 3. Manual real-stat sample
+
+```text
+[ ] choose one source window
+[ ] add small player raw-stat sample
+[ ] add small team raw-stat sample
+[ ] document source and period
 ```
 
 ## Build commands

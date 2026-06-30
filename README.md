@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.8 Source metadata scaffold
+0.1.9 Derived score model
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -55,6 +55,8 @@ esports statistics.
 - Real-stat data migration plan
 - Source metadata scaffold
 - Source metadata validation
+- Raw stat type model
+- Derived score type model
 
 ## Tech stack
 
@@ -115,7 +117,7 @@ meta[name="twitter:description"]
 src/
   components/             Shared UI components, app shell and footer
   config/                 Navigation, role profiles and map profiles
-  data/                   Player data, team data, source data and metadata
+  data/                   Player, team, source, raw-stat and score models
   hooks/                  Route/title/meta hooks
   pages/                  Route-level pages
   App.tsx                 BrowserRouter and route table
@@ -134,12 +136,14 @@ scripts/
 ## Data layer
 
 ```text
-src/data/players.ts       Player profiles
-src/data/teams.ts         Team profiles
-src/data/sources.ts       Source metadata scaffold
-src/data/meta.ts          Dataset version, status and source notes
-src/data/index.ts         Public data exports
-src/data/README.md        Data rules and future real-stat notes
+src/data/players.ts        Player profiles
+src/data/teams.ts          Team profiles
+src/data/sources.ts        Source metadata scaffold
+src/data/rawStats.ts       Future raw-stat type model
+src/data/derivedScores.ts  Future derived-score type model
+src/data/meta.ts           Dataset version, status and source notes
+src/data/index.ts          Public data exports
+src/data/README.md         Data rules and future real-stat notes
 ```
 
 Current data status:
@@ -150,10 +154,12 @@ Purpose: MVP navigation, UI testing and product logic
 Not intended as: live esports statistics
 ```
 
-Data and source documentation:
+Data and model documentation:
 
 ```text
 docs/DATA_SOURCES.md
+docs/RAW_STATS_MODEL.md
+docs/DERIVED_SCORES_MODEL.md
 docs/REAL_STATS_PLAN.md
 ```
 
@@ -185,17 +191,74 @@ Current source validation command:
 npm run validate:sources
 ```
 
-The validator checks:
+## Raw stat model
+
+Raw stat types are defined in:
 
 ```text
-[✓] source ids are unique
-[✓] source group ids are unique
-[✓] source kind values are valid
-[✓] source status values are valid
-[✓] source confidence values are valid
-[✓] every source covers at least one app area
-[✓] sourceGroups reference existing source ids
+src/data/rawStats.ts
 ```
+
+They describe future source-grounded statistics:
+
+```text
+StatWindow
+SampleSizeRules
+PlayerRawStats
+TeamRawStats
+MapRawStats
+RoleRawStats
+RawStatDatasetMeta
+```
+
+Raw stat documentation:
+
+```text
+docs/RAW_STATS_MODEL.md
+```
+
+## Derived score model
+
+Derived score types are defined in:
+
+```text
+src/data/derivedScores.ts
+```
+
+They describe future ClutchLab-calculated scores:
+
+```text
+ScoreFormulaMeta
+ScoreComponent
+PlayerDerivedScore
+TeamDerivedScore
+MapFitScore
+RosterValueScore
+DerivedScoreDatasetMeta
+```
+
+Derived score documentation:
+
+```text
+docs/DERIVED_SCORES_MODEL.md
+```
+
+The intended architecture is:
+
+```text
+source metadata → raw stats → derived scores → UI scores
+```
+
+Current formula scaffolds:
+
+```text
+player-impact-v1
+team-score-v1
+map-fit-v1
+roster-value-v1
+```
+
+These are scaffolds only. They are not connected to real-stat rows yet.
 
 ## Local setup
 
@@ -394,16 +457,15 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sitemap, Real stats and Live site links
+[✓] GitHub, Changelog, Data, Sources, Raw stats, Derived scores and Live site links
 ```
 
 ## Roadmap
 
-- Add raw stats type definitions
-- Add derived score type definitions
-- Add real-stat validation script
+- Add validation for raw stat model references
+- Add validation for derived score formula references
+- Add manually curated real-stat sample
 - Replace demo/manual values with manually curated real statistics later
-- Add source metadata per stat group
 - Track update dates and event windows
 - Separate identity data from current performance data
 - Add richer map-specific statistics
@@ -412,5 +474,5 @@ Current SEO/UX polish includes:
 ## Important note
 
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
-interface, static local data, source metadata scaffolding and clear boundaries
-around demo/manual scoring.
+interface, static local data, source metadata scaffolding, raw-stat model types,
+derived-score model types and clear boundaries around demo/manual scoring.

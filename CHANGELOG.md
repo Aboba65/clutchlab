@@ -2,6 +2,45 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.9 — Derived score model
+
+Date: 2026-06-28
+
+### Added
+
+- Derived score type model: `src/data/derivedScores.ts`
+- Derived score documentation: `docs/DERIVED_SCORES_MODEL.md`
+- `ScoreFormulaMeta`
+- `ScoreComponent`
+- `PlayerDerivedScore`
+- `TeamDerivedScore`
+- `MapFitScore`
+- `RosterValueScore`
+- `DerivedScoreDatasetMeta`
+- `derivedScoreDatasetMeta`
+- `scoreFormulaScaffolds`
+- `derivedScoreFieldGroups`
+- Derived score exports from `src/data/index.ts`
+- Derived score compatibility exports from `src/data.ts`
+- README derived score model section
+- Project status derived score model section
+
+### Improved
+
+- The real-stat architecture is now documented as:
+
+```text
+source metadata → raw stats → derived scores → UI scores
+```
+
+- The project now has planned formula scaffolds for:
+  - `player-impact-v1`
+  - `team-score-v1`
+  - `map-fit-v1`
+  - `roster-value-v1`
+- Footer version display was updated to `0.1.9`.
+- Footer now links to derived score documentation.
+
 ## 0.1.8 — Source metadata scaffold
 
 Date: 2026-06-28
