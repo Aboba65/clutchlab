@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
   sampleDerivedScoresMeta,
   sampleDerivedScoresSummary,
@@ -12,6 +13,17 @@ import {
   sampleTeamRawStats,
   teams,
 } from "../data";
+
+const playerDisplayNames = new Map([
+  ["zywoo", "ZywOo"],
+  ["donk", "donk"],
+  ["monesy", "m0NESY"],
+]);
+
+const mapDisplayNames = new Map([
+  ["mirage", "Mirage"],
+  ["nuke", "Nuke"],
+]);
 
 const teamNames = new Map(teams.map((team) => [team.id, team.name]));
 
@@ -59,7 +71,9 @@ export function SampleDataPage() {
                     Player
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">
-                    {nameForPlayer(row.playerId)}
+                    <EntityLink to={`/players/${row.playerId}`}>
+                      {nameForPlayer(row.playerId)}
+                    </EntityLink>
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">{row.playerId}</p>
                 </div>
@@ -95,7 +109,9 @@ export function SampleDataPage() {
                     Team
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">
-                    {nameForTeam(row.teamId)}
+                    <EntityLink to={`/teams/${row.teamId}`}>
+                      {nameForTeam(row.teamId)}
+                    </EntityLink>
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">{row.teamId}</p>
                 </div>
@@ -133,7 +149,9 @@ export function SampleDataPage() {
                     {row.formulaId}
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">
-                    {nameForPlayer(row.playerId)}
+                    <EntityLink to={`/players/${row.playerId}`}>
+                      {nameForPlayer(row.playerId)}
+                    </EntityLink>
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">
                     Confidence: {row.confidence}
@@ -171,7 +189,9 @@ export function SampleDataPage() {
                     {row.formulaId}
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">
-                    {nameForTeam(row.teamId)}
+                    <EntityLink to={`/teams/${row.teamId}`}>
+                      {nameForTeam(row.teamId)}
+                    </EntityLink>
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">
                     Confidence: {row.confidence}
@@ -205,10 +225,14 @@ export function SampleDataPage() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-300">
-                    {row.mapId}
+                    <EntityLink to={`/maps/${row.mapId}`}>
+                      {nameForMap(row.mapId)}
+                    </EntityLink>
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">
-                    {nameForEntity(row.entityId, row.entityType)}
+                    <EntityLink to={pathForEntity(row.entityId, row.entityType)}>
+                      {nameForEntity(row.entityId, row.entityType)}
+                    </EntityLink>
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">
                     {row.entityType} · {row.formulaId}
@@ -244,9 +268,14 @@ export function SampleDataPage() {
                     {row.formulaId}
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">{row.rosterId}</h3>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
-                    Players: {row.playerIds.map(nameForPlayer).join(", ")}
-                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+                    <span>Players:</span>
+                    {row.playerIds.map((playerId) => (
+                      <EntityLink key={playerId} to={`/players/${playerId}`}>
+                        {nameForPlayer(playerId)}
+                      </EntityLink>
+                    ))}
+                  </div>
                 </div>
                 <ScorePill value={row.value} />
               </div>
@@ -468,6 +497,17 @@ function MetaParagraph({ children }: { children: ReactNode }) {
   return <p className="text-sm leading-6 text-slate-400">{children}</p>;
 }
 
+function EntityLink({ to, children }: { to: string; children: ReactNode }) {
+  return (
+    <Link
+      to={to}
+      className="text-cyan-100 underline decoration-cyan-300/40 underline-offset-4 transition hover:text-white hover:decoration-cyan-200"
+    >
+      {children}
+    </Link>
+  );
+}
+
 function formatNumber(value: number | undefined, digits = 1) {
   if (value === undefined) {
     return "—";
@@ -477,11 +517,15 @@ function formatNumber(value: number | undefined, digits = 1) {
 }
 
 function nameForPlayer(playerId: string) {
-  return playerId;
+  return playerDisplayNames.get(playerId) ?? playerId;
 }
 
 function nameForTeam(teamId: string) {
   return teamNames.get(teamId) ?? teamId;
+}
+
+function nameForMap(mapId: string) {
+  return mapDisplayNames.get(mapId) ?? mapId;
 }
 
 function nameForEntity(entityId: string, entityType: string) {
@@ -494,4 +538,16 @@ function nameForEntity(entityId: string, entityType: string) {
   }
 
   return entityId;
+}
+
+function pathForEntity(entityId: string, entityType: string) {
+  if (entityType === "player") {
+    return `/players/${entityId}`;
+  }
+
+  if (entityType === "team") {
+    return `/teams/${entityId}`;
+  }
+
+  return "/sample-data";
 }
