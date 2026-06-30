@@ -40,7 +40,29 @@ src/pages/*
 [✓] fallback results use demo-manual/fallback
 [✓] sample results use sample-derived/sample
 [✓] coverage summary derives counts from sample arrays
-[✓] public pages do not import scoreAdapters directly yet
+[✓] only approved page files import scoreAdapters
+```
+
+## Allowed page import exception
+
+`scoreAdapters.ts` may be imported by:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+This is allowed because `/sample-data` is explicitly a sample-only preview route.
+
+All other route pages are still blocked from importing score adapters directly.
+
+Blocked examples:
+
+```text
+src/pages/PlayersPage.tsx
+src/pages/PlayerDetailPage.tsx
+src/pages/TeamsPage.tsx
+src/pages/TeamDetailPage.tsx
+src/pages/RosterBuilderPage.tsx
 ```
 
 ## Expected helper exports
@@ -60,7 +82,7 @@ getScoreAdapterCoverageSummary
 
 ## Release workflow
 
-Score adapter validation is now part of:
+Score adapter validation is part of:
 
 ```bash
 npm run release:check
@@ -99,11 +121,14 @@ Workflow file:
 
 The score adapter layer is supposed to be a safe boundary.
 
-It can read sample derived score rows, but public route pages should not start
-using it until the UI migration plan allows that behavior.
+It can read sample derived score rows, but normal public route pages should not
+start using it until the UI migration plan allows that behavior.
 
-This validation protects against accidental direct rollout of sample scores into
-public pages.
+`SampleDataPage` is the only current exception because it is visibly labeled as:
+
+```text
+Sample only / not live stats
+```
 
 ## Limitations
 

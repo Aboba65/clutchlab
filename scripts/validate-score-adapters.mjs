@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { resolve } from "node:path";
+import { relative, resolve } from "node:path";
 
 const rootDir = process.cwd();
 
@@ -63,6 +63,8 @@ const expectedCoverageDerivations = [
   "mapFitScores: sampleMapFitScores.length",
   "rosterValueScores: sampleRosterValueScores.length",
 ];
+
+const allowedPageAdapterImports = new Set(["src/pages/SampleDataPage.tsx"]);
 
 function findMatching(text, startIndex, open = "{", close = "}") {
   let depth = 0;
@@ -163,6 +165,10 @@ function findSourceFiles(dir) {
   }
 
   return files;
+}
+
+function normalizePath(filePath) {
+  return relative(rootDir, filePath).replaceAll("\\", "/");
 }
 
 const errors = [];
@@ -268,31 +274,35 @@ if (!sourceText.scoreAdapters.includes('status: "sample"')) {
   errors.push('Sample result should set status: "sample"');
 }
 
-const publicPageImports = [];
+const pageAdapterImports = [];
 
 for (const filePath of findSourceFiles(files.pagesDir)) {
   const text = readFileSync(filePath, "utf8");
 
   if (text.includes("scoreAdapters")) {
-    publicPageImports.push(
-      filePath.replace(`${rootDir}/`, "").replace(`${rootDir}\\`, ""),
-    );
+    pageAdapterImports.push(normalizePath(filePath));
   }
 }
 
-if (publicPageImports.length > 0) {
-  for (const pagePath of publicPageImports) {
-    errors.push(`Public page should not import scoreAdapters yet: ${pagePath}`);
-  }
+const blockedPageAdapterImports = pageAdapterImports.filter(
+  (pagePath) => !allowedPageAdapterImports.has(pagePath),
+);
+
+for (const pagePath of blockedPageAdapterImports) {
+  errors.push(
+    `Public page should not import scoreAdapters yet: ${pagePath}. Allowed exception: src/pages/SampleDataPage.tsx`,
+  );
 }
 
 console.log("ClutchLab score adapters validation");
 console.log("-----------------------------------");
-console.log(`Expected helpers:       ${expectedHelpers.length}`);
-console.log(`Expected result fields: ${expectedResultFields.length}`);
-console.log(`Source values:          ${expectedSourceValues.length}`);
-console.log(`Status values:          ${expectedStatusValues.length}`);
-console.log(`Public page imports:    ${publicPageImports.length}`);
+console.log(`Expected helpers:        ${expectedHelpers.length}`);
+console.log(`Expected result fields:  ${expectedResultFields.length}`);
+console.log(`Source values:           ${expectedSourceValues.length}`);
+console.log(`Status values:           ${expectedStatusValues.length}`);
+console.log(`Page adapter imports:    ${pageAdapterImports.length}`);
+console.log(`Allowed page imports:    ${allowedPageAdapterImports.size}`);
+console.log(`Blocked page imports:    ${blockedPageAdapterImports.length}`);
 
 if (errors.length > 0) {
   console.error("\nValidation failed:");
