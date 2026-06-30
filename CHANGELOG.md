@@ -2,6 +2,40 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.1 — Sample stats validation
+
+Date: 2026-06-28
+
+### Added
+
+- Sample stats validation script: `scripts/validate-sample-stats.mjs`
+- Sample stats validation documentation: `docs/SAMPLE_STATS_VALIDATION.md`
+- NPM command: `npm run validate:sample-stats`
+- Sample stats validation in `scripts/release-check.mjs`
+- Sample stats validation in GitHub Actions CI
+- README sample stats validation section
+- Project status sample stats validation section
+- Footer link to sample stats documentation
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run validate:models
+npm run validate:sample-stats
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs `npm run validate:sample-stats`.
+- The quality gate now checks the manual sample raw-stat rows before lint/build.
+- Footer version display was updated to `0.2.1`.
+
 ## 0.2.0 — Model validation
 
 Date: 2026-06-28
@@ -94,18 +128,7 @@ Date: 2026-06-28
 
 ### Improved
 
-- `npm run release:check` now runs:
-
-```bash
-npm run generate:sitemap
-npm run validate:data
-npm run validate:sources
-npm run lint
-npm run format:check
-npm run build
-```
-
-- GitHub Actions CI now runs `npm run validate:sources`.
+- `npm run release:check` now runs source validation.
 - The project now distinguishes demo/manual MVP data from planned future real-stat sources.
 - Footer version display was updated to `0.1.8`.
 
@@ -116,25 +139,17 @@ Date: 2026-06-28
 ### Added
 
 - Real-stat migration plan: `docs/REAL_STATS_PLAN.md`
-- Documentation for separating:
-  - identity data
-  - raw performance data
-  - source metadata
-  - derived scores
-  - manual adjustments
-- Recommended future types for player identity, raw stats, sources and derived scores
+- Documentation for separating identity data, raw performance data, source metadata,
+  derived scores and manual adjustments.
 - Manual real-stat update workflow
 - Future validation rules for real-stat data
 - UI disclosure rules for source, period and data status
-- README data roadmap section
-- Project status real-stat plan section
 
 ### Improved
 
 - README now links to the real-stat migration plan.
 - Project status now documents the planned path away from demo/manual values.
 - Footer version display was updated to `0.1.7`.
-- Footer now links to real-stat documentation.
 
 ## 0.1.6 — Dynamic sitemap generation
 
@@ -145,21 +160,12 @@ Date: 2026-06-28
 - Dynamic sitemap generator: `scripts/generate-sitemap.mjs`
 - NPM command: `npm run generate:sitemap`
 - Sitemap documentation: `docs/SITEMAP.md`
-- Generated detail routes for:
-  - `/players/:playerId`
-  - `/teams/:teamId`
-  - `/maps/:mapId`
-  - `/roles/:roleId`
-- Sitemap documentation in `README.md`
-- Sitemap documentation in `docs/PROJECT_STATUS.md`
+- Generated detail routes for players, teams, maps and roles.
 
 ### Improved
 
-- `npm run release:check` now runs sitemap generation before validation, linting,
-  formatting and build.
-- GitHub Actions CI now runs `npm run generate:sitemap`.
-- `public/sitemap.xml` is now generated from the local data/config source files.
-- The sitemap now covers static pages plus player, team, map and role detail pages.
+- Release check and CI now run sitemap generation.
+- `public/sitemap.xml` is generated from local data/config source files.
 - Footer version display was updated to `0.1.6`.
 
 ## 0.1.5 — SEO route meta polish
@@ -169,12 +175,8 @@ Date: 2026-06-28
 ### Added
 
 - Route-based meta descriptions through `src/hooks/usePageTitle.ts`
-- Open Graph route title updates
-- Open Graph route description updates
-- Twitter route title updates
-- Twitter route description updates
-- README route meta documentation
-- Project status SEO route meta documentation
+- Open Graph route title/description updates
+- Twitter route title/description updates
 
 ## 0.1.4 — Mobile navigation polish
 

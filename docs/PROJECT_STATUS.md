@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.0 Model validation
+0.2.1 Sample stats validation
 ```
 
 ## Live site
@@ -29,8 +29,9 @@ roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
 workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
-real-stat migration plan, source metadata, raw-stat model types, derived-score
-model types and model validation.
+real-stat migration plan, source metadata, raw-stat model types, a manual sample
+raw-stat scaffold, sample stats validation, derived-score model types and model
+validation.
 
 ## Current data status
 
@@ -46,22 +47,99 @@ be described as live, official or current esports statistics.
 Current architecture direction:
 
 ```text
-source metadata → raw stats → derived scores → UI scores
+source metadata → raw stats → sample raw stats → derived scores → UI scores
 ```
 
-Implemented model scaffolds:
+Implemented real-stat scaffold files:
 
 ```text
 [✓] docs/REAL_STATS_PLAN.md
 [✓] docs/DATA_SOURCES.md
 [✓] docs/RAW_STATS_MODEL.md
+[✓] docs/SAMPLE_REAL_STATS.md
+[✓] docs/SAMPLE_STATS_VALIDATION.md
 [✓] docs/DERIVED_SCORES_MODEL.md
 [✓] docs/MODEL_VALIDATION.md
 [✓] src/data/sources.ts
 [✓] src/data/rawStats.ts
+[✓] src/data/sampleRawStats.ts
 [✓] src/data/derivedScores.ts
 [✓] scripts/validate-sources.mjs
 [✓] scripts/validate-models.mjs
+[✓] scripts/validate-sample-stats.mjs
+```
+
+## Sample raw stats
+
+Source file:
+
+```text
+src/data/sampleRawStats.ts
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_REAL_STATS.md
+```
+
+Current sample contents:
+
+```text
+Players: 3
+Teams:   2
+Windows: 2
+```
+
+Current sample player ids:
+
+```text
+zywoo
+donk
+monesy
+```
+
+Current sample team ids:
+
+```text
+vitality
+spirit
+```
+
+The sample is not connected to current UI scoring.
+
+## Sample stats validation
+
+Command:
+
+```bash
+npm run validate:sample-stats
+```
+
+Script:
+
+```text
+scripts/validate-sample-stats.mjs
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_STATS_VALIDATION.md
+```
+
+Current sample validation checks:
+
+```text
+[✓] sample player ids exist
+[✓] sample team ids exist
+[✓] sample source ids exist
+[✓] stat window dates are valid
+[✓] periodStart is before or equal to periodEnd
+[✓] mapsPlayed and roundsPlayed are positive
+[✓] non-negative numeric fields are not negative
+[✓] percentage fields are between 0 and 100
+[✓] sampleRawStatsSummary derives counts from sample arrays
 ```
 
 ## Model validation
@@ -84,61 +162,6 @@ Documentation:
 docs/MODEL_VALIDATION.md
 ```
 
-Current model validation checks:
-
-```text
-[✓] rawStatDatasetMeta status
-[✓] derivedScoreDatasetMeta status
-[✓] rawStatFieldGroups baseline groups and fields
-[✓] derivedScoreFieldGroups baseline groups and fields
-[✓] scoreFormulaScaffolds
-[✓] unique formula ids
-[✓] formula sourceIds exist in src/data/sources.ts
-[✓] formula inputFields and outputFields
-[✓] formula outputFields match derivedScoreFieldGroups
-[✓] low-confidence formulas include notes
-```
-
-## Derived score model
-
-Source file:
-
-```text
-src/data/derivedScores.ts
-```
-
-Documentation:
-
-```text
-docs/DERIVED_SCORES_MODEL.md
-```
-
-Current derived score scaffold includes:
-
-```text
-[✓] ScoreFormulaMeta
-[✓] ScoreComponent
-[✓] PlayerDerivedScore
-[✓] TeamDerivedScore
-[✓] MapFitScore
-[✓] RosterValueScore
-[✓] DerivedScoreDatasetMeta
-[✓] derivedScoreDatasetMeta
-[✓] scoreFormulaScaffolds
-[✓] derivedScoreFieldGroups
-```
-
-Current planned formula scaffolds:
-
-```text
-player-impact-v1
-team-score-v1
-map-fit-v1
-roster-value-v1
-```
-
-These are scaffolds only. They are not connected to real-stat rows yet.
-
 ## Source metadata scaffold
 
 Source file:
@@ -159,13 +182,6 @@ Validation:
 npm run validate:sources
 ```
 
-Current source groups:
-
-```text
-current-mvp-demo-layer
-future-real-stat-layer
-```
-
 ## Raw stat model
 
 Source file:
@@ -180,18 +196,18 @@ Documentation:
 docs/RAW_STATS_MODEL.md
 ```
 
-Current raw stat scaffold includes:
+## Derived score model
+
+Source file:
 
 ```text
-[✓] StatWindow
-[✓] SampleSizeRules
-[✓] PlayerRawStats
-[✓] TeamRawStats
-[✓] MapRawStats
-[✓] RoleRawStats
-[✓] RawStatDatasetMeta
-[✓] rawStatDatasetMeta
-[✓] rawStatFieldGroups
+src/data/derivedScores.ts
+```
+
+Documentation:
+
+```text
+docs/DERIVED_SCORES_MODEL.md
 ```
 
 ## Completed product features
@@ -235,6 +251,8 @@ Current raw stat scaffold includes:
 [✓] source metadata scaffold
 [✓] source metadata validation
 [✓] raw stat type model
+[✓] sample raw-stat scaffold
+[✓] sample stats validation
 [✓] derived score type model
 [✓] model validation
 [✓] Data layer README
@@ -245,11 +263,6 @@ Current raw stat scaffold includes:
 [✓] dynamic sitemap generator
 [✓] generated sitemap detail routes
 [✓] real-stat data plan
-[✓] favicon.svg
-[✓] og-image.svg
-[✓] site.webmanifest
-[✓] robots.txt
-[✓] sitemap.xml
 [✓] Vercel SPA rewrite
 [✓] Data validation script
 [✓] ESLint config
@@ -275,6 +288,7 @@ npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
 npm run validate:models
+npm run validate:sample-stats
 npm run lint
 npm run format:check
 npm run build
@@ -284,12 +298,6 @@ npm run build
 
 ```bash
 npm run generate:sitemap
-```
-
-Output:
-
-```text
-public/sitemap.xml
 ```
 
 ### Data validation
@@ -304,22 +312,16 @@ npm run validate:data
 npm run validate:sources
 ```
 
-Validator:
-
-```text
-scripts/validate-sources.mjs
-```
-
 ### Model validation
 
 ```bash
 npm run validate:models
 ```
 
-Validator:
+### Sample stats validation
 
-```text
-scripts/validate-models.mjs
+```bash
+npm run validate:sample-stats
 ```
 
 ### Linting and formatting
@@ -340,6 +342,7 @@ npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
 npm run validate:models
+npm run validate:sample-stats
 npm run lint
 npm run format:check
 npm run build
@@ -353,6 +356,8 @@ Documents:
 docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
+docs/SAMPLE_REAL_STATS.md
+docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/MODEL_VALIDATION.md
 ```
@@ -364,28 +369,13 @@ Current data architecture direction:
 [✓] source scaffolding exists
 [✓] planned real-stat source placeholders exist
 [✓] raw stat model exists
+[✓] sample raw-stat rows exist
+[✓] sample stats validation exists
 [✓] derived score model exists
 [✓] source validation exists
 [✓] model validation exists
-[ ] manually curated real-stat sample
-[ ] raw stat row validation
+[ ] derived score sample rows
 [ ] derived score row validation
-```
-
-## SEO and UX polish
-
-```text
-[✓] static index.html meta
-[✓] route-based browser titles
-[✓] route-based meta descriptions
-[✓] Open Graph title/description route updates
-[✓] Twitter title/description route updates
-[✓] generated sitemap.xml
-[✓] sitemap detail routes
-[✓] robots.txt
-[✓] compact mobile header
-[✓] horizontal mobile navigation
-[✓] footer status block
 ```
 
 ## Important files
@@ -405,19 +395,17 @@ src/data/players.ts
 src/data/teams.ts
 src/data/sources.ts
 src/data/rawStats.ts
+src/data/sampleRawStats.ts
 src/data/derivedScores.ts
 src/data/meta.ts
-src/data/README.md
 src/lib.ts
 src/types.ts
 scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/validate-sources.mjs
 scripts/validate-models.mjs
+scripts/validate-sample-stats.mjs
 scripts/release-check.mjs
-eslint.config.js
-.prettierrc
-.prettierignore
 .github/workflows/ci.yml
 README.md
 CHANGELOG.md
@@ -426,10 +414,10 @@ docs/SITEMAP.md
 docs/REAL_STATS_PLAN.md
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
+docs/SAMPLE_REAL_STATS.md
+docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/MODEL_VALIDATION.md
-docs/ARCHITECTURE.md
-docs/RELEASE_CHECKLIST.md
 vercel.json
 index.html
 public/robots.txt
@@ -444,8 +432,8 @@ public/sitemap.xml
 - Dataset is manually created
 - Ratings are not live
 - Prices are internal MVP values
-- Source metadata exists but real-stat rows are not connected yet
-- Raw stat types exist but no raw-stat rows are connected yet
+- Source metadata exists but real-stat rows are not connected to UI yet
+- Sample raw-stat rows exist but do not replace demo/manual UI data
 - Derived score types exist but no derived-score rows are connected yet
 - No automatic match updates
 - No event-window filtering yet
@@ -460,38 +448,23 @@ public/sitemap.xml
 
 - There are no unit tests yet
 - There are no component tests yet
-- Data validation, source validation, model validation and sitemap generation are
-  source-text based, not AST-based
-- Raw stat row and derived score row validation do not exist yet because real-stat
-  rows do not exist yet
-
-### SEO limitations
-
-- Open Graph image is still a static SVG placeholder
-- Route metadata is client-side because the app is a client-side SPA
+- Data validation, source validation, model validation, sample validation and
+  sitemap generation are source-text based, not AST-based
+- Derived score row validation does not exist yet because derived score rows do
+  not exist yet
 
 ## Recommended next steps
 
-### 1. Manual real-stat sample
+### 1. Derived score sample rows
 
 ```text
-[ ] choose one source window
-[ ] add small player raw-stat sample
-[ ] add small team raw-stat sample
-[ ] document source and period
+[ ] add src/data/sampleDerivedScores.ts
+[ ] add sample player derived scores
+[ ] add sample team derived scores
+[ ] document source/formula relationship
 ```
 
-### 2. Raw stat row validation
-
-```text
-[ ] validate sourceId references
-[ ] validate playerId/teamId/mapId/roleId references
-[ ] validate stat periods
-[ ] validate minimum sample sizes
-[ ] validate percentage ranges
-```
-
-### 3. Derived score row validation
+### 2. Derived score row validation
 
 ```text
 [ ] validate formula ids
@@ -509,6 +482,7 @@ npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
 npm run validate:models
+npm run validate:sample-stats
 npm run lint
 npm run format
 npm run format:check

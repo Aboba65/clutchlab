@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.2.0 Model validation
+0.2.1 Sample stats validation
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -58,6 +58,8 @@ esports statistics.
 - Raw stat type model
 - Derived score type model
 - Model validation for raw-stat and derived-score scaffolds
+- Manual sample raw-stat scaffold
+- Sample raw-stat row validation
 
 ## Tech stack
 
@@ -128,24 +130,26 @@ src/
   types.ts                Shared TypeScript types
 
 scripts/
-  generate-sitemap.mjs    Dynamic sitemap generator
-  validate-data.mjs       Local data integrity validation
-  validate-sources.mjs    Local source metadata validation
-  validate-models.mjs     Local raw/derived model validation
-  release-check.mjs       Local release gate
+  generate-sitemap.mjs        Dynamic sitemap generator
+  validate-data.mjs           Local data integrity validation
+  validate-sources.mjs        Local source metadata validation
+  validate-models.mjs         Local raw/derived model validation
+  validate-sample-stats.mjs   Local sample raw-stat row validation
+  release-check.mjs           Local release gate
 ```
 
 ## Data layer
 
 ```text
-src/data/players.ts        Player profiles
-src/data/teams.ts          Team profiles
-src/data/sources.ts        Source metadata scaffold
-src/data/rawStats.ts       Future raw-stat type model
-src/data/derivedScores.ts  Future derived-score type model
-src/data/meta.ts           Dataset version, status and source notes
-src/data/index.ts          Public data exports
-src/data/README.md         Data rules and future real-stat notes
+src/data/players.ts         Player profiles
+src/data/teams.ts           Team profiles
+src/data/sources.ts         Source metadata scaffold
+src/data/rawStats.ts        Future raw-stat type model
+src/data/derivedScores.ts   Future derived-score type model
+src/data/sampleRawStats.ts  Manual sample raw-stat scaffold
+src/data/meta.ts            Dataset version, status and source notes
+src/data/index.ts           Public data exports
+src/data/README.md          Data rules and future real-stat notes
 ```
 
 Current data status:
@@ -162,6 +166,8 @@ Data and model documentation:
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
 docs/DERIVED_SCORES_MODEL.md
+docs/SAMPLE_REAL_STATS.md
+docs/SAMPLE_STATS_VALIDATION.md
 docs/MODEL_VALIDATION.md
 docs/REAL_STATS_PLAN.md
 ```
@@ -171,7 +177,7 @@ docs/REAL_STATS_PLAN.md
 Current architecture direction:
 
 ```text
-source metadata → raw stats → derived scores → UI scores
+source metadata → raw stats → sample raw stats → derived scores → UI scores
 ```
 
 Current model files:
@@ -179,6 +185,7 @@ Current model files:
 ```text
 src/data/sources.ts
 src/data/rawStats.ts
+src/data/sampleRawStats.ts
 src/data/derivedScores.ts
 ```
 
@@ -187,6 +194,8 @@ Current model documentation:
 ```text
 docs/DATA_SOURCES.md
 docs/RAW_STATS_MODEL.md
+docs/SAMPLE_REAL_STATS.md
+docs/SAMPLE_STATS_VALIDATION.md
 docs/DERIVED_SCORES_MODEL.md
 docs/MODEL_VALIDATION.md
 ```
@@ -238,6 +247,72 @@ Raw stat documentation:
 docs/RAW_STATS_MODEL.md
 ```
 
+## Sample raw stats
+
+Manual sample raw stats are defined in:
+
+```text
+src/data/sampleRawStats.ts
+```
+
+They export:
+
+```text
+sampleRawStatsMeta
+samplePlayerStatWindow
+sampleTeamStatWindow
+samplePlayerRawStats
+sampleTeamRawStats
+sampleRawStatsSummary
+```
+
+Current sample coverage:
+
+```text
+Players: 3
+Teams:   2
+Windows: 2
+```
+
+Sample raw-stat documentation:
+
+```text
+docs/SAMPLE_REAL_STATS.md
+```
+
+## Sample stats validation
+
+Sample raw-stat validation is handled by:
+
+```text
+scripts/validate-sample-stats.mjs
+```
+
+Command:
+
+```bash
+npm run validate:sample-stats
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_STATS_VALIDATION.md
+```
+
+The validator checks:
+
+```text
+[✓] player ids exist in src/data/players.ts
+[✓] team ids exist in src/data/teams.ts
+[✓] sample source ids exist in src/data/sources.ts
+[✓] periodStart / periodEnd / retrievedAt date shapes
+[✓] periodStart is before or equal to periodEnd
+[✓] mapsPlayed and roundsPlayed are positive
+[✓] percentage fields are between 0 and 100
+[✓] sampleRawStatsSummary derives counts from sample arrays
+```
+
 ## Derived score model
 
 Derived score types are defined in:
@@ -273,7 +348,7 @@ map-fit-v1
 roster-value-v1
 ```
 
-These are scaffolds only. They are not connected to real-stat rows yet.
+These are scaffolds only. They are not connected to current UI scoring yet.
 
 ## Model validation
 
@@ -293,21 +368,6 @@ Documentation:
 
 ```text
 docs/MODEL_VALIDATION.md
-```
-
-The validator checks:
-
-```text
-[✓] rawStatDatasetMeta status
-[✓] derivedScoreDatasetMeta status
-[✓] rawStatFieldGroups baseline groups and fields
-[✓] derivedScoreFieldGroups baseline groups and fields
-[✓] scoreFormulaScaffolds
-[✓] unique formula ids
-[✓] formula sourceIds exist in src/data/sources.ts
-[✓] formula inputFields and outputFields
-[✓] formula outputFields match derivedScoreFieldGroups
-[✓] low-confidence formulas include notes
 ```
 
 ## Local setup
@@ -346,6 +406,12 @@ Validate model scaffolds:
 
 ```bash
 npm run validate:models
+```
+
+Validate sample raw stats:
+
+```bash
+npm run validate:sample-stats
 ```
 
 Lint source files:
@@ -399,6 +465,7 @@ npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
 npm run validate:models
+npm run validate:sample-stats
 npm run lint
 npm run format:check
 npm run build
@@ -411,6 +478,7 @@ scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
 scripts/validate-sources.mjs
 scripts/validate-models.mjs
+scripts/validate-sample-stats.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -430,6 +498,7 @@ npm run generate:sitemap
 npm run validate:data
 npm run validate:sources
 npm run validate:models
+npm run validate:sample-stats
 npm run lint
 npm run format:check
 npm run build
@@ -459,25 +528,6 @@ Detailed sitemap documentation:
 
 ```text
 docs/SITEMAP.md
-```
-
-## Data roadmap
-
-ClutchLab should move from demo/manual values to real statistics in phases:
-
-```text
-1. Keep identity data separate from performance data.
-2. Add source metadata for every raw stat group.
-3. Store raw stats separately from derived scores.
-4. Make manual adjustments explicit.
-5. Validate sources, periods, sample sizes and derived score ranges.
-6. Keep UI disclosure clear: demo/manual vs real-stat.
-```
-
-Detailed plan:
-
-```text
-docs/REAL_STATS_PLAN.md
 ```
 
 ## Deployment
@@ -516,17 +566,16 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sources, Raw stats, Derived scores, Model validation and Live site links
+[✓] GitHub, Changelog, Data, Sources, Sample stats and Live site links
 ```
 
 ## Roadmap
 
-- Add manually curated real-stat sample
-- Add raw stat row validation when sample data exists
-- Add derived score row validation when sample data exists
+- Add derived score sample rows
+- Add derived score row validation
+- Add manually curated real-stat sample expansion
 - Replace demo/manual values with manually curated real statistics later
 - Track update dates and event windows
-- Separate identity data from current performance data
 - Add richer map-specific statistics
 - Add automated data generation or backend/API later
 
@@ -534,5 +583,5 @@ Current SEO/UX polish includes:
 
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
-derived-score model types, model validation and clear boundaries around
+sample raw-stat validation, derived-score model types and clear boundaries around
 demo/manual scoring.
