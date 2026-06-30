@@ -2,6 +2,40 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.5 — Adapter metadata on Sample Data
+
+Date: 2026-06-28
+
+### Added
+
+- Adapter metadata display on `/sample-data`
+- Adapter overview block on `SampleDataPage`
+- Derived sample cards now show:
+  - `source`
+  - `status`
+  - `confidence`
+  - `formulaId`
+  - `periodStart`
+  - `periodEnd`
+  - `sourceIds`
+  - fallback reason when relevant
+- `SampleDataPage` now uses:
+  - `getSamplePlayerDerivedScore`
+  - `getSampleTeamDerivedScore`
+  - `getSampleMapFitScore`
+  - `getSampleRosterValueScore`
+  - `getScoreAdapterCoverageSummary`
+  - `scoreAdapterLayerMeta`
+
+### Improved
+
+- Score adapter validation now allows `scoreAdapters.ts` imports only in
+  `src/pages/SampleDataPage.tsx`.
+- Other public pages remain protected from directly importing score adapters.
+- The Sample Data preview page now demonstrates the intended adapter boundary
+  without changing public scoring pages.
+- Footer version display was updated to `0.2.5`.
+
 ## 0.2.4 — Score adapter validation
 
 Date: 2026-06-28
@@ -62,12 +96,7 @@ Date: 2026-06-28
 - The real-stat scaffold is now visible in the interface without replacing the
   main demo/manual player, team, map, compare or roster builder pages.
 - The sample data page clearly marks the preview as `Sample only / not live stats`.
-- Generated sitemap now contains 75 routes:
-  - 12 static routes
-  - 40 player routes
-  - 8 team routes
-  - 7 map routes
-  - 8 role routes
+- Generated sitemap now contains 75 routes.
 - Footer version display was updated to `0.2.3`.
 
 ## 0.2.2 — Sample derived-score validation
@@ -86,12 +115,6 @@ Date: 2026-06-28
 - Project status sample derived-score validation section
 - Footer links to sample derived-score documentation
 
-### Improved
-
-- GitHub Actions CI now runs `npm run validate:sample-derived-scores`.
-- The quality gate checks manual sample derived-score rows before lint/build.
-- Footer version display was updated to `0.2.2`.
-
 ## 0.2.1 — Sample stats validation
 
 Date: 2026-06-28
@@ -103,15 +126,6 @@ Date: 2026-06-28
 - NPM command: `npm run validate:sample-stats`
 - Sample stats validation in `scripts/release-check.mjs`
 - Sample stats validation in GitHub Actions CI
-- README sample stats validation section
-- Project status sample stats validation section
-- Footer link to sample stats documentation
-
-### Improved
-
-- `npm run release:check` now runs sample raw-stat validation.
-- The quality gate now checks the manual sample raw-stat rows before lint/build.
-- Footer version display was updated to `0.2.1`.
 
 ## 0.2.0 — Model validation
 
@@ -124,15 +138,6 @@ Date: 2026-06-28
 - NPM command: `npm run validate:models`
 - Model validation in `scripts/release-check.mjs`
 - Model validation in GitHub Actions CI
-- README model validation section
-- Project status model validation section
-- Footer link to model validation documentation
-
-### Improved
-
-- The quality gate checks source metadata, raw-stat model scaffolds and
-  derived-score formula scaffolds before lint/build.
-- Footer version display was updated to `0.2.0`.
 
 ## 0.1.9 — Derived score model
 
@@ -142,26 +147,7 @@ Date: 2026-06-28
 
 - Derived score type model: `src/data/derivedScores.ts`
 - Derived score documentation: `docs/DERIVED_SCORES_MODEL.md`
-- `ScoreFormulaMeta`
-- `ScoreComponent`
-- `PlayerDerivedScore`
-- `TeamDerivedScore`
-- `MapFitScore`
-- `RosterValueScore`
-- `DerivedScoreDatasetMeta`
-- `derivedScoreDatasetMeta`
-- `scoreFormulaScaffolds`
-- `derivedScoreFieldGroups`
-
-### Improved
-
-- The real-stat architecture is documented as:
-
-```text
-source metadata → raw stats → derived scores → UI scores
-```
-
-- Footer version display was updated to `0.1.9`.
+- Formula scaffolds and derived score field groups.
 
 ## 0.1.8 — Source metadata scaffold
 
@@ -173,7 +159,6 @@ Date: 2026-06-28
 - Source metadata documentation: `docs/DATA_SOURCES.md`
 - Source validation script: `scripts/validate-sources.mjs`
 - NPM command: `npm run validate:sources`
-- Source validation in release check and CI.
 
 ## 0.1.7 — Real-stat data plan
 
@@ -182,10 +167,6 @@ Date: 2026-06-28
 ### Added
 
 - Real-stat migration plan: `docs/REAL_STATS_PLAN.md`
-- Documentation for separating identity data, raw performance data, source metadata,
-  derived scores and manual adjustments.
-- Manual real-stat update workflow
-- Future validation rules for real-stat data
 
 ## 0.1.6 — Dynamic sitemap generation
 
@@ -196,7 +177,6 @@ Date: 2026-06-28
 - Dynamic sitemap generator: `scripts/generate-sitemap.mjs`
 - NPM command: `npm run generate:sitemap`
 - Sitemap documentation: `docs/SITEMAP.md`
-- Generated detail routes for players, teams, maps and roles.
 
 ## 0.1.5 — SEO route meta polish
 

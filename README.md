@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.2.4 Score adapter validation
+0.2.5 Adapter metadata on Sample Data
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -44,6 +44,7 @@ esports statistics.
 - Traits page
 - About / Methodology page
 - Sample Data preview page
+- Adapter metadata shown on Sample Data derived-score cards
 - Route-based browser tab titles
 - Route-based meta descriptions
 - Open Graph title/description updates
@@ -101,32 +102,6 @@ esports statistics.
 /traits                   Traits
 /about                    About / Methodology
 /builder                  Redirect to /roster-builder
-```
-
-## Project structure
-
-```text
-src/
-  components/             Shared UI components, app shell and footer
-  config/                 Navigation, role profiles and map profiles
-  data/                   Player, team, source, raw-stat and score models
-  hooks/                  Route/title/meta hooks
-  pages/                  Route-level pages
-  App.tsx                 BrowserRouter and route table
-  data.ts                 Compatibility data export
-  index.css               Global styles
-  lib.ts                  Shared scoring and helper functions
-  types.ts                Shared TypeScript types
-
-scripts/
-  generate-sitemap.mjs                    Dynamic sitemap generator
-  validate-data.mjs                       Local data integrity validation
-  validate-sources.mjs                    Local source metadata validation
-  validate-models.mjs                     Local raw/derived model validation
-  validate-sample-stats.mjs               Local sample raw-stat row validation
-  validate-sample-derived-scores.mjs      Local sample derived-score row validation
-  validate-score-adapters.mjs             Local score adapter validation
-  release-check.mjs                       Local release gate
 ```
 
 ## Data layer
@@ -190,23 +165,6 @@ src/data/sampleDerivedScores.ts
 src/data/scoreAdapters.ts
 ```
 
-Current model documentation:
-
-```text
-docs/DATA_SOURCES.md
-docs/RAW_STATS_MODEL.md
-docs/SAMPLE_REAL_STATS.md
-docs/SAMPLE_STATS_VALIDATION.md
-docs/DERIVED_SCORES_MODEL.md
-docs/SAMPLE_DERIVED_SCORES.md
-docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
-docs/SAMPLE_DATA_PAGE.md
-docs/UI_MIGRATION_PLAN.md
-docs/SCORE_ADAPTERS.md
-docs/SCORE_ADAPTERS_VALIDATION.md
-docs/MODEL_VALIDATION.md
-```
-
 ## Score adapters
 
 The score adapter layer is defined in:
@@ -259,23 +217,11 @@ The adapter layer returns a shared result shape:
 ScoreAdapterResult<T>
 ```
 
-The adapter layer does not change public scoring behavior. Public pages should
-not import `scoreAdapters.ts` until the UI migration plan explicitly allows that.
+The adapter layer does not change public scoring behavior.
 
-## UI migration plan
+## Adapter metadata on Sample Data
 
-The UI migration plan is documented in:
-
-```text
-docs/UI_MIGRATION_PLAN.md
-```
-
-It defines how to safely move from demo/manual UI values to future derived scores
-without accidentally presenting sample data as live official statistics.
-
-## Sample Data preview page
-
-The sample data layer is visible at:
+The Sample Data page now uses score adapter helpers in the preview-only route:
 
 ```text
 /sample-data
@@ -287,105 +233,44 @@ Page file:
 src/pages/SampleDataPage.tsx
 ```
 
-Documentation:
+The page shows adapter metadata for derived sample cards:
 
 ```text
-docs/SAMPLE_DATA_PAGE.md
+source
+status
+confidence
+formulaId
+periodStart
+periodEnd
+sourceIds
+fallback reason when relevant
 ```
 
-The page previews:
+The page also shows adapter coverage summary from:
 
 ```text
-samplePlayerRawStats
-sampleTeamRawStats
-samplePlayerDerivedScores
-sampleTeamDerivedScores
-sampleMapFitScores
-sampleRosterValueScores
+getScoreAdapterCoverageSummary()
 ```
 
-It is clearly marked as:
+Important boundary:
 
 ```text
-Sample only / not live stats
+Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
 ```
 
-The page does not replace the current player catalog, team pages, map pages,
-compare pages or roster builder scoring.
+The score adapter validator enforces this exception and still blocks other public
+route pages from importing score adapters directly.
 
-## Source metadata
+## UI migration plan
 
-Source metadata is defined in:
+The UI migration plan is documented in:
 
 ```text
-src/data/sources.ts
+docs/UI_MIGRATION_PLAN.md
 ```
 
-Current source validation command:
-
-```bash
-npm run validate:sources
-```
-
-## Raw stat model and sample
-
-Raw stat types are defined in:
-
-```text
-src/data/rawStats.ts
-```
-
-Manual sample raw stats are defined in:
-
-```text
-src/data/sampleRawStats.ts
-```
-
-Current sample raw-stat validation command:
-
-```bash
-npm run validate:sample-stats
-```
-
-## Derived score model and sample
-
-Derived score types are defined in:
-
-```text
-src/data/derivedScores.ts
-```
-
-Manual sample derived scores are defined in:
-
-```text
-src/data/sampleDerivedScores.ts
-```
-
-Current sample derived-score validation command:
-
-```bash
-npm run validate:sample-derived-scores
-```
-
-## Model validation
-
-Model validation is handled by:
-
-```text
-scripts/validate-models.mjs
-```
-
-Command:
-
-```bash
-npm run validate:models
-```
-
-Documentation:
-
-```text
-docs/MODEL_VALIDATION.md
-```
+It defines how to safely move from demo/manual UI values to future derived scores
+without accidentally presenting sample data as live official statistics.
 
 ## Local setup
 
@@ -539,12 +424,6 @@ npm run format:check
 npm run build
 ```
 
-Workflow file:
-
-```text
-.github/workflows/ci.yml
-```
-
 ## Sitemap
 
 The sitemap is generated from local source files by:
@@ -553,32 +432,10 @@ The sitemap is generated from local source files by:
 scripts/generate-sitemap.mjs
 ```
 
-Output:
-
-```text
-public/sitemap.xml
-```
-
 Current generated sitemap route count:
 
 ```text
 75 routes
-```
-
-The sitemap includes:
-
-```text
-12 static routes
-40 player routes
-8 team routes
-7 map routes
-8 role routes
-```
-
-Detailed sitemap documentation:
-
-```text
-docs/SITEMAP.md
 ```
 
 ## Deployment
@@ -596,38 +453,12 @@ git push
 
 Vercel then builds the latest pushed version.
 
-## SEO and UX polish
-
-Current SEO/UX polish includes:
-
-```text
-[✓] static index.html meta
-[✓] route-based browser titles
-[✓] route-based meta descriptions
-[✓] Open Graph title/description route updates
-[✓] Twitter title/description route updates
-[✓] generated sitemap.xml
-[✓] sitemap detail routes
-[✓] /sample-data sitemap route
-[✓] robots.txt
-[✓] compact mobile header
-[✓] horizontal mobile navigation
-[✓] active mobile route visibility
-[✓] keyboard focus ring on navigation links
-[✓] app-wide footer
-[✓] visible MVP version
-[✓] visible data status
-[✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sources, Sample stats, Sample scores, Score adapters and Live site links
-```
-
 ## Roadmap
 
+- Add adapter-based preview cards for more sample data views
+- Extend adapters later to prefer real-derived rows when real data exists
+- Keep current public scoring stable until coverage is sufficient
 - Improve Sample Data page display names once the player model exposes a display name
-- Use score adapters only in explicitly labeled preview contexts
-- Add adapter-based preview cards without changing public scoring
-- Add a real-derived score layer after real data coverage exists
-- Add a UI migration plan implementation checklist to future PRs
 - Expand manual sample stat coverage
 - Replace demo/manual values with manually curated real statistics later
 - Track update dates and event windows
@@ -639,5 +470,5 @@ Current SEO/UX polish includes:
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
 interface, static local data, source metadata scaffolding, raw-stat model types,
 sample raw-stat validation, derived-score model types, sample derived-score
-validation, a score adapter layer with validation, a visible sample data preview
-page and clear boundaries around demo/manual scoring.
+validation, a score adapter layer with validation, adapter metadata on the
+sample-only preview page and clear boundaries around demo/manual scoring.

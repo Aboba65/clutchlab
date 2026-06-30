@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.4 Score adapter validation
+0.2.5 Adapter metadata on Sample Data
 ```
 
 ## Live site
@@ -32,7 +32,8 @@ workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
 real-stat migration plan, source metadata, raw-stat model types, manual sample
 raw stats, raw-stat sample validation, derived-score model types, manual sample
 derived scores, derived-score sample validation, model validation, a visible
-Sample Data preview page, a score adapter layer and score adapter validation.
+Sample Data preview page, a score adapter layer, score adapter validation and
+adapter metadata displayed on `/sample-data`.
 
 ## Current data status
 
@@ -81,6 +82,76 @@ Implemented real-stat scaffold files:
 [✓] scripts/validate-score-adapters.mjs
 ```
 
+## Sample Data preview page
+
+Route:
+
+```text
+/sample-data
+```
+
+Page file:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DATA_PAGE.md
+```
+
+The page is clearly marked:
+
+```text
+Sample only / not live stats
+```
+
+The page does not replace current demo/manual UI scoring.
+
+## Adapter metadata on Sample Data
+
+`SampleDataPage` now imports score adapter helpers and shows adapter metadata on
+derived sample cards.
+
+Displayed adapter metadata:
+
+```text
+[✓] source
+[✓] status
+[✓] confidence
+[✓] formulaId
+[✓] periodStart
+[✓] periodEnd
+[✓] sourceIds
+[✓] fallback reason when relevant
+[✓] adapter coverage summary
+```
+
+Used helpers:
+
+```text
+[✓] getSamplePlayerDerivedScore
+[✓] getSampleTeamDerivedScore
+[✓] getSampleMapFitScore
+[✓] getSampleRosterValueScore
+[✓] getScoreAdapterCoverageSummary
+[✓] scoreAdapterLayerMeta
+```
+
+Important boundary:
+
+```text
+Only src/pages/SampleDataPage.tsx may import scoreAdapters.ts.
+```
+
+Other public pages remain protected by:
+
+```bash
+npm run validate:score-adapters
+```
+
 ## Score adapters
 
 Source file:
@@ -113,191 +184,6 @@ Current adapter status:
 sample-only
 ```
 
-Current adapter exports:
-
-```text
-[✓] scoreAdapterLayerMeta
-[✓] ScoreAdapterResult<T>
-[✓] getSamplePlayerDerivedScore(playerId)
-[✓] getSampleTeamDerivedScore(teamId)
-[✓] getSampleMapFitScoresForEntity(entityId, entityType)
-[✓] getSampleMapFitScore({ mapId, entityId, entityType })
-[✓] getSampleRosterValueScore(rosterId)
-[✓] hasSamplePlayerDerivedScore(playerId)
-[✓] hasSampleTeamDerivedScore(teamId)
-[✓] hasSampleRosterValueScore(rosterId)
-[✓] getScoreAdapterCoverageSummary()
-```
-
-Current score adapter validation checks:
-
-```text
-[✓] adapter metadata status is sample-only
-[✓] expected helper exports exist
-[✓] ScoreAdapterResult metadata shape exists
-[✓] coverage summary derives counts from sample arrays
-[✓] fallback behavior exists
-[✓] sample results use sample-derived/sample
-[✓] fallback results use demo-manual/fallback
-[✓] public pages do not import scoreAdapters directly yet
-```
-
-## UI migration plan
-
-Documentation:
-
-```text
-docs/UI_MIGRATION_PLAN.md
-```
-
-The plan defines how demo/manual UI scores can later migrate to source-grounded
-derived scores without treating sample data as live official statistics.
-
-## Sample Data preview page
-
-Route:
-
-```text
-/sample-data
-```
-
-Page file:
-
-```text
-src/pages/SampleDataPage.tsx
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_DATA_PAGE.md
-```
-
-The page is clearly marked:
-
-```text
-Sample only / not live stats
-```
-
-The page does not replace current demo/manual UI scoring.
-
-## Sample derived scores
-
-Source file:
-
-```text
-src/data/sampleDerivedScores.ts
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_DERIVED_SCORES.md
-```
-
-Current sample contents:
-
-```text
-Player derived scores: 3
-Team derived scores:   2
-Map fit scores:        2
-Roster value scores:   1
-```
-
-Validation:
-
-```bash
-npm run validate:sample-derived-scores
-```
-
-## Sample raw stats
-
-Source file:
-
-```text
-src/data/sampleRawStats.ts
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_REAL_STATS.md
-```
-
-Validation:
-
-```bash
-npm run validate:sample-stats
-```
-
-## Model validation
-
-Command:
-
-```bash
-npm run validate:models
-```
-
-Script:
-
-```text
-scripts/validate-models.mjs
-```
-
-Documentation:
-
-```text
-docs/MODEL_VALIDATION.md
-```
-
-## Source metadata scaffold
-
-Source file:
-
-```text
-src/data/sources.ts
-```
-
-Documentation:
-
-```text
-docs/DATA_SOURCES.md
-```
-
-Validation:
-
-```bash
-npm run validate:sources
-```
-
-## Raw stat model
-
-Source file:
-
-```text
-src/data/rawStats.ts
-```
-
-Documentation:
-
-```text
-docs/RAW_STATS_MODEL.md
-```
-
-## Derived score model
-
-Source file:
-
-```text
-src/data/derivedScores.ts
-```
-
-Documentation:
-
-```text
-docs/DERIVED_SCORES_MODEL.md
-```
-
 ## Completed product features
 
 ```text
@@ -314,6 +200,7 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] Roster Builder
 [✓] Saved Rosters manager
 [✓] Sample Data preview page
+[✓] Adapter metadata on Sample Data page
 [✓] Route page titles
 [✓] Route meta descriptions
 [✓] Open Graph route meta
@@ -349,14 +236,13 @@ docs/DERIVED_SCORES_MODEL.md
 [✓] UI migration plan
 [✓] score adapter layer
 [✓] score adapter validation
+[✓] adapter metadata on sample data page
 [✓] model validation
-[✓] Data layer README
 [✓] GitHub README
 [✓] README badges
 [✓] SEO meta tags
 [✓] route meta descriptions
 [✓] dynamic sitemap generator
-[✓] generated sitemap detail routes
 [✓] /sample-data sitemap route
 [✓] real-stat data plan
 [✓] Vercel SPA rewrite
@@ -368,8 +254,6 @@ docs/DERIVED_SCORES_MODEL.md
 ```
 
 ## Current quality workflow
-
-### Local checks
 
 Run this before committing:
 
@@ -392,73 +276,7 @@ npm run format:check
 npm run build
 ```
 
-### Sitemap generation
-
-```bash
-npm run generate:sitemap
-```
-
-Current generated route count:
-
-```text
-75
-```
-
-Current sitemap breakdown:
-
-```text
-Static routes: 12
-Player routes: 40
-Team routes:   8
-Map routes:    7
-Role routes:   8
-```
-
-### Data validation
-
-```bash
-npm run validate:data
-```
-
-### Source validation
-
-```bash
-npm run validate:sources
-```
-
-### Model validation
-
-```bash
-npm run validate:models
-```
-
-### Sample raw-stat validation
-
-```bash
-npm run validate:sample-stats
-```
-
-### Sample derived-score validation
-
-```bash
-npm run validate:sample-derived-scores
-```
-
-### Score adapter validation
-
-```bash
-npm run validate:score-adapters
-```
-
-### Linting and formatting
-
-```bash
-npm run lint
-npm run format
-npm run format:check
-```
-
-### GitHub Actions CI
+## CI
 
 GitHub runs:
 
@@ -474,6 +292,24 @@ npm run validate:score-adapters
 npm run lint
 npm run format:check
 npm run build
+```
+
+## Current sitemap
+
+Current generated route count:
+
+```text
+75
+```
+
+Current sitemap breakdown:
+
+```text
+Static routes: 12
+Player routes: 40
+Team routes:   8
+Map routes:    7
+Role routes:   8
 ```
 
 ## Data roadmap
@@ -512,67 +348,11 @@ Current data architecture direction:
 [✓] UI migration plan exists
 [✓] score adapter layer exists
 [✓] score adapter validation exists
+[✓] adapter metadata visible on sample page
 [✓] source validation exists
 [✓] model validation exists
-[ ] adapter-based preview cards
 [ ] real-derived score layer
-```
-
-## Important files
-
-```text
-src/App.tsx
-src/components/AppShell.tsx
-src/components/DataNotice.tsx
-src/components/Footer.tsx
-src/config/navigation.ts
-src/config/maps.ts
-src/config/roles.ts
-src/hooks/usePageTitle.ts
-src/pages/SampleDataPage.tsx
-src/data.ts
-src/data/index.ts
-src/data/players.ts
-src/data/teams.ts
-src/data/sources.ts
-src/data/rawStats.ts
-src/data/sampleRawStats.ts
-src/data/derivedScores.ts
-src/data/sampleDerivedScores.ts
-src/data/scoreAdapters.ts
-src/data/meta.ts
-src/lib.ts
-src/types.ts
-scripts/generate-sitemap.mjs
-scripts/validate-data.mjs
-scripts/validate-sources.mjs
-scripts/validate-models.mjs
-scripts/validate-sample-stats.mjs
-scripts/validate-sample-derived-scores.mjs
-scripts/validate-score-adapters.mjs
-scripts/release-check.mjs
-.github/workflows/ci.yml
-README.md
-CHANGELOG.md
-docs/PROJECT_STATUS.md
-docs/SITEMAP.md
-docs/REAL_STATS_PLAN.md
-docs/DATA_SOURCES.md
-docs/RAW_STATS_MODEL.md
-docs/SAMPLE_REAL_STATS.md
-docs/SAMPLE_STATS_VALIDATION.md
-docs/DERIVED_SCORES_MODEL.md
-docs/SAMPLE_DERIVED_SCORES.md
-docs/SAMPLE_DERIVED_SCORES_VALIDATION.md
-docs/SAMPLE_DATA_PAGE.md
-docs/UI_MIGRATION_PLAN.md
-docs/SCORE_ADAPTERS.md
-docs/SCORE_ADAPTERS_VALIDATION.md
-docs/MODEL_VALIDATION.md
-vercel.json
-index.html
-public/robots.txt
-public/sitemap.xml
+[ ] public UI migration after real coverage
 ```
 
 ## Known limitations
@@ -584,11 +364,11 @@ public/sitemap.xml
 - Ratings are not live
 - Prices are internal MVP values
 - Score adapters currently read sample-derived rows only
+- Only SampleDataPage may import score adapters
 - Public pages intentionally do not import score adapters yet
 - Source metadata exists but real-stat rows are not connected to UI yet
 - Sample raw-stat rows exist but do not replace demo/manual UI data
 - Sample derived-score rows exist but do not replace demo/manual UI scores
-- Sample Data page currently uses local sample display names for player ids
 - No automatic match updates
 - No event-window filtering yet
 
@@ -607,22 +387,21 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Adapter-based preview cards
-
-```text
-[ ] use score adapters inside /sample-data only
-[ ] show adapter source/status/confidence
-[ ] preserve sample-only warning
-[ ] keep public routes untouched
-```
-
-### 2. Real-derived score layer
+### 1. Real-derived score layer plan
 
 ```text
 [ ] define future realDerivedScores file shape
 [ ] extend adapters to prefer real-derived rows later
 [ ] preserve demo/manual fallback
 [ ] keep score source visible
+```
+
+### 2. Sample Data page polish
+
+```text
+[ ] improve density of adapter metadata cards
+[ ] add filters for raw stats vs derived scores
+[ ] add component breakdown expansion
 ```
 
 ## Build commands
