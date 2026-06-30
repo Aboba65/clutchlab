@@ -10,3 +10,14 @@ export type {
   SourceKind,
   SourceStatus,
 } from "./sources";
+export { rawStatDatasetMeta, rawStatFieldGroups } from "./rawStats";
+export type {
+  MapRawStats,
+  PlayerRawStats,
+  RawStatDatasetMeta,
+  RawStatDatasetStatus,
+  RoleRawStats,
+  SampleSizeRules,
+  StatWindow,
+  TeamRawStats,
+} from "./rawStats";
