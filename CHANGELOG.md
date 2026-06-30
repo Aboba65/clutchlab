@@ -2,6 +2,57 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.8 — Generic score adapters
+
+Date: 2026-06-28
+
+### Added
+
+- Generic score adapter implementation in `src/data/scoreAdapters.ts`
+- `ScoreAdapterOptions`
+- `defaultScoreAdapterOptions`
+- `resolveScoreAdapterOptions`
+- `getPlayerDerivedScore(playerId, options?)`
+- `getTeamDerivedScore(teamId, options?)`
+- `getMapFitScoresForEntity(entityId, entityType, options?)`
+- `getMapFitScore({ mapId, entityId, entityType }, options?)`
+- `getRosterValueScore(rosterId, options?)`
+- `hasScoreAdapterValue(result)`
+- Generic adapter validation rules in `scripts/validate-score-adapters.mjs`
+- Updated score adapter validation documentation
+
+### Improved
+
+- Score adapters now support the intended priority path:
+
+```text
+real-derived → sample-derived only if allowSample=true → demo-manual fallback
+```
+
+- Generic adapter defaults are now explicit:
+
+```text
+allowSample=false
+preferReal=true
+```
+
+- Score adapter validation now checks:
+  - generic helper exports
+  - real-derived/active path
+  - sample-derived/sample path behind `allowSample`
+  - demo-manual/fallback path
+  - public pages do not pass `allowSample: true`
+  - public pages do not call `getSample*` helpers
+  - public pages do not import `sampleDerivedScores` or `realDerivedScores` directly
+- Footer version display was updated to `0.2.8`.
+
+### Notes
+
+This release does not migrate public scoring UI.
+
+Current public player, team, compare and roster pages keep their existing
+demo/manual scoring behavior.
+
 ## 0.2.7 — Generic score adapter documentation
 
 Date: 2026-06-28
@@ -10,32 +61,7 @@ Date: 2026-06-28
 
 - Generic score adapters plan: `docs/GENERIC_SCORE_ADAPTERS_PLAN.md`
 - Generic score adapters API documentation: `docs/GENERIC_SCORE_ADAPTERS.md`
-- Documentation for future helper API:
-  - `getPlayerDerivedScore(playerId, options?)`
-  - `getTeamDerivedScore(teamId, options?)`
-  - `getMapFitScoresForEntity(entityId, entityType, options?)`
-  - `getMapFitScore({ mapId, entityId, entityType }, options?)`
-  - `getRosterValueScore(rosterId, options?)`
-- Documentation for future `ScoreAdapterOptions`
-- Documentation for safe defaults:
-  - `allowSample=false`
-  - `preferReal=true`
-- Documentation for future source priority:
-  - `real-derived → sample-derived → demo-manual fallback`
-- Footer links to generic score adapter documentation
-
-### Improved
-
-- README now documents generic score adapter planning.
-- Project status now documents generic score adapter planning.
-- Footer version display was updated to `0.2.7`.
-
-### Notes
-
-This release is documentation-only for generic score adapters.
-
-No public UI behavior, scoring behavior, validation behavior or data arrays were
-changed.
+- Documentation for future helper API and safe defaults.
 
 ## 0.2.6 — Real-derived scaffold validation
 
@@ -51,9 +77,7 @@ Date: 2026-06-28
 - Real-derived score validation documentation:
   `docs/REAL_DERIVED_SCORES_VALIDATION.md`
 - NPM command: `npm run validate:real-derived-scores`
-- Real-derived score validation in `scripts/release-check.mjs`
-- Real-derived score validation in GitHub Actions CI
-- Real-derived scaffold exports through `src/data/index.ts` and `src/data.ts`
+- Real-derived score validation in release check and CI.
 
 ## 0.2.5 — Adapter metadata on Sample Data
 
@@ -104,7 +128,6 @@ Date: 2026-06-28
 - Sample derived-score validation documentation:
   `docs/SAMPLE_DERIVED_SCORES_VALIDATION.md`
 - NPM command: `npm run validate:sample-derived-scores`
-- Sample derived-score validation in release check and CI.
 
 ## 0.2.1 — Sample stats validation
 
@@ -115,7 +138,6 @@ Date: 2026-06-28
 - Sample stats validation script: `scripts/validate-sample-stats.mjs`
 - Sample stats validation documentation: `docs/SAMPLE_STATS_VALIDATION.md`
 - NPM command: `npm run validate:sample-stats`
-- Sample stats validation in release check and CI.
 
 ## 0.2.0 — Model validation
 
@@ -126,7 +148,6 @@ Date: 2026-06-28
 - Model validation script: `scripts/validate-models.mjs`
 - Model validation documentation: `docs/MODEL_VALIDATION.md`
 - NPM command: `npm run validate:models`
-- Model validation in release check and CI.
 
 ## 0.1.9 — Derived score model
 
@@ -136,7 +157,6 @@ Date: 2026-06-28
 
 - Derived score type model: `src/data/derivedScores.ts`
 - Derived score documentation: `docs/DERIVED_SCORES_MODEL.md`
-- Formula scaffolds and derived score field groups.
 
 ## 0.1.8 — Source metadata scaffold
 
@@ -147,7 +167,6 @@ Date: 2026-06-28
 - Source metadata scaffold: `src/data/sources.ts`
 - Source metadata documentation: `docs/DATA_SOURCES.md`
 - Source validation script: `scripts/validate-sources.mjs`
-- NPM command: `npm run validate:sources`
 
 ## 0.1.7 — Real-stat data plan
 

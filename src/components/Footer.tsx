@@ -24,11 +24,7 @@ export function Footer() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-          <FooterCard
-            label="Version"
-            value="0.2.7"
-            detail="Generic score adapter documentation"
-          />
+          <FooterCard label="Version" value="0.2.8" detail="Generic score adapters" />
           <FooterCard
             label="Data updated"
             value={dataMeta.lastUpdated}
