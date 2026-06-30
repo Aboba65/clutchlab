@@ -17,7 +17,7 @@ Repository: https://github.com/Aboba65/clutchlab
 Current documented version:
 
 ```text
-0.2.8 Generic score adapters
+0.2.9 Sample Data generic adapters
 ```
 
 ClutchLab is still an MVP with a static local data layer. Current ratings,
@@ -42,7 +42,9 @@ esports statistics.
 - Traits page
 - About / Methodology page
 - Sample Data preview page
+- Sample Data preview page uses generic score adapters with `allowSample=true`
 - Adapter metadata shown on Sample Data derived-score cards
+- Optional sample fields render safely as `n/a`
 - Source metadata scaffold and validation
 - Raw-stat model and sample raw-stat validation
 - Derived-score model and sample derived-score validation
@@ -178,8 +180,44 @@ Important behavior:
 Current real-derived arrays are empty.
 Generic helpers therefore fall back by default.
 Sample rows are used only when allowSample=true.
-Public UI has not migrated to generic adapters yet.
+Public UI scoring has not migrated to generic adapters.
 ```
+
+## Sample Data preview page
+
+Route:
+
+```text
+/sample-data
+```
+
+Page file:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+Documentation:
+
+```text
+docs/SAMPLE_DATA_PAGE.md
+```
+
+Current behavior:
+
+```text
+[✓] calls getPlayerDerivedScore(..., { allowSample: true })
+[✓] calls getTeamDerivedScore(..., { allowSample: true })
+[✓] calls getMapFitScore(..., { allowSample: true })
+[✓] calls getRosterValueScore(..., { allowSample: true })
+[✓] keeps Sample only / not live stats label visible
+[✓] keeps public pages unchanged
+[✓] keeps public scoring unchanged
+[✓] renders optional sample fields as n/a
+```
+
+`allowSample=true` is safe here because `/sample-data` is a labeled preview route.
+Validation still protects other pages from sample-derived usage.
 
 ## Score adapter validation
 
@@ -204,8 +242,8 @@ Validation protects:
 [✓] public pages do not import sampleDerivedScores or realDerivedScores directly
 ```
 
-`SampleDataPage.tsx` remains the only allowed sample-helper exception because it
-is a sample-only preview route.
+`SampleDataPage.tsx` remains the only allowed sample-helper / sample-preview
+exception because it is a sample-only preview route.
 
 ## Real-derived score layer
 
@@ -249,45 +287,6 @@ realRosterValueScores: []
 
 The scaffold intentionally contains no fake real-derived rows and does not change
 public UI scoring.
-
-## Sample Data preview page
-
-Route:
-
-```text
-/sample-data
-```
-
-Page file:
-
-```text
-src/pages/SampleDataPage.tsx
-```
-
-Documentation:
-
-```text
-docs/SAMPLE_DATA_PAGE.md
-```
-
-The page is clearly marked:
-
-```text
-Sample only / not live stats
-```
-
-It shows adapter metadata for derived sample cards:
-
-```text
-source
-status
-confidence
-formulaId
-periodStart
-periodEnd
-sourceIds
-fallback reason when relevant
-```
 
 ## Documentation index
 
@@ -418,7 +417,7 @@ Vercel then builds the latest pushed version.
 
 ## Roadmap
 
-- Use generic adapters in preview-only blocks first
+- Add read-only generic adapter preview blocks to detail pages later
 - Extend real-derived validation when real rows exist
 - Add real-derived row coverage gates
 - Keep public scoring stable until coverage gates pass

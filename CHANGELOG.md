@@ -2,6 +2,40 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.2.9 — Sample Data generic adapters
+
+Date: 2026-06-28
+
+### Added
+
+- `/sample-data` now uses generic score adapter helpers:
+  - `getPlayerDerivedScore(..., { allowSample: true })`
+  - `getTeamDerivedScore(..., { allowSample: true })`
+  - `getMapFitScore(..., { allowSample: true })`
+  - `getRosterValueScore(..., { allowSample: true })`
+- Documentation that `allowSample=true` is preview-only.
+- Documentation that public scoring pages remain unchanged.
+- Optional field safety documentation for sample preview values.
+- Footer version display updated to `0.2.9`.
+
+### Fixed
+
+- Optional raw stat fields on `SampleDataPage` now render safely as `n/a`.
+- Optional derived score fields on `SampleDataPage` now render safely as `n/a`.
+- Sample preview raw stat field names now match the raw stat model:
+  - `openingSuccess`
+  - `clutchWins`
+  - `clutchAttempts`
+
+### Notes
+
+This release does not migrate public scoring UI.
+
+Current public player, team, compare and roster pages keep their existing
+demo/manual scoring behavior.
+
+`allowSample=true` is used only on the sample-only preview page.
+
 ## 0.2.8 — Generic score adapters
 
 Date: 2026-06-28
@@ -23,35 +57,18 @@ Date: 2026-06-28
 
 ### Improved
 
-- Score adapters now support the intended priority path:
+- Score adapters support:
 
 ```text
 real-derived → sample-derived only if allowSample=true → demo-manual fallback
 ```
 
-- Generic adapter defaults are now explicit:
+- Generic adapter defaults:
 
 ```text
 allowSample=false
 preferReal=true
 ```
-
-- Score adapter validation now checks:
-  - generic helper exports
-  - real-derived/active path
-  - sample-derived/sample path behind `allowSample`
-  - demo-manual/fallback path
-  - public pages do not pass `allowSample: true`
-  - public pages do not call `getSample*` helpers
-  - public pages do not import `sampleDerivedScores` or `realDerivedScores` directly
-- Footer version display was updated to `0.2.8`.
-
-### Notes
-
-This release does not migrate public scoring UI.
-
-Current public player, team, compare and roster pages keep their existing
-demo/manual scoring behavior.
 
 ## 0.2.7 — Generic score adapter documentation
 

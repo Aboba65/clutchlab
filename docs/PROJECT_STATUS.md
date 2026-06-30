@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.2.8 Generic score adapters
+0.2.9 Sample Data generic adapters
 ```
 
 ## Live site
@@ -35,8 +35,9 @@ derived scores, derived-score sample validation, model validation, a visible
 Sample Data preview page, a score adapter layer, score adapter validation,
 adapter metadata displayed on `/sample-data`, a real-derived score plan, a
 real-derived scaffold, real-derived scaffold validation, generic score adapter
-documentation, generic score adapters implemented in code and validation for the
-generic adapter safety rules.
+documentation, generic score adapters implemented in code, validation for generic
+adapter safety rules, and `/sample-data` migrated to generic adapters with
+`allowSample=true`.
 
 ## Current data status
 
@@ -139,7 +140,37 @@ Current behavior:
 [✓] real-derived arrays are empty
 [✓] generic helpers fall back by default
 [✓] sample-derived rows require allowSample=true
+[✓] /sample-data opts into sample-derived preview rows
 [✓] public scoring pages are not migrated
+```
+
+## Sample Data preview page
+
+Route:
+
+```text
+/sample-data
+```
+
+Page file:
+
+```text
+src/pages/SampleDataPage.tsx
+```
+
+Current behavior:
+
+```text
+[✓] getPlayerDerivedScore(..., { allowSample: true })
+[✓] getTeamDerivedScore(..., { allowSample: true })
+[✓] getMapFitScore(..., { allowSample: true })
+[✓] getRosterValueScore(..., { allowSample: true })
+[✓] sample-only label remains visible
+[✓] not-live-stats label remains visible
+[✓] optional raw stat fields render as n/a
+[✓] optional derived score fields render as n/a
+[✓] public pages remain unchanged
+[✓] public scoring remains unchanged
 ```
 
 ## Score adapter validation
@@ -195,40 +226,6 @@ realPlayerDerivedScores: []
 realTeamDerivedScores: []
 realMapFitScores: []
 realRosterValueScores: []
-```
-
-## Sample Data preview page
-
-Route:
-
-```text
-/sample-data
-```
-
-Page file:
-
-```text
-src/pages/SampleDataPage.tsx
-```
-
-The page is clearly marked:
-
-```text
-Sample only / not live stats
-```
-
-Displayed adapter metadata:
-
-```text
-[✓] source
-[✓] status
-[✓] confidence
-[✓] formulaId
-[✓] periodStart
-[✓] periodEnd
-[✓] sourceIds
-[✓] fallback reason when relevant
-[✓] adapter coverage summary
 ```
 
 ## Current quality workflow
@@ -308,6 +305,7 @@ Role routes:   8
 [✓] Roster Builder
 [✓] Saved Rosters manager
 [✓] Sample Data preview page
+[✓] Sample Data generic adapter usage
 [✓] Adapter metadata on Sample Data page
 [✓] Route page titles
 [✓] Route meta descriptions
@@ -331,7 +329,7 @@ Role routes:   8
 - Prices are internal MVP values
 - Real-derived layer is a planned empty scaffold
 - Generic helpers are implemented but not used by public scoring pages yet
-- Only SampleDataPage may use sample helpers
+- Only SampleDataPage may opt into sample rows with `allowSample=true`
 - Public pages intentionally do not import sampleDerivedScores or realDerivedScores
 - Sample rows do not replace demo/manual UI scores
 - No automatic match updates
@@ -353,22 +351,23 @@ Role routes:   8
 
 ## Recommended next steps
 
-### 1. Use generic adapters in SampleDataPage only
-
-```text
-[ ] call getPlayerDerivedScore(..., { allowSample: true })
-[ ] call getTeamDerivedScore(..., { allowSample: true })
-[ ] call getMapFitScore(..., { allowSample: true })
-[ ] keep sample-only label visible
-```
-
-### 2. Add read-only preview blocks later
+### 1. Add read-only generic adapter preview blocks later
 
 ```text
 [ ] /players/:playerId preview block
 [ ] /teams/:teamId preview block
 [ ] no catalog sorting migration yet
 [ ] no roster-builder scoring migration yet
+```
+
+### 2. Add real-derived row validation when real data exists
+
+```text
+[ ] validate real player derived rows
+[ ] validate real team derived rows
+[ ] validate real map fit rows
+[ ] validate real roster value rows
+[ ] validate coverage gates
 ```
 
 ## Build commands

@@ -1,6 +1,4 @@
-# Sample Data Preview Page
-
-ClutchLab includes a product-facing preview page for the manual sample data layer.
+# Sample Data Page
 
 ## Route
 
@@ -8,7 +6,7 @@ ClutchLab includes a product-facing preview page for the manual sample data laye
 /sample-data
 ```
 
-## Page file
+## Source file
 
 ```text
 src/pages/SampleDataPage.tsx
@@ -16,150 +14,178 @@ src/pages/SampleDataPage.tsx
 
 ## Purpose
 
-The page shows the current manual sample raw stats and manual sample derived
-scores in the actual ClutchLab interface without replacing the main demo/manual
-player, team, map, compare or roster builder pages.
+The Sample Data page is a preview-only route for checking raw stat samples,
+derived score samples and adapter metadata before any public scoring migration.
 
-It is a bridge between the data architecture work and the future UI migration.
+It is not a live ranking page.
 
-## Data shown
+It is not a source of official CS2 statistics.
 
-Raw sample data:
-
-```text
-samplePlayerRawStats
-sampleTeamRawStats
-sampleRawStatsSummary
-sampleRawStatsMeta
-```
-
-Derived sample data:
+## Current status
 
 ```text
-samplePlayerDerivedScores
-sampleTeamDerivedScores
-sampleMapFitScores
-sampleRosterValueScores
-sampleDerivedScoresSummary
-sampleDerivedScoresMeta
+sample-only preview
 ```
 
-## Source imports
+## Current implementation
 
-The page imports from:
+The page now uses generic score adapter helpers with explicit sample opt-in:
 
 ```text
-src/data.ts
+getPlayerDerivedScore(..., { allowSample: true })
+getTeamDerivedScore(..., { allowSample: true })
+getMapFitScore(..., { allowSample: true })
+getRosterValueScore(..., { allowSample: true })
 ```
 
-Compatibility exports are expected to include:
+This means `/sample-data` exercises the same generic adapter API that future
+public pages may use, while still keeping sample-derived rows isolated to a
+labeled preview route.
+
+## Safety labels
+
+The page must keep visible labels:
 
 ```text
-samplePlayerRawStats
-sampleTeamRawStats
-sampleRawStatsSummary
-sampleRawStatsMeta
-samplePlayerDerivedScores
-sampleTeamDerivedScores
-sampleMapFitScores
-sampleRosterValueScores
-sampleDerivedScoresSummary
-sampleDerivedScoresMeta
+Sample only
+Not live stats
+Generic adapters allowSample=true
 ```
 
-## Navigation
+## Why allowSample=true is allowed here
 
-The page is linked in:
+`allowSample=true` is safe on `/sample-data` because:
 
 ```text
-src/config/navigation.ts
+[✓] the route is visibly labeled as sample-only
+[✓] the route is not used for public rankings
+[✓] the route is not used for catalog sorting
+[✓] the route is not used by Roster Builder scoring
+[✓] validation blocks allowSample=true on other public pages
 ```
 
-Navigation label:
+## Public page boundary
+
+Public scoring pages remain unchanged:
 
 ```text
-Sample Data
+/players
+/players/:playerId
+/teams
+/teams/:teamId
+/maps
+/maps/:mapId
+/compare
+/team-compare
+/roster-builder
+/saved-rosters
 ```
 
-## Routing
-
-The page is registered in:
+These pages must not:
 
 ```text
-src/App.tsx
+[!] pass allowSample: true
+[!] call getSample* helpers
+[!] import sampleDerivedScores directly
+[!] import realDerivedScores directly
 ```
 
-Route:
+## Displayed sections
 
-```tsx
-<Route path="/sample-data" element={<SampleDataPage />} />
-```
-
-## SEO metadata
-
-Route title and description are added in:
+The page shows:
 
 ```text
-src/hooks/usePageTitle.ts
+[✓] raw player stat samples
+[✓] raw team stat samples
+[✓] player derived score samples through generic adapters
+[✓] team derived score samples through generic adapters
+[✓] map fit score samples through generic adapters
+[✓] roster value score samples through generic adapters
+[✓] adapter metadata
+[✓] sample metadata
+[✓] coverage summary
 ```
 
-Title:
+## Adapter metadata shown
+
+For each adapted derived score card, the page shows:
 
 ```text
-Sample Data Preview — ClutchLab
+source
+status
+confidence
+formulaId
+periodStart
+periodEnd
+sourceIds
+fallback reason when relevant
 ```
 
-## Sitemap
-
-The static route is added to:
+Expected sample-preview values:
 
 ```text
-scripts/generate-sitemap.mjs
+source: sample-derived
+status: sample
 ```
 
-The route will appear in:
+## Optional field safety
+
+Some raw and derived fields are intentionally optional in the model because real
+imports may not always provide every field.
+
+The page must render missing optional values safely as:
 
 ```text
-public/sitemap.xml
+n/a
 ```
 
-after running:
+This applies to optional raw stat fields and optional derived score fields.
+
+## Raw stat field names
+
+Player raw stat preview uses field names from `PlayerRawStats`:
+
+```text
+openingSuccess
+clutchWins
+clutchAttempts
+```
+
+Older display-only names should not be used:
+
+```text
+openingDuelSuccess
+clutch1vXWins
+clutch1vXAttempts
+```
+
+## Validation
+
+Run:
 
 ```bash
-npm run generate:sitemap
+npm run validate:score-adapters
+npm run release:check
 ```
 
-## Important boundary
+The score adapter validator protects the public-page boundary and allows the
+sample route to remain a controlled exception.
 
-This page is intentionally labeled:
+## Non-goals
 
-```text
-Sample only / not live stats
-```
-
-The data is not:
+The Sample Data page must not:
 
 ```text
-[!] live scoring
-[!] official esports data
-[!] connected to the public player catalog scoring
-[!] connected to the roster builder scoring
-[!] a betting or prediction feature
+[ ] replace public UI scores
+[ ] change player catalog sorting
+[ ] change team catalog sorting
+[ ] change compare page logic
+[ ] change roster-builder value logic
+[ ] claim sample rows are official
+[ ] add fake real-derived rows
 ```
 
 ## Recommended next step
 
-After adding this page, update project documentation:
-
-```text
-README.md
-CHANGELOG.md
-docs/PROJECT_STATUS.md
-src/components/Footer.tsx
-```
-
-Suggested version:
-
-```text
-0.2.3 Sample data preview page
-```
+Add read-only generic adapter preview blocks to detail routes later, but keep them
+separate from ranking/sorting logic until real-derived coverage gates are ready.
