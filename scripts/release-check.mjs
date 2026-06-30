@@ -14,6 +14,10 @@ const checks = [
     command: "npm run validate:sources",
   },
   {
+    name: "Validate models",
+    command: "npm run validate:models",
+  },
+  {
     name: "Lint source",
     command: "npm run lint",
   },

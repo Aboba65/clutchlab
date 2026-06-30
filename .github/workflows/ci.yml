@@ -37,6 +37,9 @@ jobs:
       - name: Validate sources
         run: npm run validate:sources
 
+      - name: Validate models
+        run: npm run validate:models
+
       - name: Lint
         run: npm run lint
 
