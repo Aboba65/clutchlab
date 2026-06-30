@@ -5,27 +5,20 @@ const rootDir = process.cwd();
 
 const files = {
   scoreAdapters: resolve(rootDir, "src", "data", "scoreAdapters.ts"),
-  sampleDerivedScores: resolve(rootDir, "src", "data", "sampleDerivedScores.ts"),
   pagesDir: resolve(rootDir, "src", "pages"),
 };
 
-const sourceText = {
-  scoreAdapters: readFileSync(files.scoreAdapters, "utf8"),
-  sampleDerivedScores: readFileSync(files.sampleDerivedScores, "utf8"),
-};
+const scoreAdaptersText = readFileSync(files.scoreAdapters, "utf8");
 
-const expectedHelpers = [
-  "scoreAdapterLayerMeta",
-  "getSamplePlayerDerivedScore",
-  "getSampleTeamDerivedScore",
-  "getSampleMapFitScoresForEntity",
-  "getSampleMapFitScore",
-  "getSampleRosterValueScore",
-  "hasSamplePlayerDerivedScore",
-  "hasSampleTeamDerivedScore",
-  "hasSampleRosterValueScore",
-  "getScoreAdapterCoverageSummary",
+const expectedTypes = [
+  "ScoreAdapterSource",
+  "ScoreAdapterStatus",
+  "ScoreAdapterOptions",
+  "ScoreAdapterResult",
 ];
+
+const expectedSourceValues = ["demo-manual", "sample-derived", "real-derived"];
+const expectedStatusValues = ["fallback", "sample", "active"];
 
 const expectedResultFields = [
   "value",
@@ -39,32 +32,86 @@ const expectedResultFields = [
   "reason",
 ];
 
-const expectedSourceValues = ["demo-manual", "sample-derived", "real-derived"];
-const expectedStatusValues = ["fallback", "sample", "active"];
+const expectedGenericHelpers = [
+  "resolveScoreAdapterOptions",
+  "getPlayerDerivedScore",
+  "getTeamDerivedScore",
+  "getMapFitScoresForEntity",
+  "getMapFitScore",
+  "getRosterValueScore",
+];
 
-const expectedSampleImports = [
+const expectedSampleHelpers = [
+  "getSamplePlayerDerivedScore",
+  "getSampleTeamDerivedScore",
+  "getSampleMapFitScoresForEntity",
+  "getSampleMapFitScore",
+  "getSampleRosterValueScore",
+];
+
+const expectedSupportExports = [
+  "defaultScoreAdapterOptions",
+  "scoreAdapterLayerMeta",
+  "hasSamplePlayerDerivedScore",
+  "hasSampleTeamDerivedScore",
+  "hasSampleRosterValueScore",
+  "hasScoreAdapterValue",
+  "getScoreAdapterCoverageSummary",
+];
+
+const expectedRealArrays = [
+  "realMapFitScores",
+  "realPlayerDerivedScores",
+  "realRosterValueScores",
+  "realTeamDerivedScores",
+];
+
+const expectedSampleArrays = [
   "sampleMapFitScores",
   "samplePlayerDerivedScores",
   "sampleRosterValueScores",
   "sampleTeamDerivedScores",
 ];
 
-const expectedFallbackMessages = [
-  "No sample player derived score",
-  "No sample team derived score",
-  "No sample map fit scores",
-  "No sample map fit score",
-  "No sample roster value score",
+const genericHelperRules = [
+  {
+    name: "getPlayerDerivedScore",
+    realArray: "realPlayerDerivedScores",
+    sampleArray: "samplePlayerDerivedScores",
+    realResult: "createRealResult",
+    sampleResult: "createSampleResult",
+  },
+  {
+    name: "getTeamDerivedScore",
+    realArray: "realTeamDerivedScores",
+    sampleArray: "sampleTeamDerivedScores",
+    realResult: "createRealResult",
+    sampleResult: "createSampleResult",
+  },
+  {
+    name: "getMapFitScoresForEntity",
+    realArray: "realMapFitScores",
+    sampleArray: "sampleMapFitScores",
+    realResult: "createRealArrayResult",
+    sampleResult: "createSampleArrayResult",
+  },
+  {
+    name: "getMapFitScore",
+    realArray: "realMapFitScores",
+    sampleArray: "sampleMapFitScores",
+    realResult: "createRealResult",
+    sampleResult: "createSampleResult",
+  },
+  {
+    name: "getRosterValueScore",
+    realArray: "realRosterValueScores",
+    sampleArray: "sampleRosterValueScores",
+    realResult: "createRealResult",
+    sampleResult: "createSampleResult",
+  },
 ];
 
-const expectedCoverageDerivations = [
-  "playerScores: samplePlayerDerivedScores.length",
-  "teamScores: sampleTeamDerivedScores.length",
-  "mapFitScores: sampleMapFitScores.length",
-  "rosterValueScores: sampleRosterValueScores.length",
-];
-
-const allowedPageAdapterImports = new Set(["src/pages/SampleDataPage.tsx"]);
+const samplePagePath = "src/pages/SampleDataPage.tsx";
 
 function findMatching(text, startIndex, open = "{", close = "}") {
   let depth = 0;
@@ -132,8 +179,57 @@ function extractExportedObject(text, name) {
   return text.slice(startIndex, endIndex + 1);
 }
 
-function exportedFunctionExists(text, name) {
-  const regex = new RegExp(`export\\s+function\\s+${name}\\s*\\(`);
+function findFunctionStart(text, name) {
+  const exportedRegex = new RegExp(
+    `(^|\\n)export\\s+function\\s+${name}(?:\\s*<[^>{}]*>)?\\s*\\(`,
+  );
+  const exportedMatch = exportedRegex.exec(text);
+
+  if (exportedMatch) {
+    return exportedMatch.index + exportedMatch[1].length;
+  }
+
+  const localRegex = new RegExp(`(^|\\n)function\\s+${name}(?:\\s*<[^>{}]*>)?\\s*\\(`);
+  const localMatch = localRegex.exec(text);
+
+  if (localMatch) {
+    return localMatch.index + localMatch[1].length;
+  }
+
+  return -1;
+}
+
+function extractFunction(text, name) {
+  const markerIndex = findFunctionStart(text, name);
+
+  if (markerIndex === -1) {
+    throw new Error(`Missing function: ${name}`);
+  }
+
+  const paramsStartIndex = text.indexOf("(", markerIndex);
+
+  if (paramsStartIndex === -1) {
+    throw new Error(`Could not find parameter list for function: ${name}`);
+  }
+
+  const paramsEndIndex = findMatching(text, paramsStartIndex, "(", ")");
+
+  if (paramsEndIndex === -1) {
+    throw new Error(`Could not parse parameter list for function: ${name}`);
+  }
+
+  const startIndex = text.indexOf("{", paramsEndIndex);
+  const endIndex = findMatching(text, startIndex, "{", "}");
+
+  if (startIndex === -1 || endIndex === -1) {
+    throw new Error(`Could not parse function body: ${name}`);
+  }
+
+  return text.slice(markerIndex, endIndex + 1);
+}
+
+function exportedTypeExists(text, name) {
+  const regex = new RegExp(`export\\s+type\\s+${name}\\b`);
   return regex.test(text);
 }
 
@@ -142,8 +238,8 @@ function exportedConstExists(text, name) {
   return regex.test(text);
 }
 
-function exportedTypeExists(text, name) {
-  const regex = new RegExp(`export\\s+type\\s+${name}\\b`);
+function exportedFunctionExists(text, name) {
+  const regex = new RegExp(`export\\s+function\\s+${name}(?:\\s*<[^>{}]*>)?\\s*\\(`);
   return regex.test(text);
 }
 
@@ -173,136 +269,254 @@ function normalizePath(filePath) {
 
 const errors = [];
 
-if (!exportedTypeExists(sourceText.scoreAdapters, "ScoreAdapterSource")) {
-  errors.push("Missing exported type: ScoreAdapterSource");
-}
-
-if (!exportedTypeExists(sourceText.scoreAdapters, "ScoreAdapterStatus")) {
-  errors.push("Missing exported type: ScoreAdapterStatus");
-}
-
-if (!exportedTypeExists(sourceText.scoreAdapters, "ScoreAdapterResult")) {
-  errors.push("Missing exported type: ScoreAdapterResult");
+for (const typeName of expectedTypes) {
+  if (!exportedTypeExists(scoreAdaptersText, typeName)) {
+    errors.push(`Missing exported type: ${typeName}`);
+  }
 }
 
 for (const value of expectedSourceValues) {
-  if (!sourceText.scoreAdapters.includes(`"${value}"`)) {
+  if (!scoreAdaptersText.includes(`"${value}"`)) {
     errors.push(`ScoreAdapterSource is missing value: ${value}`);
   }
 }
 
 for (const value of expectedStatusValues) {
-  if (!sourceText.scoreAdapters.includes(`"${value}"`)) {
+  if (!scoreAdaptersText.includes(`"${value}"`)) {
     errors.push(`ScoreAdapterStatus is missing value: ${value}`);
   }
 }
 
 for (const field of expectedResultFields) {
   const fieldRegex = new RegExp(`\\b${field}\\??:`);
-  if (!fieldRegex.test(sourceText.scoreAdapters)) {
+  if (!fieldRegex.test(scoreAdaptersText)) {
     errors.push(`ScoreAdapterResult is missing field: ${field}`);
   }
 }
 
-for (const helper of expectedHelpers) {
-  const exists =
-    helper === "scoreAdapterLayerMeta"
-      ? exportedConstExists(sourceText.scoreAdapters, helper)
-      : exportedFunctionExists(sourceText.scoreAdapters, helper);
-
-  if (!exists) {
-    errors.push(`Missing adapter export: ${helper}`);
+for (const exportName of expectedSupportExports) {
+  if (
+    !exportedConstExists(scoreAdaptersText, exportName) &&
+    !exportedFunctionExists(scoreAdaptersText, exportName)
+  ) {
+    errors.push(`Missing support export: ${exportName}`);
   }
 }
 
-for (const sampleImport of expectedSampleImports) {
-  if (!sourceText.scoreAdapters.includes(sampleImport)) {
-    errors.push(`scoreAdapters.ts does not reference ${sampleImport}`);
+for (const helper of [...expectedGenericHelpers, ...expectedSampleHelpers]) {
+  if (!exportedFunctionExists(scoreAdaptersText, helper)) {
+    errors.push(`Missing adapter helper export: ${helper}`);
   }
 }
 
-const adapterMeta = extractExportedObject(
-  sourceText.scoreAdapters,
-  "scoreAdapterLayerMeta",
+for (const arrayName of expectedRealArrays) {
+  if (!scoreAdaptersText.includes(arrayName)) {
+    errors.push(`scoreAdapters.ts must reference ${arrayName}`);
+  }
+}
+
+for (const arrayName of expectedSampleArrays) {
+  if (!scoreAdaptersText.includes(arrayName)) {
+    errors.push(`scoreAdapters.ts must reference ${arrayName}`);
+  }
+}
+
+const defaultOptions = extractExportedObject(
+  scoreAdaptersText,
+  "defaultScoreAdapterOptions",
 );
 
-if (!adapterMeta.includes('status: "sample-only"')) {
-  errors.push('scoreAdapterLayerMeta.status must be "sample-only"');
+if (!defaultOptions.includes("allowSample: false")) {
+  errors.push("defaultScoreAdapterOptions.allowSample must be false");
 }
 
-if (!adapterMeta.includes("does not change public UI scoring")) {
+if (!defaultOptions.includes("preferReal: true")) {
+  errors.push("defaultScoreAdapterOptions.preferReal must be true");
+}
+
+const meta = extractExportedObject(scoreAdaptersText, "scoreAdapterLayerMeta");
+
+if (!meta.includes('status: "sample-only"')) {
+  errors.push('scoreAdapterLayerMeta.status must stay "sample-only" for now');
+}
+
+if (!meta.includes("genericDefaults: defaultScoreAdapterOptions")) {
+  errors.push("scoreAdapterLayerMeta should expose genericDefaults");
+}
+
+if (
+  !meta.includes('"real-derived"') ||
+  !meta.includes('"sample-derived"') ||
+  !meta.includes('"demo-manual"')
+) {
   errors.push(
-    "scoreAdapterLayerMeta should state that it does not change public UI scoring",
+    "scoreAdapterLayerMeta.priority should include real-derived, sample-derived and demo-manual",
   );
 }
 
-for (const warning of [
-  "Sample derived scores are not live official statistics",
-  "Do not use these helpers to rank public pages",
-  "Keep demo/manual fallbacks",
+const resolveOptions = extractFunction(scoreAdaptersText, "resolveScoreAdapterOptions");
+
+if (!resolveOptions.includes("defaultScoreAdapterOptions.allowSample")) {
+  errors.push(
+    "resolveScoreAdapterOptions must default allowSample from defaultScoreAdapterOptions",
+  );
+}
+
+if (!resolveOptions.includes("defaultScoreAdapterOptions.preferReal")) {
+  errors.push(
+    "resolveScoreAdapterOptions must default preferReal from defaultScoreAdapterOptions",
+  );
+}
+
+for (const rule of genericHelperRules) {
+  const functionText = extractFunction(scoreAdaptersText, rule.name);
+
+  if (!functionText.includes("resolveScoreAdapterOptions")) {
+    errors.push(`${rule.name} must resolve ScoreAdapterOptions`);
+  }
+
+  if (!functionText.includes("resolved.preferReal")) {
+    errors.push(`${rule.name} must gate real-derived lookup behind preferReal`);
+  }
+
+  if (!functionText.includes("resolved.allowSample")) {
+    errors.push(`${rule.name} must gate sample-derived lookup behind allowSample`);
+  }
+
+  if (!functionText.includes(rule.realArray)) {
+    errors.push(`${rule.name} must reference ${rule.realArray}`);
+  }
+
+  if (!functionText.includes(rule.sampleArray)) {
+    errors.push(`${rule.name} must reference ${rule.sampleArray}`);
+  }
+
+  if (!functionText.includes(rule.realResult)) {
+    errors.push(`${rule.name} must return ${rule.realResult} for real rows`);
+  }
+
+  if (!functionText.includes(rule.sampleResult)) {
+    errors.push(`${rule.name} must return ${rule.sampleResult} for sample rows`);
+  }
+
+  if (!functionText.includes("createFallbackResult")) {
+    errors.push(`${rule.name} must return createFallbackResult when no safe row exists`);
+  }
+}
+
+const createFallbackResult = extractFunction(scoreAdaptersText, "createFallbackResult");
+const createRealResult = extractFunction(scoreAdaptersText, "createRealResult");
+const createSampleResult = extractFunction(scoreAdaptersText, "createSampleResult");
+const createRealArrayResult = extractFunction(scoreAdaptersText, "createRealArrayResult");
+const createSampleArrayResult = extractFunction(
+  scoreAdaptersText,
+  "createSampleArrayResult",
+);
+
+if (!createFallbackResult.includes('source: "demo-manual"')) {
+  errors.push('createFallbackResult must use source: "demo-manual"');
+}
+
+if (!createFallbackResult.includes('status: "fallback"')) {
+  errors.push('createFallbackResult must use status: "fallback"');
+}
+
+for (const [name, functionText] of [
+  ["createRealResult", createRealResult],
+  ["createRealArrayResult", createRealArrayResult],
 ]) {
-  if (!adapterMeta.includes(warning)) {
-    errors.push(`scoreAdapterLayerMeta warning is missing: ${warning}`);
+  if (!functionText.includes('source: "real-derived"')) {
+    errors.push(`${name} must use source: "real-derived"`);
+  }
+
+  if (!functionText.includes('status: "active"')) {
+    errors.push(`${name} must use status: "active"`);
   }
 }
 
-for (const fallbackMessage of expectedFallbackMessages) {
-  if (!sourceText.scoreAdapters.includes(fallbackMessage)) {
-    errors.push(`Missing fallback message: ${fallbackMessage}`);
+for (const [name, functionText] of [
+  ["createSampleResult", createSampleResult],
+  ["createSampleArrayResult", createSampleArrayResult],
+]) {
+  if (!functionText.includes('source: "sample-derived"')) {
+    errors.push(`${name} must use source: "sample-derived"`);
+  }
+
+  if (!functionText.includes('status: "sample"')) {
+    errors.push(`${name} must use status: "sample"`);
   }
 }
 
-for (const coverageDerivation of expectedCoverageDerivations) {
-  if (!sourceText.scoreAdapters.includes(coverageDerivation)) {
-    errors.push(`Coverage summary should derive count from ${coverageDerivation}`);
+const coverageSummary = extractFunction(
+  scoreAdaptersText,
+  "getScoreAdapterCoverageSummary",
+);
+
+for (const requiredCoverage of [
+  "playerScores: samplePlayerDerivedScores.length",
+  "teamScores: sampleTeamDerivedScores.length",
+  "mapFitScores: sampleMapFitScores.length",
+  "rosterValueScores: sampleRosterValueScores.length",
+  "realPlayerScores: realPlayerDerivedScores.length",
+  "realTeamScores: realTeamDerivedScores.length",
+  "realMapFitScores: realMapFitScores.length",
+  "realRosterValueScores: realRosterValueScores.length",
+]) {
+  if (!coverageSummary.includes(requiredCoverage)) {
+    errors.push(`getScoreAdapterCoverageSummary should include ${requiredCoverage}`);
   }
-}
-
-if (!sourceText.scoreAdapters.includes('source: "demo-manual"')) {
-  errors.push('Fallback result should set source: "demo-manual"');
-}
-
-if (!sourceText.scoreAdapters.includes('status: "fallback"')) {
-  errors.push('Fallback result should set status: "fallback"');
-}
-
-if (!sourceText.scoreAdapters.includes('source: "sample-derived"')) {
-  errors.push('Sample result should set source: "sample-derived"');
-}
-
-if (!sourceText.scoreAdapters.includes('status: "sample"')) {
-  errors.push('Sample result should set status: "sample"');
 }
 
 const pageAdapterImports = [];
+const blockedAllowSamplePages = [];
+const blockedSampleHelperPages = [];
+const blockedDirectDataPages = [];
 
 for (const filePath of findSourceFiles(files.pagesDir)) {
   const text = readFileSync(filePath, "utf8");
+  const pagePath = normalizePath(filePath);
 
   if (text.includes("scoreAdapters")) {
-    pageAdapterImports.push(normalizePath(filePath));
+    pageAdapterImports.push(pagePath);
+  }
+
+  if (pagePath !== samplePagePath && /allowSample\s*:\s*true/.test(text)) {
+    blockedAllowSamplePages.push(pagePath);
+  }
+
+  if (pagePath !== samplePagePath && /\bgetSample[A-Z]\w*\s*\(/.test(text)) {
+    blockedSampleHelperPages.push(pagePath);
+  }
+
+  if (
+    pagePath !== samplePagePath &&
+    (text.includes("sampleDerivedScores") || text.includes("realDerivedScores"))
+  ) {
+    blockedDirectDataPages.push(pagePath);
   }
 }
 
-const blockedPageAdapterImports = pageAdapterImports.filter(
-  (pagePath) => !allowedPageAdapterImports.has(pagePath),
-);
+for (const pagePath of blockedAllowSamplePages) {
+  errors.push(`Public page must not pass allowSample: true: ${pagePath}`);
+}
 
-for (const pagePath of blockedPageAdapterImports) {
-  errors.push(
-    `Public page should not import scoreAdapters yet: ${pagePath}. Allowed exception: src/pages/SampleDataPage.tsx`,
-  );
+for (const pagePath of blockedSampleHelperPages) {
+  errors.push(`Public page must not call getSample* helpers: ${pagePath}`);
+}
+
+for (const pagePath of blockedDirectDataPages) {
+  errors.push(`Public page must not import derived score arrays directly: ${pagePath}`);
 }
 
 console.log("ClutchLab score adapters validation");
 console.log("-----------------------------------");
-console.log(`Expected helpers:        ${expectedHelpers.length}`);
+console.log(`Expected generic helpers: ${expectedGenericHelpers.length}`);
+console.log(`Expected sample helpers:  ${expectedSampleHelpers.length}`);
 console.log(`Expected result fields:  ${expectedResultFields.length}`);
-console.log(`Source values:           ${expectedSourceValues.length}`);
-console.log(`Status values:           ${expectedStatusValues.length}`);
 console.log(`Page adapter imports:    ${pageAdapterImports.length}`);
-console.log(`Allowed page imports:    ${allowedPageAdapterImports.size}`);
-console.log(`Blocked page imports:    ${blockedPageAdapterImports.length}`);
+console.log(`allowSample violations:  ${blockedAllowSamplePages.length}`);
+console.log(`getSample violations:    ${blockedSampleHelperPages.length}`);
+console.log(`direct data violations:  ${blockedDirectDataPages.length}`);
 
 if (errors.length > 0) {
   console.error("\nValidation failed:");
