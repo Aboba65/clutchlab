@@ -7,7 +7,7 @@ ClutchLab
 ## Current version
 
 ```text
-0.1.7 Real-stat data plan
+0.1.8 Source metadata scaffold
 ```
 
 ## Live site
@@ -28,8 +28,8 @@ ClutchLab is a CS2 analytics MVP for exploring players, teams, maps, roles,
 roster construction and matchup comparison.
 
 The product now has a complete first version of the interface, a stronger quality
-workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation and
-a documented plan for moving from demo/manual values to real-stat data.
+workflow, mobile polish, route-level SEO metadata, dynamic sitemap generation, a
+real-stat migration plan and a source metadata scaffold.
 
 ## Current data status
 
@@ -40,35 +40,54 @@ demo/manual data
 The current dataset is useful for product testing and UI logic, but it should not
 be described as live, official or current esports statistics.
 
-## Real-stat data plan
+## Source metadata scaffold
 
-Document:
+Source file:
 
 ```text
-docs/REAL_STATS_PLAN.md
+src/data/sources.ts
 ```
 
-The plan defines how future real statistics should be structured:
+Documentation:
 
 ```text
-[✓] identity data
-[✓] raw performance data
-[✓] source metadata
-[✓] derived scores
-[✓] manual adjustments
-[✓] validation rules
-[✓] UI disclosure rules
+docs/DATA_SOURCES.md
 ```
 
-Recommended future implementation sequence:
+Validation:
+
+```bash
+npm run validate:sources
+```
+
+Current source scaffold includes:
 
 ```text
-1. Add source metadata scaffolding.
-2. Add raw stat types.
-3. Add derived score types.
-4. Add real-stat validation.
-5. Add a small manually curated real-stat sample.
-6. Only then consider semi-structured import or API/backend work.
+[✓] dataSources
+[✓] sourceGroups
+[✓] SourceStatus
+[✓] SourceKind
+[✓] SourceConfidence
+[✓] ClutchLabDataSource
+[✓] ClutchLabSourceGroup
+```
+
+Current source groups:
+
+```text
+current-mvp-demo-layer
+future-real-stat-layer
+```
+
+Current sources:
+
+```text
+demo-player-ratings
+demo-team-ratings
+demo-map-profiles
+demo-role-profiles
+future-real-player-stats
+future-real-team-stats
 ```
 
 ## Completed product features
@@ -109,6 +128,8 @@ Recommended future implementation sequence:
 [✓] Footer component
 [✓] Data layer split
 [✓] dataMeta
+[✓] source metadata scaffold
+[✓] source metadata validation
 [✓] Data layer README
 [✓] GitHub README
 [✓] README badges
@@ -145,6 +166,7 @@ This runs:
 ```bash
 npm run generate:sitemap
 npm run validate:data
+npm run validate:sources
 npm run lint
 npm run format:check
 npm run build
@@ -168,6 +190,33 @@ public/sitemap.xml
 npm run validate:data
 ```
 
+### Source validation
+
+```bash
+npm run validate:sources
+```
+
+Validator:
+
+```text
+scripts/validate-sources.mjs
+```
+
+Checks:
+
+```text
+[✓] dataSources export exists
+[✓] sourceGroups export exists
+[✓] source ids are unique
+[✓] source group ids are unique
+[✓] each source has id, name and description
+[✓] each source has valid kind
+[✓] each source has valid status
+[✓] each source has valid confidence
+[✓] each source covers at least one app area
+[✓] sourceGroups reference existing source ids
+```
+
 ### Linting and formatting
 
 ```bash
@@ -184,9 +233,31 @@ GitHub runs:
 npm ci
 npm run generate:sitemap
 npm run validate:data
+npm run validate:sources
 npm run lint
 npm run format:check
 npm run build
+```
+
+## Data roadmap
+
+Documents:
+
+```text
+docs/REAL_STATS_PLAN.md
+docs/DATA_SOURCES.md
+```
+
+Current data architecture direction:
+
+```text
+[✓] demo/manual status is explicit
+[✓] source scaffolding exists
+[✓] planned real-stat source placeholders exist
+[ ] raw stat type definitions
+[ ] derived score type definitions
+[ ] real-stat validation script
+[ ] manually curated real-stat sample
 ```
 
 ## SEO and UX polish
@@ -220,12 +291,14 @@ src/data.ts
 src/data/index.ts
 src/data/players.ts
 src/data/teams.ts
+src/data/sources.ts
 src/data/meta.ts
 src/data/README.md
 src/lib.ts
 src/types.ts
 scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
+scripts/validate-sources.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -236,6 +309,7 @@ CHANGELOG.md
 docs/PROJECT_STATUS.md
 docs/SITEMAP.md
 docs/REAL_STATS_PLAN.md
+docs/DATA_SOURCES.md
 docs/ARCHITECTURE.md
 docs/RELEASE_CHECKLIST.md
 vercel.json
@@ -252,8 +326,8 @@ public/sitemap.xml
 - Dataset is manually created
 - Ratings are not live
 - Prices are internal MVP values
+- Source metadata exists but real-stat rows are not connected yet
 - No automatic match updates
-- No source-level stat tracking yet
 - No event-window filtering yet
 
 ### Product limitations
@@ -266,7 +340,8 @@ public/sitemap.xml
 
 - There are no unit tests yet
 - There are no component tests yet
-- Data validation and sitemap generation are source-text based, not AST-based
+- Data validation, source validation and sitemap generation are source-text based,
+  not AST-based
 
 ### SEO limitations
 
@@ -275,31 +350,32 @@ public/sitemap.xml
 
 ## Recommended next steps
 
-### 1. Source metadata scaffolding
+### 1. Raw stat type definitions
 
 ```text
-[ ] add source-related TypeScript types
-[ ] add src/data/sources.ts
-[ ] validate source ids
-[ ] connect dataMeta with source status
-[ ] add docs/DATA_SOURCES.md
+[ ] PlayerRawStats
+[ ] TeamRawStats
+[ ] MapRawStats
+[ ] SourceWindow
+[ ] SampleSizeRules
 ```
 
-### 2. Real-stat validation
+### 2. Derived score type definitions
+
+```text
+[ ] PlayerDerivedScore
+[ ] TeamDerivedScore
+[ ] MapFitScore
+[ ] RosterValueScore
+```
+
+### 3. Real-stat validation
 
 ```text
 [ ] validate sourceId references
 [ ] validate stat periods
 [ ] validate minimum sample sizes
 [ ] validate derived score ranges
-```
-
-### 3. Testing
-
-```text
-[ ] basic smoke tests
-[ ] component tests for core pages
-[ ] CI test step
 ```
 
 ## Build commands
@@ -309,6 +385,7 @@ npm install
 npm run dev
 npm run generate:sitemap
 npm run validate:data
+npm run validate:sources
 npm run lint
 npm run format
 npm run format:check

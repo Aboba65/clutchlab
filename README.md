@@ -19,7 +19,7 @@ ClutchLab is currently an MVP with a static local data layer.
 Current documented version:
 
 ```text
-0.1.7 Real-stat data plan
+0.1.8 Source metadata scaffold
 ```
 
 The interface is built like a real analytics product, but the current ratings,
@@ -53,6 +53,8 @@ esports statistics.
 - Footer with version, data status and project links
 - Dynamic sitemap generation for static and detail routes
 - Real-stat data migration plan
+- Source metadata scaffold
+- Source metadata validation
 
 ## Tech stack
 
@@ -113,7 +115,7 @@ meta[name="twitter:description"]
 src/
   components/             Shared UI components, app shell and footer
   config/                 Navigation, role profiles and map profiles
-  data/                   Player data, team data and dataset metadata
+  data/                   Player data, team data, source data and metadata
   hooks/                  Route/title/meta hooks
   pages/                  Route-level pages
   App.tsx                 BrowserRouter and route table
@@ -124,6 +126,7 @@ src/
 
 scripts/
   validate-data.mjs       Local data integrity validation
+  validate-sources.mjs    Local source metadata validation
   release-check.mjs       Local release gate
   generate-sitemap.mjs    Dynamic sitemap generator
 ```
@@ -133,6 +136,7 @@ scripts/
 ```text
 src/data/players.ts       Player profiles
 src/data/teams.ts         Team profiles
+src/data/sources.ts       Source metadata scaffold
 src/data/meta.ts          Dataset version, status and source notes
 src/data/index.ts         Public data exports
 src/data/README.md        Data rules and future real-stat notes
@@ -146,10 +150,51 @@ Purpose: MVP navigation, UI testing and product logic
 Not intended as: live esports statistics
 ```
 
-Real-stat migration plan:
+Data and source documentation:
 
 ```text
+docs/DATA_SOURCES.md
 docs/REAL_STATS_PLAN.md
+```
+
+## Source metadata
+
+Source metadata is defined in:
+
+```text
+src/data/sources.ts
+```
+
+It exports:
+
+```text
+dataSources
+sourceGroups
+```
+
+Current source groups:
+
+```text
+current-mvp-demo-layer
+future-real-stat-layer
+```
+
+Current source validation command:
+
+```bash
+npm run validate:sources
+```
+
+The validator checks:
+
+```text
+[✓] source ids are unique
+[✓] source group ids are unique
+[✓] source kind values are valid
+[✓] source status values are valid
+[✓] source confidence values are valid
+[✓] every source covers at least one app area
+[✓] sourceGroups reference existing source ids
 ```
 
 ## Local setup
@@ -176,6 +221,12 @@ Validate local data:
 
 ```bash
 npm run validate:data
+```
+
+Validate source metadata:
+
+```bash
+npm run validate:sources
 ```
 
 Lint source files:
@@ -227,6 +278,7 @@ The release check runs:
 ```bash
 npm run generate:sitemap
 npm run validate:data
+npm run validate:sources
 npm run lint
 npm run format:check
 npm run build
@@ -237,6 +289,7 @@ Quality config files:
 ```text
 scripts/generate-sitemap.mjs
 scripts/validate-data.mjs
+scripts/validate-sources.mjs
 scripts/release-check.mjs
 eslint.config.js
 .prettierrc
@@ -254,6 +307,7 @@ The CI workflow runs:
 npm ci
 npm run generate:sitemap
 npm run validate:data
+npm run validate:sources
 npm run lint
 npm run format:check
 npm run build
@@ -340,12 +394,11 @@ Current SEO/UX polish includes:
 [✓] visible MVP version
 [✓] visible data status
 [✓] visible data updated date
-[✓] GitHub, Changelog, Data, Sitemap and Live site links
+[✓] GitHub, Changelog, Data, Sitemap, Real stats and Live site links
 ```
 
 ## Roadmap
 
-- Add source metadata scaffolding
 - Add raw stats type definitions
 - Add derived score type definitions
 - Add real-stat validation script
@@ -359,4 +412,5 @@ Current SEO/UX polish includes:
 ## Important note
 
 ClutchLab is not currently a live ranking system. It is a product MVP with a clean
-interface, static local data and clear boundaries around demo/manual scoring.
+interface, static local data, source metadata scaffolding and clear boundaries
+around demo/manual scoring.

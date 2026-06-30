@@ -2,6 +2,40 @@
 
 All notable ClutchLab MVP changes are tracked here.
 
+## 0.1.8 — Source metadata scaffold
+
+Date: 2026-06-28
+
+### Added
+
+- Source metadata scaffold: `src/data/sources.ts`
+- Source metadata documentation: `docs/DATA_SOURCES.md`
+- Source validation script: `scripts/validate-sources.mjs`
+- NPM command: `npm run validate:sources`
+- Source exports from `src/data/index.ts`
+- Source compatibility exports from `src/data.ts`
+- Source validation in `scripts/release-check.mjs`
+- Source validation in GitHub Actions CI
+- README source metadata section
+- Project status source metadata section
+
+### Improved
+
+- `npm run release:check` now runs:
+
+```bash
+npm run generate:sitemap
+npm run validate:data
+npm run validate:sources
+npm run lint
+npm run format:check
+npm run build
+```
+
+- GitHub Actions CI now runs `npm run validate:sources`.
+- The project now distinguishes demo/manual MVP data from planned future real-stat sources.
+- Footer version display was updated to `0.1.8`.
+
 ## 0.1.7 — Real-stat data plan
 
 Date: 2026-06-28
